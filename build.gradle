@@ -1,0 +1,74 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'org.springframework.boot' version '2.2.7.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+    id 'maven'
+}
+
+group = 'com.something'
+version = System.getenv("BUILD_NUMBER")
+println "Build Version = ${System.getenv("BUILD_NUMBER") ?: '[none]'}"
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+//publishing {
+//    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
+//        }
+//    }
+//    repositories {
+//        mavenLocal()
+//    }
+//}
+
+apply plugin: 'io.spring.dependency-management'
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Hoxton.SR1'
+        mavenBom 'io.pivotal.spring.cloud:spring-cloud-services-dependencies:2.1.4.RELEASE'
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+dependencies {
+
+    // Spring
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+
+    // Database driver for storing interactions
+    implementation 'org.mongodb:mongo-java-driver:3.12.6'
+
+    // Yatspec
+    implementation 'com.github.nickmcdowall:yatspec:2020.1.13'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    // JSON & XML pretty formatting
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'dom4j:dom4j:1.6.1'
+
+    // Other
+    implementation 'org.apache.commons:commons-lang3:3.11'
+}

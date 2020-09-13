@@ -1,0 +1,8 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.yatspec.e2e.config.DestinationNamesAutoConfiguration,\
+  com.yatspec.e2e.config.FeignInterceptorConfig,\
+  com.yatspec.e2e.config.LibraryConfig,\
+  com.yatspec.e2e.config.RabbitListenerInterceptorConfig,\
+  com.yatspec.e2e.config.RabbitTemplateInterceptorConfig,\
+  com.yatspec.e2e.config.RestTemplateInterceptorConfig,\
+  com.yatspec.e2e.config.TestStateCollectorConfig
