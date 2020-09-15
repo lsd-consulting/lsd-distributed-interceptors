@@ -38,11 +38,11 @@ repositories {
     jcenter()
 }
 
-scmVersion {
-    repository {
-        customKey = project.file('/Users/lgryzbon/.ssh/id_rsa2')
-    }
-}
+//scmVersion {
+//    repository {
+//        customKey = project.file('/Users/lgryzbon/.ssh/id_rsa')
+//    }
+//}
 
 bintray {
     user = System.getenv('BINTRAY_USER')
