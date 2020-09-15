@@ -3,12 +3,14 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 plugins {
     id 'org.springframework.boot' version '2.2.7.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-    id 'java'
+    id 'java-library'
     id 'maven'
+    id 'pl.allegro.tech.build.axion-release' version '1.10.0'
+    id "com.jfrog.bintray" version "1.8.5"
 }
 
 group = 'com.something'
-version = System.getenv("BUILD_NUMBER")
+project.version = scmVersion.version
 println "Build Version = ${System.getenv("BUILD_NUMBER") ?: '[none]'}"
 
 sourceCompatibility = '11'
@@ -22,9 +24,36 @@ jar {
     enabled = true
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+}
 repositories {
     mavenLocal()
     jcenter()
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    configurations = ['archives']
+    pkg {
+        repo = 'integreety'
+        name = 'lsd-distributed-interceptor-library'
+        override = false
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/integreety/lsd-distributed-interceptor-library.git'
+        publish = true
+        publicDownloadNumbers = true
+        version {
+            name = project.version
+        }
+    }
 }
 
 //publishing {
