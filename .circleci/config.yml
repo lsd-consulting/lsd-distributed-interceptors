@@ -23,9 +23,6 @@ jobs:
       TERM: dumb
 
     steps:
-#      - add_ssh_keys:
-#          fingerprints:
-#            - "f7:ca:60:78:a8:12:4c:68:15:57:a6:2c:52:df:d3:43"
       - checkout
 
       # Download and cache dependencies
@@ -45,3 +42,6 @@ jobs:
       - run: ./gradlew markNextVersion -Prelease.incrementer=incrementPatch
       - run: ./gradlew clean build release
       - run: ./gradlew bintrayUpload
+
+      - store_artifacts:
+          path: build/libs/
