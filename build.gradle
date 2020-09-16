@@ -11,7 +11,7 @@ plugins {
 
 group = 'com.something'
 project.version = scmVersion.version
-println "Build Version = ${System.getenv("BUILD_NUMBER") ?: '[none]'}"
+println "Build Version = ${project.version}"
 
 sourceCompatibility = '11'
 targetCompatibility = '11'
