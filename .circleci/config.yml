@@ -42,5 +42,5 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
-      - run: ./gradlew markNextVersion -Prelease.incrementer=incrementMinor
+      - run: ./gradlew markNextVersion -Prelease.incrementer=incrementPatch
       - run: ./gradlew clean build bintrayUpload
