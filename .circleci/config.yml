@@ -39,7 +39,8 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
-      - run: ./gradlew markNextVersion -Prelease.incrementer=incrementPatch clean release build bintrayUpload
+      - run: ./gradlew markNextVersion -Prelease.incrementer=incrementPatch
+      - run: ./gradlew clean release build bintrayUpload
 
       - store_artifacts:
           path: build/libs/
