@@ -9,7 +9,7 @@ plugins {
     id "com.jfrog.bintray" version "1.8.5"
 }
 
-group = 'com.something'
+group = 'com.integreety'
 project.version = scmVersion.version
 println "Build Version = ${project.version}"
 
