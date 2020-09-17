@@ -45,7 +45,7 @@ bintray {
     pkg {
         repo = 'public'
         name = 'lsd-distributed-interceptor-library'
-        userOrg = System.getenv('BINTRAY_ORG')
+//        userOrg = System.getenv('BINTRAY_ORG')
         override = false
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/integreety/lsd-distributed-interceptor-library.git'
