@@ -15,7 +15,7 @@ import org.bson.Document;
 @Slf4j
 public class InterceptedDocumentRepository {
 
-    private static final String DATABASE_NAME = "goms"; // TODO Should we assume the db exists? Or should we attempt to create it if it doesn't?
+    private static final String DATABASE_NAME = "lsd";
     private static final String COLLECTION_NAME = "interceptedInteraction";
 
     private final MongoClient mongoClient;

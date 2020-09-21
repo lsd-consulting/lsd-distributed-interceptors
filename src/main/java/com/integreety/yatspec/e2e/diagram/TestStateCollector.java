@@ -20,7 +20,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class TestStateCollector {
 
-    private static final String DATABASE_NAME = "goms";
+    private static final String DATABASE_NAME = "lsd";
     private static final String COLLECTION_NAME = "interceptedInteraction";
 
     private final TestState testState;
