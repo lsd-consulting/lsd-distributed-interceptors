@@ -1,4 +1,4 @@
-package com.integreety.yatspec.e2e.diagram;
+package com.integreety.yatspec.e2e.teststate;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

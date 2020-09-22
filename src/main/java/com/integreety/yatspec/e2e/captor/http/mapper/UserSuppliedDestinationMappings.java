@@ -28,5 +28,4 @@ public class UserSuppliedDestinationMappings implements DestinationNameMappings 
     public static DestinationNameMappings userSuppliedDestinationMappings(final Map<String, String> mappings) {
         return new UserSuppliedDestinationMappings(mappings, new RegexResolvingNameMapper());
     }
-
 }

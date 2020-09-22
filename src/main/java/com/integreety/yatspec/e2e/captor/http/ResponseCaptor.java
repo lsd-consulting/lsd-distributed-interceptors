@@ -41,9 +41,9 @@ public class ResponseCaptor extends PathDerivingCaptor {
             final String source = serviceNameDeriver.derive();
             final String destination = destinationNameMappings.mapForPath(path);
             final String interactionMessage = responseOf(deriveStatus(response.status()), destination, source);
-            final InterceptedCall data = interceptedCallFactory.buildFrom(extractResponseBodyToString(response), response.headers(), interactionMessage, RESPONSE);
-            interceptedDocumentRepository.save(data);
-            return data;
+            final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(extractResponseBodyToString(response), response.headers(), interactionMessage, RESPONSE);
+            interceptedDocumentRepository.save(interceptedCall);
+            return interceptedCall;
         } catch (final RuntimeException e) {
             log.error(e.getMessage(), e);
             throw e;
@@ -57,8 +57,8 @@ public class ResponseCaptor extends PathDerivingCaptor {
         final String interactionMessage = responseOf(response.getStatusCode().toString(), destination, source);
         final var headers = response.getHeaders().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> (Collection<String>) e.getValue()));
-        final InterceptedCall data = interceptedCallFactory.buildFrom(body, headers, interactionMessage, RESPONSE);
-        interceptedDocumentRepository.save(data);
+        final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(body, headers, interactionMessage, RESPONSE);
+        interceptedDocumentRepository.save(interceptedCall);
     }
 
 

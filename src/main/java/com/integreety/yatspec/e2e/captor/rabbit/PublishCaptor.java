@@ -29,7 +29,7 @@ public class PublishCaptor {
         final MessageProperties messageProperties = message.getMessageProperties();
         final Map<String, Collection<String>> headers = headerRetriever.retrieve(messageProperties);
         final String interactionName = publishOf(serviceNameDeriver.derive(), exchangeNameDeriver.derive(messageProperties));
-        final InterceptedCall data = interceptedCallFactory.buildFrom(new String(message.getBody()), headers, interactionName, PUBLISH);
-        interceptedDocumentRepository.save(data);
+        final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(new String(message.getBody()), headers, interactionName, PUBLISH);
+        interceptedDocumentRepository.save(interceptedCall);
     }
 }

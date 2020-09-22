@@ -2,7 +2,7 @@ package com.integreety.yatspec.e2e.config;
 
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
-import com.integreety.yatspec.e2e.diagram.TestStateCollector;
+import com.integreety.yatspec.e2e.teststate.TestStateCollector;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

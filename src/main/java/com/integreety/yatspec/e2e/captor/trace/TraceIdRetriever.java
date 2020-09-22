@@ -1,4 +1,4 @@
-package com.integreety.yatspec.e2e.captor.repository;
+package com.integreety.yatspec.e2e.captor.trace;
 
 import brave.Tracer;
 import lombok.RequiredArgsConstructor;

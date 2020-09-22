@@ -29,7 +29,7 @@ public class ConsumeCaptor {
         final MessageProperties messageProperties = message.getMessageProperties();
         final Map<String, Collection<String>> headers = headerRetriever.retrieve(messageProperties);
         final String interactionName = consumeOf(exchangeNameDeriver.derive(messageProperties), serviceNameDeriver.derive());
-        final InterceptedCall data = interceptedCallFactory.buildFrom(new String(message.getBody()), headers, interactionName, CONSUME);
-        interceptedDocumentRepository.save(data);
+        final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(new String(message.getBody()), headers, interactionName, CONSUME);
+        interceptedDocumentRepository.save(interceptedCall);
     }
 }
