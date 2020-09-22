@@ -8,6 +8,8 @@ import com.mongodb.client.MongoDatabase;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 
+import java.util.Map;
+
 import static com.integreety.yatspec.e2e.captor.repository.mongo.MongoClientCreator.COLLECTION_NAME;
 import static com.integreety.yatspec.e2e.captor.repository.mongo.MongoClientCreator.DATABASE_NAME;
 
@@ -23,9 +25,9 @@ public class InterceptedDocumentRepository {
         mongoClient = MongoClientCreator.getMongoClient(new ConnectionString(dbConnectionString));
     }
 
-    public void save(final Document interceptedCall) {
+    public void save(final Map<String, Object> interceptedCallDetails) {
         final MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
         final MongoCollection<Document> interceptedCalls = database.getCollection(COLLECTION_NAME);
-        interceptedCalls.insertOne(interceptedCall);
+        interceptedCalls.insertOne(new Document(interceptedCallDetails));
     }
 }

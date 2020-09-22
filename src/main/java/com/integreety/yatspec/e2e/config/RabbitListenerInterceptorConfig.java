@@ -2,7 +2,6 @@ package com.integreety.yatspec.e2e.config;
 
 import com.integreety.yatspec.e2e.captor.rabbit.ConsumeCaptor;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
@@ -29,7 +28,6 @@ public class RabbitListenerInterceptorConfig {
         simpleRabbitListenerContainerFactory.setAfterReceivePostProcessors(this::postProcessMessage);
     }
 
-    @SneakyThrows
     private Message postProcessMessage(final Message message) {
         consumeCaptor.captureConsumeInteraction(MessageBuilder.fromMessage(message).build());
         return message;

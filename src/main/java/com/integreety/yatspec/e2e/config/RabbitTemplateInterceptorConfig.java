@@ -1,6 +1,5 @@
 package com.integreety.yatspec.e2e.config;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.integreety.yatspec.e2e.captor.rabbit.ConsumeCaptor;
 import com.integreety.yatspec.e2e.captor.rabbit.PublishCaptor;
 import lombok.RequiredArgsConstructor;
@@ -27,19 +26,11 @@ public class RabbitTemplateInterceptorConfig {
     @PostConstruct
     public void configureRabbitTemplatePublishInterceptor() {
         rabbitTemplate.addBeforePublishPostProcessors(message -> {
-            try {
-                publishCaptor.capturePublishInteraction(MessageBuilder.fromMessage(message).build());
-            } catch (final JsonProcessingException e) {
-                log.error(e.getMessage(), e);
-            }
+            publishCaptor.capturePublishInteraction(MessageBuilder.fromMessage(message).build());
             return message;
         });
         rabbitTemplate.addAfterReceivePostProcessors(message -> {
-            try {
-                consumeCaptor.captureConsumeInteraction(MessageBuilder.fromMessage(message).build());
-            } catch (final JsonProcessingException e) {
-                log.error(e.getMessage(), e);
-            }
+            consumeCaptor.captureConsumeInteraction(MessageBuilder.fromMessage(message).build());
             return message;
         });
     }

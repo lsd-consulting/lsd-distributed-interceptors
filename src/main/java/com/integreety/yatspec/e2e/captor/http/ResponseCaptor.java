@@ -1,6 +1,5 @@
 package com.integreety.yatspec.e2e.captor.http;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.integreety.yatspec.e2e.captor.http.mapper.DestinationNameMappings;
 import com.integreety.yatspec.e2e.captor.name.ServiceNameDeriver;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
@@ -10,7 +9,6 @@ import feign.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.Document;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
@@ -22,7 +20,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 import static com.integreety.yatspec.e2e.captor.repository.Type.RESPONSE;
 import static com.integreety.yatspec.e2e.captor.template.InteractionMessageTemplates.responseOf;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -30,8 +27,6 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 @RequiredArgsConstructor
 @Slf4j
 public class ResponseCaptor extends PathDerivingCaptor {
-
-    private final ObjectMapper objectMapper = new ObjectMapperCreator().getObjectMapper().enable(INDENT_OUTPUT);
 
     private final InterceptedDocumentRepository interceptedDocumentRepository;
     private final MapGenerator mapGenerator;
@@ -46,7 +41,7 @@ public class ResponseCaptor extends PathDerivingCaptor {
             final String destination = destinationNameMappings.mapForPath(path);
             final String interactionMessage = responseOf(deriveStatus(response.status()), destination, source);
             final Map<String, Object> data = mapGenerator.generateFrom(extractResponseBodyToString(response), response.headers(), interactionMessage, RESPONSE);
-            interceptedDocumentRepository.save(Document.parse(objectMapper.writeValueAsString(data)));
+            interceptedDocumentRepository.save(data);
             return data;
         } catch (final RuntimeException e) {
             log.error(e.getMessage(), e);
@@ -62,7 +57,7 @@ public class ResponseCaptor extends PathDerivingCaptor {
         final var headers = response.getHeaders().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> (Collection<String>) e.getValue()));
         final Map<String, Object> data = mapGenerator.generateFrom(body, headers, interactionMessage, RESPONSE);
-        interceptedDocumentRepository.save(Document.parse(objectMapper.writeValueAsString(data)));
+        interceptedDocumentRepository.save(data);
     }
 
 
