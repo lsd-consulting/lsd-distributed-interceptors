@@ -13,6 +13,7 @@ import com.integreety.yatspec.e2e.captor.rabbit.header.HeaderRetriever;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
 import com.integreety.yatspec.e2e.captor.repository.MapGenerator;
 import com.integreety.yatspec.e2e.captor.repository.TraceIdRetriever;
+import com.integreety.yatspec.e2e.captor.repository.mongo.InterceptedDocumentMongoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -101,6 +102,6 @@ public class LibraryConfig {
 
     @Bean
     public InterceptedDocumentRepository interceptedDocumentRepository() {
-        return new InterceptedDocumentRepository(dbConnectionString);
+        return new InterceptedDocumentMongoRepository(dbConnectionString);
     }
 }
