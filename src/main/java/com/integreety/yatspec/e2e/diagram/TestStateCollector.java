@@ -5,9 +5,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
+import com.integreety.yatspec.e2e.captor.repository.mongo.MongoClientCreator;
 import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.*;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -16,12 +19,11 @@ import org.dom4j.io.XMLWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import static com.integreety.yatspec.e2e.captor.repository.mongo.MongoClientCreator.COLLECTION_NAME;
+import static com.integreety.yatspec.e2e.captor.repository.mongo.MongoClientCreator.DATABASE_NAME;
 import static com.mongodb.client.model.Filters.eq;
 
 public class TestStateCollector {
-
-    private static final String DATABASE_NAME = "lsd";
-    private static final String COLLECTION_NAME = "interceptedInteraction";
 
     private final TestState testState;
 
@@ -29,15 +31,10 @@ public class TestStateCollector {
 
     public TestStateCollector(final String dbConnectionString, final TestState testState) {
         this.testState = testState;
-        final ConnectionString connString = new ConnectionString(dbConnectionString);
-        mongoClient = MongoClients.create(MongoClientSettings.builder()
-                .applyConnectionString(connString)
-//            .credential(credential)
-                .retryWrites(true)
-                .build());
+        mongoClient = MongoClientCreator.getMongoClient(new ConnectionString(dbConnectionString));
     }
 
-    public void createYatspecDiagram(final String traceId) {
+    public void logStatesFromDatabase(final String traceId) {
         final MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
         final MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
         final FindIterable<Document> documents = collection.find(eq("traceId", traceId));
