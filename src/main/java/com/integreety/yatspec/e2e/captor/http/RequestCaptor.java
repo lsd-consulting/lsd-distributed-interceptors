@@ -3,7 +3,7 @@ package com.integreety.yatspec.e2e.captor.http;
 import com.integreety.yatspec.e2e.captor.http.mapper.DestinationNameMappings;
 import com.integreety.yatspec.e2e.captor.name.ServiceNameDeriver;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
-import com.integreety.yatspec.e2e.captor.repository.MapGenerator;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCallFactory;
 import feign.Request;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import static com.integreety.yatspec.e2e.captor.template.InteractionMessageTempl
 public class RequestCaptor extends PathDerivingCaptor {
 
     private final InterceptedDocumentRepository interceptedDocumentRepository;
-    private final MapGenerator mapGenerator;
+    private final InterceptedCallFactory interceptedCallFactory;
     private final ServiceNameDeriver serviceNameDeriver;
     private final DestinationNameMappings destinationNameMappings;
 
@@ -32,7 +32,7 @@ public class RequestCaptor extends PathDerivingCaptor {
             final String source = serviceNameDeriver.derive();
             final String destination = destinationNameMappings.mapForPath(path);
             final String interactionMessage = requestOf(request.httpMethod().name(), path, source, destination);
-            interceptedDocumentRepository.save(mapGenerator.generateFrom(body, request.headers(), interactionMessage, REQUEST));
+            interceptedDocumentRepository.save(interceptedCallFactory.buildFrom(body, request.headers(), interactionMessage, REQUEST));
         } catch (final RuntimeException e) {
             log.error(e.getMessage(), e);
             throw e;
@@ -46,6 +46,6 @@ public class RequestCaptor extends PathDerivingCaptor {
         final String interactionMessage = requestOf(request.getMethodValue(), path, source, destination);
         final var headers = request.getHeaders().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> (Collection<String>) e.getValue()));
-        interceptedDocumentRepository.save(mapGenerator.generateFrom(body, headers, interactionMessage, REQUEST));
+        interceptedDocumentRepository.save(interceptedCallFactory.buildFrom(body, headers, interactionMessage, REQUEST));
     }
 }

@@ -11,8 +11,8 @@ import com.integreety.yatspec.e2e.captor.rabbit.ConsumeCaptor;
 import com.integreety.yatspec.e2e.captor.rabbit.PublishCaptor;
 import com.integreety.yatspec.e2e.captor.rabbit.header.HeaderRetriever;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
-import com.integreety.yatspec.e2e.captor.repository.MapGenerator;
 import com.integreety.yatspec.e2e.captor.repository.TraceIdRetriever;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCallFactory;
 import com.integreety.yatspec.e2e.captor.repository.mongo.InterceptedDocumentMongoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,41 +63,41 @@ public class LibraryConfig {
 
     @Bean
     public RequestCaptor requestCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                       final MapGenerator mapGenerator,
+                                       final InterceptedCallFactory interceptedCallFactory,
                                        final ServiceNameDeriver serviceNameDeriver) {
 
-        return new RequestCaptor(interceptedDocumentRepository, mapGenerator, serviceNameDeriver, destinationNameMappings);
+        return new RequestCaptor(interceptedDocumentRepository, interceptedCallFactory, serviceNameDeriver, destinationNameMappings);
     }
 
     @Bean
     public ResponseCaptor responseCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                         final MapGenerator mapGenerator,
+                                         final InterceptedCallFactory interceptedCallFactory,
                                          final ServiceNameDeriver serviceNameDeriver) {
 
-        return new ResponseCaptor(interceptedDocumentRepository, mapGenerator, serviceNameDeriver, destinationNameMappings);
+        return new ResponseCaptor(interceptedDocumentRepository, interceptedCallFactory, serviceNameDeriver, destinationNameMappings);
     }
 
     @Bean
-    public MapGenerator mapGenerator(final TraceIdRetriever traceIdRetriever) {
-        return new MapGenerator(traceIdRetriever);
+    public InterceptedCallFactory mapGenerator(final TraceIdRetriever traceIdRetriever) {
+        return new InterceptedCallFactory(traceIdRetriever);
     }
 
     @Bean
     public ConsumeCaptor consumeCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                       final MapGenerator mapGenerator,
+                                       final InterceptedCallFactory interceptedCallFactory,
                                        final ServiceNameDeriver serviceNameDeriver,
                                        final ExchangeNameDeriver exchangeNameDeriver,
                                        final HeaderRetriever headerRetriever) {
-        return new ConsumeCaptor(interceptedDocumentRepository, mapGenerator, serviceNameDeriver, exchangeNameDeriver, headerRetriever);
+        return new ConsumeCaptor(interceptedDocumentRepository, interceptedCallFactory, serviceNameDeriver, exchangeNameDeriver, headerRetriever);
     }
 
     @Bean
     public PublishCaptor publishCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                       final MapGenerator mapGenerator,
+                                       final InterceptedCallFactory interceptedCallFactory,
                                        final ServiceNameDeriver serviceNameDeriver,
                                        final ExchangeNameDeriver exchangeNameDeriver,
                                        final HeaderRetriever headerRetriever) {
-        return new PublishCaptor(interceptedDocumentRepository, mapGenerator, serviceNameDeriver, exchangeNameDeriver, headerRetriever);
+        return new PublishCaptor(interceptedDocumentRepository, interceptedCallFactory, serviceNameDeriver, exchangeNameDeriver, headerRetriever);
     }
 
     @Bean
