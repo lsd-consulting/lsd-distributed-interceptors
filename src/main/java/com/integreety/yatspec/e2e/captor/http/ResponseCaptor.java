@@ -4,6 +4,7 @@ import com.integreety.yatspec.e2e.captor.http.mapper.DestinationNameMappings;
 import com.integreety.yatspec.e2e.captor.name.ServiceNameDeriver;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
 import com.integreety.yatspec.e2e.captor.repository.MapGenerator;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import feign.Response;
 import feign.Util;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.integreety.yatspec.e2e.captor.repository.Type.RESPONSE;
+import static com.integreety.yatspec.e2e.captor.repository.model.Type.RESPONSE;
 import static com.integreety.yatspec.e2e.captor.template.InteractionMessageTemplates.responseOf;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
@@ -34,13 +35,13 @@ public class ResponseCaptor extends PathDerivingCaptor {
     private final DestinationNameMappings destinationNameMappings;
 
     @SneakyThrows
-    public Map<String, Object> captureResponseInteraction(final Response response) {
+    public InterceptedCall captureResponseInteraction(final Response response) {
         try {
             final String path = derivePath(response.request().url());
             final String source = serviceNameDeriver.derive();
             final String destination = destinationNameMappings.mapForPath(path);
             final String interactionMessage = responseOf(deriveStatus(response.status()), destination, source);
-            final Map<String, Object> data = mapGenerator.generateFrom(extractResponseBodyToString(response), response.headers(), interactionMessage, RESPONSE);
+            final InterceptedCall data = mapGenerator.generateFrom(extractResponseBodyToString(response), response.headers(), interactionMessage, RESPONSE);
             interceptedDocumentRepository.save(data);
             return data;
         } catch (final RuntimeException e) {
@@ -56,7 +57,7 @@ public class ResponseCaptor extends PathDerivingCaptor {
         final String interactionMessage = responseOf(response.getStatusCode().toString(), destination, source);
         final var headers = response.getHeaders().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> (Collection<String>) e.getValue()));
-        final Map<String, Object> data = mapGenerator.generateFrom(body, headers, interactionMessage, RESPONSE);
+        final InterceptedCall data = mapGenerator.generateFrom(body, headers, interactionMessage, RESPONSE);
         interceptedDocumentRepository.save(data);
     }
 

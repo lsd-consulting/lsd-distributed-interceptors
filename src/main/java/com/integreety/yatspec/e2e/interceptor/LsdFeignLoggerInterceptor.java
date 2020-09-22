@@ -2,13 +2,13 @@ package com.integreety.yatspec.e2e.interceptor;
 
 import com.integreety.yatspec.e2e.captor.http.RequestCaptor;
 import com.integreety.yatspec.e2e.captor.http.ResponseCaptor;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import feign.Logger;
 import feign.Request;
 import feign.Response;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.util.Map;
 
 @Slf4j
 public class LsdFeignLoggerInterceptor extends Logger.JavaLogger {
@@ -31,8 +31,8 @@ public class LsdFeignLoggerInterceptor extends Logger.JavaLogger {
     @Override
     protected Response logAndRebufferResponse(final String configKey, final Level logLevel, final Response response, final long elapsedTime) throws IOException {
         super.logAndRebufferResponse(configKey, logLevel, response, elapsedTime);
-        final Map<String, Object> data = responseCaptor.captureResponseInteraction(response);
-        return resetBodyData(response, ((String)data.get("body")).getBytes());
+        final InterceptedCall data = responseCaptor.captureResponseInteraction(response);
+        return resetBodyData(response, data.getBody().getBytes());
     }
 
     private Response resetBodyData(final Response response, final byte[] bodyData) {

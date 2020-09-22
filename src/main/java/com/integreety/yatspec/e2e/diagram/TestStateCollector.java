@@ -5,46 +5,36 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
-import com.integreety.yatspec.e2e.captor.repository.mongo.MongoClientCreator;
-import com.mongodb.ConnectionString;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
+import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.io.XMLWriter;
 
 import java.io.IOException;
 import java.io.StringWriter;
-
-import static com.integreety.yatspec.e2e.captor.repository.mongo.MongoClientCreator.COLLECTION_NAME;
-import static com.integreety.yatspec.e2e.captor.repository.mongo.MongoClientCreator.DATABASE_NAME;
-import static com.mongodb.client.model.Filters.eq;
+import java.util.List;
 
 public class TestStateCollector {
 
     private final TestState testState;
 
-    private final MongoClient mongoClient;
+    private final InterceptedDocumentRepository interceptedDocumentRepository;
 
-    public TestStateCollector(final String dbConnectionString, final TestState testState) {
+    public TestStateCollector(final TestState testState, final InterceptedDocumentRepository interceptedDocumentRepository) {
         this.testState = testState;
-        mongoClient = MongoClientCreator.getMongoClient(new ConnectionString(dbConnectionString));
+        this.interceptedDocumentRepository = interceptedDocumentRepository;
     }
 
     public void logStatesFromDatabase(final String traceId) {
-        final MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
-        final MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
-        final FindIterable<Document> documents = collection.find(eq("traceId", traceId));
-        for (final Document document : documents) {
-            final String interactionName = document.get("interactionName", String.class);
-            testState.log(interactionName, getPrettyString(document));
+        final List<InterceptedCall> data = interceptedDocumentRepository.findByTraceId(traceId);
+        for (final InterceptedCall interceptedCall : data) {
+            final String interactionName = interceptedCall.getInteractionName();
+            testState.log(interactionName, getPrettyString(interceptedCall));
         }
     }
 
-    private String getPrettyString(final Document document) {
+    private String getPrettyString(final InterceptedCall document) {
         String prettyJsonString;
         try {
             prettyJsonString = prettifyJson(document);
@@ -54,20 +44,20 @@ public class TestStateCollector {
         return prettyJsonString;
     }
 
-    private String prettifyJson(final Document document) {
+    private String prettifyJson(final InterceptedCall document) {
         final Gson gson = new GsonBuilder().setPrettyPrinting().create();
         final String prettyJsonString;
-        final JsonElement je = JsonParser.parseString(document.get("body", String.class));
+        final JsonElement je = JsonParser.parseString(document.getBody());
         prettyJsonString = gson.toJson(je);
         return prettyJsonString;
     }
 
-    private String prettifyXml(final Document document) {
+    private String prettifyXml(final InterceptedCall document) {
         final String prettyJsonString;
         final StringWriter sw = new StringWriter();
         try {
             final org.dom4j.io.OutputFormat format = org.dom4j.io.OutputFormat.createPrettyPrint();
-            final org.dom4j.Document xml = DocumentHelper.parseText(document.get("body", String.class));
+            final org.dom4j.Document xml = DocumentHelper.parseText(document.getBody());
             final XMLWriter writer = new XMLWriter(sw, format);
             writer.write(xml);
         } catch (final IOException | DocumentException ioException) {

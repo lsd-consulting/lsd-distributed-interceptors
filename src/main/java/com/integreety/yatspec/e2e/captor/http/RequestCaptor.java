@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.integreety.yatspec.e2e.captor.repository.Type.REQUEST;
+import static com.integreety.yatspec.e2e.captor.repository.model.Type.REQUEST;
 import static com.integreety.yatspec.e2e.captor.template.InteractionMessageTemplates.requestOf;
 
 @Slf4j
@@ -32,8 +32,7 @@ public class RequestCaptor extends PathDerivingCaptor {
             final String source = serviceNameDeriver.derive();
             final String destination = destinationNameMappings.mapForPath(path);
             final String interactionMessage = requestOf(request.httpMethod().name(), path, source, destination);
-            final Map<String, Object> data = mapGenerator.generateFrom(body, request.headers(), interactionMessage, REQUEST);
-            interceptedDocumentRepository.save(data);
+            interceptedDocumentRepository.save(mapGenerator.generateFrom(body, request.headers(), interactionMessage, REQUEST));
         } catch (final RuntimeException e) {
             log.error(e.getMessage(), e);
             throw e;
@@ -47,7 +46,6 @@ public class RequestCaptor extends PathDerivingCaptor {
         final String interactionMessage = requestOf(request.getMethodValue(), path, source, destination);
         final var headers = request.getHeaders().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> (Collection<String>) e.getValue()));
-        final Map<String, Object> data = mapGenerator.generateFrom(body, headers, interactionMessage, REQUEST);
-        interceptedDocumentRepository.save(data);
+        interceptedDocumentRepository.save(mapGenerator.generateFrom(body, headers, interactionMessage, REQUEST));
     }
 }
