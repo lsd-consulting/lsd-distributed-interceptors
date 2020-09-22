@@ -4,10 +4,7 @@ import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepositor
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -16,8 +13,6 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.integreety.yatspec.e2e.captor.repository.mongo.MongoClientCreator.COLLECTION_NAME;
-import static com.integreety.yatspec.e2e.captor.repository.mongo.MongoClientCreator.DATABASE_NAME;
 import static com.mongodb.client.model.Filters.eq;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
@@ -25,13 +20,26 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 @Slf4j
 public class InterceptedDocumentMongoRepository implements InterceptedDocumentRepository {
 
+    private static final String DATABASE_NAME = "lsd";
+    private static final String COLLECTION_NAME = "interceptedInteraction";
+
     private final MongoClient mongoClient;
 
     private final CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
             fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 
     public InterceptedDocumentMongoRepository(final String dbConnectionString) {
-        mongoClient = MongoClientCreator.getMongoClient(new ConnectionString(dbConnectionString));
+        mongoClient = MongoClients.create(MongoClientSettings.builder()
+                .applyConnectionString(new ConnectionString(dbConnectionString))
+//            .credential(credential)
+                .retryWrites(true)
+                .build());
+//    String user = "xxxx"; // the user name
+//    String database = "admin"; // the name of the database in which the user is defined
+//    char[] password = "xxxx".toCharArray(); // the password as a character array
+//    MongoCredential credential = MongoCredential.createCredential(user, database, password);
+//    MongoClient mongoClient = new MongoClient(new ServerAddress("xxx", 27017),
+//    Arrays.asList(credential));
     }
 
     @Override
