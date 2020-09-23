@@ -1,4 +1,4 @@
-package com.integreety.yatspec.e2e.captor.http.mapper;
+package com.integreety.yatspec.e2e.captor.http.mapper.destination;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Value;

@@ -1,4 +1,4 @@
-package com.integreety.yatspec.e2e.captor.name;
+package com.integreety.yatspec.e2e.captor.rabbit.mapper;
 
 import org.springframework.amqp.core.MessageProperties;
 

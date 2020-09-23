@@ -1,7 +1,7 @@
 package com.integreety.yatspec.e2e.captor.http;
 
-import com.integreety.yatspec.e2e.captor.http.mapper.DestinationNameMappings;
-import com.integreety.yatspec.e2e.captor.name.ServiceNameDeriver;
+import com.integreety.yatspec.e2e.captor.http.mapper.destination.DestinationNameMappings;
+import com.integreety.yatspec.e2e.captor.http.mapper.source.SourceNameMappings;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCallFactory;
@@ -31,14 +31,14 @@ public class ResponseCaptor extends PathDerivingCaptor {
 
     private final InterceptedDocumentRepository interceptedDocumentRepository;
     private final InterceptedCallFactory interceptedCallFactory;
-    private final ServiceNameDeriver serviceNameDeriver;
+    private final SourceNameMappings sourceNameMappings;
     private final DestinationNameMappings destinationNameMappings;
 
     @SneakyThrows
     public InterceptedCall captureResponseInteraction(final Response response) {
         try {
             final String path = derivePath(response.request().url());
-            final String source = serviceNameDeriver.derive();
+            final String source = sourceNameMappings.mapForPath(path);
             final String destination = destinationNameMappings.mapForPath(path);
             final String interactionMessage = responseOf(deriveStatus(response.status()), destination, source);
             final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(extractResponseBodyToString(response), response.headers(), interactionMessage, RESPONSE);
@@ -52,7 +52,7 @@ public class ResponseCaptor extends PathDerivingCaptor {
 
     public void captureResponseInteraction(final ClientHttpResponse response, final String path) throws IOException {
         final String body = copyBodyToString(response);
-        final String source = serviceNameDeriver.derive();
+        final String source = sourceNameMappings.mapForPath(path);
         final String destination = destinationNameMappings.mapForPath(path);
         final String interactionMessage = responseOf(response.getStatusCode().toString(), destination, source);
         final var headers = response.getHeaders().entrySet().stream()

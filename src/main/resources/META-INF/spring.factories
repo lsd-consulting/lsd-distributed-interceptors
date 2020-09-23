@@ -1,7 +1,7 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.integreety.yatspec.e2e.config.DestinationNamesAutoConfiguration,\
   com.integreety.yatspec.e2e.config.FeignInterceptorConfig,\
   com.integreety.yatspec.e2e.config.LibraryConfig,\
+  com.integreety.yatspec.e2e.config.NameMappingConfiguration,\
   com.integreety.yatspec.e2e.config.RabbitListenerInterceptorConfig,\
   com.integreety.yatspec.e2e.config.RabbitTemplateInterceptorConfig,\
   com.integreety.yatspec.e2e.config.RestTemplateInterceptorConfig,\

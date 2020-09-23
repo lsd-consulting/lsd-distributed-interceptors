@@ -1,7 +1,7 @@
 package com.integreety.yatspec.e2e.captor.http;
 
-import com.integreety.yatspec.e2e.captor.http.mapper.DestinationNameMappings;
-import com.integreety.yatspec.e2e.captor.name.ServiceNameDeriver;
+import com.integreety.yatspec.e2e.captor.http.mapper.destination.DestinationNameMappings;
+import com.integreety.yatspec.e2e.captor.http.mapper.source.SourceNameMappings;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCallFactory;
 import feign.Request;
@@ -22,14 +22,14 @@ public class RequestCaptor extends PathDerivingCaptor {
 
     private final InterceptedDocumentRepository interceptedDocumentRepository;
     private final InterceptedCallFactory interceptedCallFactory;
-    private final ServiceNameDeriver serviceNameDeriver;
+    private final SourceNameMappings sourceNameMappings;
     private final DestinationNameMappings destinationNameMappings;
 
     public void captureRequestInteraction(final Request request) {
         try {
             final String body = request.requestBody().asString();
             final String path = derivePath(request.url());
-            final String source = serviceNameDeriver.derive();
+            final String source = sourceNameMappings.mapForPath(path);
             final String destination = destinationNameMappings.mapForPath(path);
             final String interactionMessage = requestOf(request.httpMethod().name(), path, source, destination);
             interceptedDocumentRepository.save(interceptedCallFactory.buildFrom(body, request.headers(), interactionMessage, REQUEST));
@@ -41,7 +41,7 @@ public class RequestCaptor extends PathDerivingCaptor {
 
     public void captureRequestInteraction(final HttpRequest request, final String body) {
         final String path = request.getURI().getPath();
-        final String source = serviceNameDeriver.derive();
+        final String source = sourceNameMappings.mapForPath(path);
         final String destination = destinationNameMappings.mapForPath(path);
         final String interactionMessage = requestOf(request.getMethodValue(), path, source, destination);
         final var headers = request.getHeaders().entrySet().stream()
