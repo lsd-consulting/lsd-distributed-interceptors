@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -19,19 +20,21 @@ import javax.annotation.PostConstruct;
 @RequiredArgsConstructor
 public class RabbitTemplateInterceptorConfig {
 
-    private final RabbitTemplate rabbitTemplate;
+    private final List<RabbitTemplate> rabbitTemplates;
     private final PublishCaptor publishCaptor;
     private final ConsumeCaptor consumeCaptor;
 
     @PostConstruct
     public void configureRabbitTemplatePublishInterceptor() {
-        rabbitTemplate.addBeforePublishPostProcessors(message -> {
-            publishCaptor.capturePublishInteraction(MessageBuilder.fromMessage(message).build());
-            return message;
-        });
-        rabbitTemplate.addAfterReceivePostProcessors(message -> {
-            consumeCaptor.captureConsumeInteraction(MessageBuilder.fromMessage(message).build());
-            return message;
+        rabbitTemplates.forEach(rabbitTemplate -> {
+            rabbitTemplate.addBeforePublishPostProcessors(message -> {
+                publishCaptor.capturePublishInteraction(MessageBuilder.fromMessage(message).build());
+                return message;
+            });
+            rabbitTemplate.addAfterReceivePostProcessors(message -> {
+                consumeCaptor.captureConsumeInteraction(MessageBuilder.fromMessage(message).build());
+                return message;
+            });
         });
     }
 }
