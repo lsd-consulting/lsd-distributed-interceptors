@@ -14,9 +14,6 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnProperty(name = {"yatspec.lsd.db.connectionstring"})
 public class NameMappingConfiguration {
 
-    @Value("${info.app.name}")
-    private String appName;
-
     @Bean
     @ConditionalOnMissingBean(name = "destinationNameMappings")
     public DestinationNameMappings destinationNameMappings() {
@@ -25,7 +22,7 @@ public class NameMappingConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(name = "sourceNameMappings")
-    public SourceNameMappings sourceNameMappings() {
+    public SourceNameMappings sourceNameMappings(@Value("${info.app.name}") final String appName) {
         return new PropertyServiceNameDeriver(appName);
     }
 }
