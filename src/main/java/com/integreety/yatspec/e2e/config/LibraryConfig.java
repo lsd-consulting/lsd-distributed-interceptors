@@ -9,7 +9,6 @@ import com.integreety.yatspec.e2e.captor.http.mapper.source.SourceNameMappings;
 import com.integreety.yatspec.e2e.captor.rabbit.ConsumeCaptor;
 import com.integreety.yatspec.e2e.captor.rabbit.PublishCaptor;
 import com.integreety.yatspec.e2e.captor.rabbit.header.HeaderRetriever;
-import com.integreety.yatspec.e2e.captor.rabbit.mapper.ExchangeNameDeriver;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCallFactory;
 import com.integreety.yatspec.e2e.captor.repository.mongo.InterceptedDocumentMongoRepository;
@@ -37,11 +36,6 @@ public class LibraryConfig {
     @Bean
     public TestState testState() {
         return new TestState();
-    }
-
-    @Bean
-    public ExchangeNameDeriver exchangeNameDeriver() {
-        return new ExchangeNameDeriver();
     }
 
     @Bean
@@ -76,17 +70,15 @@ public class LibraryConfig {
     @Bean
     public ConsumeCaptor consumeCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
                                        final InterceptedCallFactory interceptedCallFactory,
-                                       final ExchangeNameDeriver exchangeNameDeriver,
                                        final HeaderRetriever headerRetriever) {
-        return new ConsumeCaptor(interceptedDocumentRepository, interceptedCallFactory, sourceNameMappings, exchangeNameDeriver, headerRetriever);
+        return new ConsumeCaptor(interceptedDocumentRepository, interceptedCallFactory, sourceNameMappings, headerRetriever);
     }
 
     @Bean
     public PublishCaptor publishCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
                                        final InterceptedCallFactory interceptedCallFactory,
-                                       final ExchangeNameDeriver exchangeNameDeriver,
                                        final HeaderRetriever headerRetriever) {
-        return new PublishCaptor(interceptedDocumentRepository, interceptedCallFactory, sourceNameMappings, exchangeNameDeriver, headerRetriever);
+        return new PublishCaptor(interceptedDocumentRepository, interceptedCallFactory, sourceNameMappings, headerRetriever);
     }
 
     @Bean

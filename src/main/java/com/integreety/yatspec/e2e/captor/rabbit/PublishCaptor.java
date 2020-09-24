@@ -2,7 +2,6 @@ package com.integreety.yatspec.e2e.captor.rabbit;
 
 import com.integreety.yatspec.e2e.captor.http.mapper.source.SourceNameMappings;
 import com.integreety.yatspec.e2e.captor.rabbit.header.HeaderRetriever;
-import com.integreety.yatspec.e2e.captor.rabbit.mapper.ExchangeNameDeriver;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCallFactory;
@@ -24,13 +23,12 @@ public class PublishCaptor {
     private final InterceptedDocumentRepository interceptedDocumentRepository;
     private final InterceptedCallFactory interceptedCallFactory;
     private final SourceNameMappings sourceNameMappings;
-    private final ExchangeNameDeriver exchangeNameDeriver;
     private final HeaderRetriever headerRetriever;
 
-    public void capturePublishInteraction(final Message message) {
+    public void capturePublishInteraction(final String exchange, final Message message) {
         final MessageProperties messageProperties = message.getMessageProperties();
         final Map<String, Collection<String>> headers = headerRetriever.retrieve(messageProperties);
-        final String interactionName = publishOf(sourceNameMappings.mapForPath(NO_PATH), exchangeNameDeriver.derive(messageProperties));
+        final String interactionName = publishOf(sourceNameMappings.mapForPath(NO_PATH), exchange);
         final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(new String(message.getBody()), headers, interactionName, PUBLISH);
         interceptedDocumentRepository.save(interceptedCall);
     }

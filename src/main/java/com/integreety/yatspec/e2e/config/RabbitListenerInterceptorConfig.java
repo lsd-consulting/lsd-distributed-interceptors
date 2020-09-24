@@ -29,7 +29,7 @@ public class RabbitListenerInterceptorConfig {
     }
 
     private Message postProcessMessage(final Message message) {
-        consumeCaptor.captureConsumeInteraction(MessageBuilder.fromMessage(message).build());
+        consumeCaptor.captureConsumeInteraction(message.getMessageProperties().getReceivedExchange(), MessageBuilder.fromMessage(message).build());
         return message;
     }
 }
