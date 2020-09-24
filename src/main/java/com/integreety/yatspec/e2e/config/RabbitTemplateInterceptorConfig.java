@@ -28,6 +28,7 @@ public class RabbitTemplateInterceptorConfig {
     public void configureRabbitTemplatePublishInterceptor() {
         rabbitTemplates.forEach(rabbitTemplate -> {
             rabbitTemplate.addBeforePublishPostProcessors(message -> {
+                log.info("E2E-LSD - message.getMessageProperties():{}", message.getMessageProperties());
                 publishCaptor.capturePublishInteraction(message.getMessageProperties().getReceivedExchange(), MessageBuilder.fromMessage(message).build());
                 return message;
             });
