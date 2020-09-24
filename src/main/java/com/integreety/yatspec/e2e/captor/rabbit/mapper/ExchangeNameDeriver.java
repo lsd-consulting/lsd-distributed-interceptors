@@ -13,6 +13,9 @@ public class ExchangeNameDeriver {
     private static final String TYPE_ID_HEADER = "__TypeId__";
 
     public String derive(final MessageProperties messageProperties, final String defaultExchangeName)  {
+        if (messageProperties.getHeader(TYPE_ID_HEADER) == null) {
+            return defaultExchangeName;
+        }
         final String exchangeName = deriveFromMessageProperties(messageProperties);
         if (!isBlank(exchangeName)) {
             return exchangeName;
