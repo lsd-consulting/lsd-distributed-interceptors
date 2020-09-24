@@ -37,7 +37,8 @@ public class RabbitTemplateInterceptorConfig {
             });
             rabbitTemplate.addAfterReceivePostProcessors(message -> {
                 log.info("Rabbit message properties after receiving:{}", message.getMessageProperties());
-                consumeCaptor.captureConsumeInteraction(message.getMessageProperties().getReceivedExchange(), MessageBuilder.fromMessage(message).build());
+                final String exchangeName = exchangeNameDeriver.derive(message.getMessageProperties(), message.getMessageProperties().getReceivedExchange());
+                consumeCaptor.captureConsumeInteraction(exchangeName, MessageBuilder.fromMessage(message).build());
                 return message;
             });
         });
