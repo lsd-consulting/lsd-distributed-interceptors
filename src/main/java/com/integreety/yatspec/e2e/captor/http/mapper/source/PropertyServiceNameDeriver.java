@@ -1,11 +1,13 @@
 package com.integreety.yatspec.e2e.captor.http.mapper.source;
 
-import lombok.Value;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Value
+@Getter
+@RequiredArgsConstructor
 public class PropertyServiceNameDeriver implements SourceNameMappings {
 
-    String appName;
+    final String appName;
 
     @Override
     public String mapForPath(final String path) {

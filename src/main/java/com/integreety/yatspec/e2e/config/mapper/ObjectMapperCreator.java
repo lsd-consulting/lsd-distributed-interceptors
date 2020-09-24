@@ -1,4 +1,4 @@
-package com.integreety.yatspec.e2e.captor.http;
+package com.integreety.yatspec.e2e.config.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
