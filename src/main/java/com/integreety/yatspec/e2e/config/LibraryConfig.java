@@ -9,6 +9,7 @@ import com.integreety.yatspec.e2e.captor.http.mapper.source.SourceNameMappings;
 import com.integreety.yatspec.e2e.captor.rabbit.ConsumeCaptor;
 import com.integreety.yatspec.e2e.captor.rabbit.PublishCaptor;
 import com.integreety.yatspec.e2e.captor.rabbit.header.HeaderRetriever;
+import com.integreety.yatspec.e2e.captor.rabbit.mapper.ExchangeNameDeriver;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCallFactory;
 import com.integreety.yatspec.e2e.captor.repository.mongo.InterceptedDocumentMongoRepository;
@@ -36,6 +37,11 @@ public class LibraryConfig {
     @Bean
     public TestState testState() {
         return new TestState();
+    }
+
+    @Bean
+    public ExchangeNameDeriver exchangeNameDeriver() {
+        return new ExchangeNameDeriver();
     }
 
     @Bean

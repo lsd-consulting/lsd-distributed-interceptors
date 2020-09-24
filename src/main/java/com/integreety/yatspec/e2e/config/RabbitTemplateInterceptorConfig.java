@@ -2,6 +2,7 @@ package com.integreety.yatspec.e2e.config;
 
 import com.integreety.yatspec.e2e.captor.rabbit.ConsumeCaptor;
 import com.integreety.yatspec.e2e.captor.rabbit.PublishCaptor;
+import com.integreety.yatspec.e2e.captor.rabbit.mapper.ExchangeNameDeriver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessageBuilder;
@@ -23,16 +24,19 @@ public class RabbitTemplateInterceptorConfig {
     private final List<RabbitTemplate> rabbitTemplates;
     private final PublishCaptor publishCaptor;
     private final ConsumeCaptor consumeCaptor;
+    private final ExchangeNameDeriver exchangeNameDeriver;
 
     @PostConstruct
     public void configureRabbitTemplatePublishInterceptor() {
         rabbitTemplates.forEach(rabbitTemplate -> {
             rabbitTemplate.addBeforePublishPostProcessors(message -> {
-                log.info("E2E-LSD - message.getMessageProperties():{}", message.getMessageProperties());
-                publishCaptor.capturePublishInteraction(message.getMessageProperties().getReceivedExchange(), MessageBuilder.fromMessage(message).build());
+                log.info("Rabbit message properties before publishing:{}", message.getMessageProperties());
+                final String exchangeName = exchangeNameDeriver.derive(message.getMessageProperties(), rabbitTemplate.getExchange());
+                publishCaptor.capturePublishInteraction(exchangeName, MessageBuilder.fromMessage(message).build());
                 return message;
             });
             rabbitTemplate.addAfterReceivePostProcessors(message -> {
+                log.info("Rabbit message properties after receiving:{}", message.getMessageProperties());
                 consumeCaptor.captureConsumeInteraction(message.getMessageProperties().getReceivedExchange(), MessageBuilder.fromMessage(message).build());
                 return message;
             });
