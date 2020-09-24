@@ -33,8 +33,10 @@ artifacts {
     archives jar
     archives sourcesJar
 }
+
 repositories {
     mavenLocal()
+    mavenCentral()
     jcenter()
 }
 
@@ -71,8 +73,8 @@ bintray {
 apply plugin: 'io.spring.dependency-management'
 dependencyManagement {
     imports {
-        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Hoxton.SR1'
-        mavenBom 'io.pivotal.spring.cloud:spring-cloud-services-dependencies:2.1.4.RELEASE'
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Hoxton.SR6'
+        mavenBom 'io.pivotal.spring.cloud:spring-cloud-services-dependencies:2.2.3.RELEASE'
         mavenBom SpringBootPlugin.BOM_COORDINATES
     }
 }

@@ -27,7 +27,7 @@ public class RequestCaptor extends PathDerivingCaptor {
 
     public void captureRequestInteraction(final Request request) {
         try {
-            final String body = request.requestBody().asString();
+            final String body = new String(request.body());
             final String path = derivePath(request.url());
             final String source = sourceNameMappings.mapForPath(path);
             final String destination = destinationNameMappings.mapForPath(path);
