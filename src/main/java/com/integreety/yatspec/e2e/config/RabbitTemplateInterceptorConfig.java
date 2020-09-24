@@ -28,11 +28,11 @@ public class RabbitTemplateInterceptorConfig {
     public void configureRabbitTemplatePublishInterceptor() {
         rabbitTemplates.forEach(rabbitTemplate -> {
             rabbitTemplate.addBeforePublishPostProcessors(message -> {
-                publishCaptor.capturePublishInteraction(rabbitTemplate.getExchange(), MessageBuilder.fromMessage(message).build());
+                publishCaptor.capturePublishInteraction(message.getMessageProperties().getReceivedExchange(), MessageBuilder.fromMessage(message).build());
                 return message;
             });
             rabbitTemplate.addAfterReceivePostProcessors(message -> {
-                consumeCaptor.captureConsumeInteraction(rabbitTemplate.getExchange(), MessageBuilder.fromMessage(message).build());
+                consumeCaptor.captureConsumeInteraction(message.getMessageProperties().getReceivedExchange(), MessageBuilder.fromMessage(message).build());
                 return message;
             });
         });
