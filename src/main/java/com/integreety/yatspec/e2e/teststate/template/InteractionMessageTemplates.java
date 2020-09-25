@@ -1,4 +1,4 @@
-package com.integreety.yatspec.e2e.captor.template;
+package com.integreety.yatspec.e2e.teststate.template;
 
 /**
  * Useful to keep the interaction messages consistent across various interceptors.
@@ -14,8 +14,8 @@ public class InteractionMessageTemplates {
         return String.format(REQUEST_TEMPLATE, method, path, sourceName, destinationName);
     }
 
-    public static String responseOf(final String message, final String destinationName, final String sourceName) {
-        return String.format(RESPONSE_TEMPLATE, message, destinationName, sourceName);
+    public static String responseOf(final String status, final String destinationName, final String sourceName) {
+        return String.format(RESPONSE_TEMPLATE, status, destinationName, sourceName);
     }
 
     public static String consumeOf(final String exchangeName, final String serviceName) {

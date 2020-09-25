@@ -1,8 +1,5 @@
-package com.integreety.yatspec.e2e.captor.http.mapper.destination;
+package com.integreety.yatspec.e2e.teststate.mapper.destination;
 
-import lombok.Value;
-
-@Value
 public class RegexResolvingNameMapper implements DestinationNameMappings {
 
     private static final String FIRST_PART_OF_PATH = "^/?(.*?)([/?].*|$)";

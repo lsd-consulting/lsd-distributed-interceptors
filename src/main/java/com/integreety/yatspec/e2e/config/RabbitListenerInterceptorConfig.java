@@ -1,6 +1,6 @@
 package com.integreety.yatspec.e2e.config;
 
-import com.integreety.yatspec.e2e.captor.rabbit.ConsumeCaptor;
+import com.integreety.yatspec.e2e.captor.rabbit.RabbitCaptor;
 import com.integreety.yatspec.e2e.captor.rabbit.mapper.ExchangeNameDeriver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Message;
@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 
+import static com.integreety.yatspec.e2e.captor.repository.model.Type.CONSUME;
+
 /*
     This config adds the interception of messages to RabbitMq listeners
 */
@@ -22,7 +24,7 @@ import javax.annotation.PostConstruct;
 public class RabbitListenerInterceptorConfig {
 
     private final SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory;
-    private final ConsumeCaptor consumeCaptor;
+    private final RabbitCaptor rabbitCaptor;
     private final ExchangeNameDeriver exchangeNameDeriver;
 
     @PostConstruct
@@ -32,7 +34,7 @@ public class RabbitListenerInterceptorConfig {
 
     private Message postProcessMessage(final Message message) {
         final String exchangeName = exchangeNameDeriver.derive(message.getMessageProperties(), message.getMessageProperties().getReceivedExchange());
-        consumeCaptor.captureConsumeInteraction(exchangeName, MessageBuilder.fromMessage(message).build());
+        rabbitCaptor.captureInteraction(exchangeName, MessageBuilder.fromMessage(message).build(), CONSUME);
         return message;
     }
 }

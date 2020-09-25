@@ -4,10 +4,8 @@ import brave.Tracer;
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import com.integreety.yatspec.e2e.captor.http.RequestCaptor;
 import com.integreety.yatspec.e2e.captor.http.ResponseCaptor;
-import com.integreety.yatspec.e2e.captor.http.mapper.destination.DestinationNameMappings;
-import com.integreety.yatspec.e2e.captor.http.mapper.source.SourceNameMappings;
-import com.integreety.yatspec.e2e.captor.rabbit.ConsumeCaptor;
-import com.integreety.yatspec.e2e.captor.rabbit.PublishCaptor;
+import com.integreety.yatspec.e2e.captor.http.mapper.PropertyServiceNameDeriver;
+import com.integreety.yatspec.e2e.captor.rabbit.RabbitCaptor;
 import com.integreety.yatspec.e2e.captor.rabbit.header.HeaderRetriever;
 import com.integreety.yatspec.e2e.captor.rabbit.mapper.ExchangeNameDeriver;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
@@ -16,27 +14,28 @@ import com.integreety.yatspec.e2e.captor.repository.mongo.InterceptedDocumentMon
 import com.integreety.yatspec.e2e.captor.trace.TraceIdRetriever;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConditionalOnProperty(name = "yatspec.lsd.db.connectionstring")
-@AutoConfigureAfter(NameMappingConfiguration.class)
 @RequiredArgsConstructor
 public class LibraryConfig {
 
     @Value("${yatspec.lsd.db.connectionstring}")
     private String dbConnectionString;
 
-    private final DestinationNameMappings destinationNameMappings;
-    private final SourceNameMappings sourceNameMappings;
     private final Tracer tracer;
 
     @Bean
     public TestState testState() {
         return new TestState();
+    }
+
+    @Bean
+    public PropertyServiceNameDeriver propertyServiceNameDeriver(@Value("${info.app.name}") final String appName) {
+        return new PropertyServiceNameDeriver(appName);
     }
 
     @Bean
@@ -56,16 +55,18 @@ public class LibraryConfig {
 
     @Bean
     public RequestCaptor requestCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                       final InterceptedCallFactory interceptedCallFactory) {
+                                       final InterceptedCallFactory interceptedCallFactory,
+                                       final PropertyServiceNameDeriver propertyServiceNameDeriver) {
 
-        return new RequestCaptor(interceptedDocumentRepository, interceptedCallFactory, sourceNameMappings, destinationNameMappings);
+        return new RequestCaptor(interceptedDocumentRepository, interceptedCallFactory, propertyServiceNameDeriver);
     }
 
     @Bean
     public ResponseCaptor responseCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                         final InterceptedCallFactory interceptedCallFactory) {
+                                         final InterceptedCallFactory interceptedCallFactory,
+                                         final PropertyServiceNameDeriver propertyServiceNameDeriver) {
 
-        return new ResponseCaptor(interceptedDocumentRepository, interceptedCallFactory, sourceNameMappings, destinationNameMappings);
+        return new ResponseCaptor(interceptedDocumentRepository, interceptedCallFactory, propertyServiceNameDeriver);
     }
 
     @Bean
@@ -74,17 +75,11 @@ public class LibraryConfig {
     }
 
     @Bean
-    public ConsumeCaptor consumeCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                       final InterceptedCallFactory interceptedCallFactory,
-                                       final HeaderRetriever headerRetriever) {
-        return new ConsumeCaptor(interceptedDocumentRepository, interceptedCallFactory, sourceNameMappings, headerRetriever);
-    }
-
-    @Bean
-    public PublishCaptor publishCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                       final InterceptedCallFactory interceptedCallFactory,
-                                       final HeaderRetriever headerRetriever) {
-        return new PublishCaptor(interceptedDocumentRepository, interceptedCallFactory, sourceNameMappings, headerRetriever);
+    public RabbitCaptor publishCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
+                                      final InterceptedCallFactory interceptedCallFactory,
+                                      final HeaderRetriever headerRetriever,
+                                      final PropertyServiceNameDeriver propertyServiceNameDeriver) {
+        return new RabbitCaptor(interceptedDocumentRepository, interceptedCallFactory, propertyServiceNameDeriver, headerRetriever);
     }
 
     @Bean

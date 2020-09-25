@@ -1,7 +1,6 @@
 package com.integreety.yatspec.e2e.config;
 
-import com.integreety.yatspec.e2e.captor.rabbit.ConsumeCaptor;
-import com.integreety.yatspec.e2e.captor.rabbit.PublishCaptor;
+import com.integreety.yatspec.e2e.captor.rabbit.RabbitCaptor;
 import com.integreety.yatspec.e2e.captor.rabbit.mapper.ExchangeNameDeriver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +13,9 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.PostConstruct;
 import java.util.List;
 
+import static com.integreety.yatspec.e2e.captor.repository.model.Type.CONSUME;
+import static com.integreety.yatspec.e2e.captor.repository.model.Type.PUBLISH;
+
 @Slf4j
 @Configuration
 @ConditionalOnProperty(name = {"yatspec.lsd.db.connectionstring"})
@@ -22,8 +24,7 @@ import java.util.List;
 public class RabbitTemplateInterceptorConfig {
 
     private final List<RabbitTemplate> rabbitTemplates;
-    private final PublishCaptor publishCaptor;
-    private final ConsumeCaptor consumeCaptor;
+    private final RabbitCaptor rabbitCaptor;
     private final ExchangeNameDeriver exchangeNameDeriver;
 
     @PostConstruct
@@ -32,13 +33,13 @@ public class RabbitTemplateInterceptorConfig {
             rabbitTemplate.addBeforePublishPostProcessors(message -> {
                 log.info("Rabbit message properties before publishing:{}", message.getMessageProperties());
                 final String exchangeName = exchangeNameDeriver.derive(message.getMessageProperties(), rabbitTemplate.getExchange());
-                publishCaptor.capturePublishInteraction(exchangeName, MessageBuilder.fromMessage(message).build());
+                rabbitCaptor.captureInteraction(exchangeName, MessageBuilder.fromMessage(message).build(), PUBLISH);
                 return message;
             });
             rabbitTemplate.addAfterReceivePostProcessors(message -> {
                 log.info("Rabbit message properties after receiving:{}", message.getMessageProperties());
                 final String exchangeName = exchangeNameDeriver.derive(message.getMessageProperties(), message.getMessageProperties().getReceivedExchange());
-                consumeCaptor.captureConsumeInteraction(exchangeName, MessageBuilder.fromMessage(message).build());
+                rabbitCaptor.captureInteraction(exchangeName, MessageBuilder.fromMessage(message).build(), CONSUME);
                 return message;
             });
         });

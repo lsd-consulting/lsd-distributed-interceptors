@@ -1,10 +1,11 @@
 package com.integreety.yatspec.e2e.captor.rabbit;
 
-import com.integreety.yatspec.e2e.captor.http.mapper.source.SourceNameMappings;
+import com.integreety.yatspec.e2e.captor.http.mapper.PropertyServiceNameDeriver;
 import com.integreety.yatspec.e2e.captor.rabbit.header.HeaderRetriever;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCallFactory;
+import com.integreety.yatspec.e2e.captor.repository.model.Type;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
@@ -12,24 +13,19 @@ import org.springframework.amqp.core.MessageProperties;
 import java.util.Collection;
 import java.util.Map;
 
-import static com.integreety.yatspec.e2e.captor.repository.model.Type.PUBLISH;
-import static com.integreety.yatspec.e2e.captor.template.InteractionMessageTemplates.publishOf;
-
 @RequiredArgsConstructor
-public class PublishCaptor {
-
-    private static final String NO_PATH = "";
+public class RabbitCaptor {
 
     private final InterceptedDocumentRepository interceptedDocumentRepository;
     private final InterceptedCallFactory interceptedCallFactory;
-    private final SourceNameMappings sourceNameMappings;
+    private final PropertyServiceNameDeriver propertyServiceNameDeriver;
     private final HeaderRetriever headerRetriever;
 
-    public void capturePublishInteraction(final String exchange, final Message message) {
+    public void captureInteraction(final String exchange, final Message message, final Type type) {
         final MessageProperties messageProperties = message.getMessageProperties();
         final Map<String, Collection<String>> headers = headerRetriever.retrieve(messageProperties);
-        final String interactionName = publishOf(sourceNameMappings.mapForPath(NO_PATH), exchange);
-        final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(new String(message.getBody()), headers, interactionName, PUBLISH);
+        final String service = propertyServiceNameDeriver.getServiceName();
+        final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(new String(message.getBody()), headers, service, exchange, type);
         interceptedDocumentRepository.save(interceptedCall);
     }
 }

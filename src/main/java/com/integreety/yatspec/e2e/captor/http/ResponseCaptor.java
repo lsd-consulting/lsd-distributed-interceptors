@@ -1,7 +1,6 @@
 package com.integreety.yatspec.e2e.captor.http;
 
-import com.integreety.yatspec.e2e.captor.http.mapper.destination.DestinationNameMappings;
-import com.integreety.yatspec.e2e.captor.http.mapper.source.SourceNameMappings;
+import com.integreety.yatspec.e2e.captor.http.mapper.PropertyServiceNameDeriver;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCallFactory;
@@ -22,7 +21,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.integreety.yatspec.e2e.captor.repository.model.Type.RESPONSE;
-import static com.integreety.yatspec.e2e.captor.template.InteractionMessageTemplates.responseOf;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @RequiredArgsConstructor
@@ -31,17 +29,14 @@ public class ResponseCaptor extends PathDerivingCaptor {
 
     private final InterceptedDocumentRepository interceptedDocumentRepository;
     private final InterceptedCallFactory interceptedCallFactory;
-    private final SourceNameMappings sourceNameMappings;
-    private final DestinationNameMappings destinationNameMappings;
+    private final PropertyServiceNameDeriver propertyServiceNameDeriver;
 
     @SneakyThrows
     public InterceptedCall captureResponseInteraction(final Response response) {
         try {
             final String path = derivePath(response.request().url());
-            final String source = sourceNameMappings.mapForPath(path);
-            final String destination = destinationNameMappings.mapForPath(path);
-            final String interactionMessage = responseOf(deriveStatus(response.status()), destination, source);
-            final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(extractResponseBodyToString(response), response.headers(), interactionMessage, RESPONSE);
+            final String serviceName = propertyServiceNameDeriver.getServiceName();
+            final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(extractResponseBodyToString(response), response.headers(), serviceName, path, deriveStatus(response.status()), null, RESPONSE);
             interceptedDocumentRepository.save(interceptedCall);
             return interceptedCall;
         } catch (final RuntimeException e) {
@@ -52,12 +47,10 @@ public class ResponseCaptor extends PathDerivingCaptor {
 
     public void captureResponseInteraction(final ClientHttpResponse response, final String path) throws IOException {
         final String body = copyBodyToString(response);
-        final String source = sourceNameMappings.mapForPath(path);
-        final String destination = destinationNameMappings.mapForPath(path);
-        final String interactionMessage = responseOf(response.getStatusCode().toString(), destination, source);
+        final String serviceName = propertyServiceNameDeriver.getServiceName();
         final var headers = response.getHeaders().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> (Collection<String>) e.getValue()));
-        final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(body, headers, interactionMessage, RESPONSE);
+        final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(body, headers, serviceName, path, response.getStatusCode().toString(), null, RESPONSE);
         interceptedDocumentRepository.save(interceptedCall);
     }
 

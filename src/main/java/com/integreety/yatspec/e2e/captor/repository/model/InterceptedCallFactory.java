@@ -12,15 +12,25 @@ public class InterceptedCallFactory {
     private final TraceIdRetriever traceIdRetriever; // TODO Should this be part of this class?
 
     public InterceptedCall buildFrom(final String body,
-                                     final Map<String, Collection<String>> headers,
-                                     final String interactionName, final Type type) {
+                                     final Map<String, Collection<String>> headers, final String serviceName,
+                                     final String target, final Type type) {
+
+        return buildFrom(body, headers, serviceName, target, null, null, type);
+    }
+
+    public InterceptedCall buildFrom(final String body, final Map<String, Collection<String>> headers,
+                                     final String serviceName, final String target, final String httpStatus,
+                                     final String httpMethod, final Type type) {
 
         return InterceptedCall.builder()
                 .traceId(traceIdRetriever.getTraceId(headers))
-                .type(type)
                 .body(body)
                 .headers(headers)
-                .interactionName(interactionName)
+                .serviceName(serviceName)
+                .target(target)
+                .httpStatus(httpStatus)
+                .httpMethod(httpMethod)
+                .type(type)
                 .build();
     }
 }
