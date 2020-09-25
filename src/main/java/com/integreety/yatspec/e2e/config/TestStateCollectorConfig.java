@@ -21,9 +21,8 @@ public class TestStateCollectorConfig {
 
     @Bean
     public TestStateCollector testStateCollector(final TestState testState,
-                                                 final InterceptedDocumentRepository interceptedDocumentRepository,
-                                                 final RegexResolvingNameMapper regexResolvingNameMapper) {
+                                                 final InterceptedDocumentRepository interceptedDocumentRepository) {
 
-        return new TestStateCollector(testState, interceptedDocumentRepository, regexResolvingNameMapper);
+        return new TestStateCollector(testState, interceptedDocumentRepository);
     }
 }
