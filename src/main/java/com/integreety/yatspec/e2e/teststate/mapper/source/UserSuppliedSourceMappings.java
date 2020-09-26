@@ -17,13 +17,13 @@ public class UserSuppliedSourceMappings implements SourceNameMappings {
 
     @Override
     public String mapFor(final Pair<String, String> pair) {
-        return mappings.keySet().stream()
+        final Pair<String, String> key = mappings.keySet().stream()
                 .filter(p -> p.getLeft().equals(pair.getLeft()))
                 .sorted(reverseOrder())
                 .filter(p -> p.getRight().startsWith(pair.getRight()))
                 .findFirst()
-                .orElse(Pair.of(pair.getLeft(), ""))
-                .getLeft();
+                .orElse(pair);
+        return mappings.getOrDefault(key, pair.getLeft());
     }
 
     public static SourceNameMappings userSuppliedSourceMappings(final Map<Pair<String, String>, String> mappings) {
