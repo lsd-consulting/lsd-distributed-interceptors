@@ -24,7 +24,7 @@ public class RequestCaptor extends PathDerivingCaptor {
 
     public void captureRequestInteraction(final Request request) {
         try {
-            final String body = new String(request.body());
+            final String body = request.body() != null ? new String(request.body()) : null;
             final String path = derivePath(request.url());
             final String serviceName = propertyServiceNameDeriver.getServiceName();
             interceptedDocumentRepository.save(interceptedCallFactory.buildFrom(body, request.headers(), serviceName, path, null, request.httpMethod().name(), REQUEST));
