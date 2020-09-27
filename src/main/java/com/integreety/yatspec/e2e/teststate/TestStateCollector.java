@@ -10,6 +10,7 @@ import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.integreety.yatspec.e2e.teststate.mapper.destination.DestinationNameMappings;
 import com.integreety.yatspec.e2e.teststate.mapper.source.SourceNameMappings;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import static com.integreety.yatspec.e2e.teststate.template.InteractionMessageTemplates.*;
 
+@Slf4j
 @RequiredArgsConstructor
 public class TestStateCollector {
 
@@ -34,7 +36,10 @@ public class TestStateCollector {
         for (final InterceptedCall interceptedCall : data) {
             final String destination = destinationNameMappings.mapForPath(interceptedCall.getTarget());
             final String source = sourceNameMappings.mapFor(Pair.of(interceptedCall.getServiceName(), interceptedCall.getTarget()));
-            testState.log(getInteractionName(interceptedCall, source, destination), getPrettyString(interceptedCall));
+            log.info("Resolved service name:{}, to source:{}, and target:{}, to destination:{}", interceptedCall.getServiceName(), source, interceptedCall.getTarget(), destination);
+            final String interactionName = getInteractionName(interceptedCall, source, destination);
+            log.info("Generated an interaction name={}", interactionName);
+            testState.log(interactionName, getPrettyString(interceptedCall));
         }
     }
 
