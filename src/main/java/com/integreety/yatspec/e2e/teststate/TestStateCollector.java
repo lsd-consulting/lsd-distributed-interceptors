@@ -21,6 +21,7 @@ import java.io.StringWriter;
 import java.util.List;
 
 import static com.integreety.yatspec.e2e.teststate.template.InteractionMessageTemplates.*;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -66,6 +67,9 @@ public class TestStateCollector {
     }
 
     private String getPrettyString(final InterceptedCall document) {
+        if (isBlank(document.getBody())) {
+            return null;
+        }
         String prettyJsonString;
         try {
             prettyJsonString = prettifyJson(document);
