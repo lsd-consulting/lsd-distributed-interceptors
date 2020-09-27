@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Optional;
 
+import static java.util.Optional.empty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.dom4j.DocumentHelper.parseText;
 
@@ -18,15 +19,16 @@ public class XmlPrettyPrinter {
 
     public static Optional<String> indentXml(final String document) {
         if (isBlank(document)) {
-            return Optional.empty();
+            return empty();
         }
 
         final StringWriter sw = new StringWriter();
         try {
             new XMLWriter(sw, format).write(parseText(document));
+            return Optional.of(sw.toString());
         } catch (final IOException | DocumentException e) {
             log.error(e.getMessage(), e);
+            return empty();
         }
-        return Optional.of(sw.toString());
     }
 }

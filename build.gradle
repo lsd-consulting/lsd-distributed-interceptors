@@ -105,4 +105,5 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.11'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:3.5.13'
 }

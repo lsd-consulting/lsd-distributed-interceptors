@@ -8,6 +8,7 @@ import com.google.gson.JsonParseException;
 import java.util.Optional;
 
 import static com.google.gson.JsonParser.parseString;
+import static java.util.Optional.empty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class JsonPrettyPrinter {
@@ -16,15 +17,15 @@ public class JsonPrettyPrinter {
 
     public static Optional<String> indentJson(final String document) {
         if (isBlank(document)) {
-            return Optional.empty();
+            return empty();
         }
 
         final JsonElement jsonElement;
         try {
             jsonElement = parseString(document);
+            return Optional.of(GSON.toJson(jsonElement));
         } catch (final JsonParseException e) {
-            return Optional.empty();
+            return empty();
         }
-        return Optional.of(GSON.toJson(jsonElement));
     }
 }
