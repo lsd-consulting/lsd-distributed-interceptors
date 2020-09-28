@@ -2,7 +2,8 @@ package com.integreety.yatspec.e2e.config;
 
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
-import com.integreety.yatspec.e2e.teststate.TestStateCollector;
+import com.integreety.yatspec.e2e.teststate.TestStateLogger;
+import com.integreety.yatspec.e2e.teststate.interaction.InteractionNameGenerator;
 import com.integreety.yatspec.e2e.teststate.mapper.destination.RegexResolvingNameMapper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -20,9 +21,15 @@ public class TestStateCollectorConfig {
     }
 
     @Bean
-    public TestStateCollector testStateCollector(final TestState testState,
-                                                 final InterceptedDocumentRepository interceptedDocumentRepository) {
+    public InteractionNameGenerator interactionNameGenerator() {
+        return new InteractionNameGenerator();
+    }
 
-        return new TestStateCollector(testState, interceptedDocumentRepository);
+    @Bean
+    public TestStateLogger testStateCollector(final TestState testState,
+                                              final InterceptedDocumentRepository interceptedDocumentRepository,
+                                              final InteractionNameGenerator interactionNameGenerator) {
+
+        return new TestStateLogger(testState, interceptedDocumentRepository, interactionNameGenerator);
     }
 }
