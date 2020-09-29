@@ -7,6 +7,7 @@ plugins {
     id 'maven'
     id 'pl.allegro.tech.build.axion-release' version '1.12.0'
     id "com.jfrog.bintray" version "1.8.5"
+    id 'jacoco'
 }
 
 group = 'com.integreety'
@@ -45,6 +46,7 @@ test {
     testLogging {
         events "skipped", "failed"
     }
+    finalizedBy jacocoTestReport
 }
 
 bintray {
