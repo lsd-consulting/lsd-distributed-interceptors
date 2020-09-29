@@ -32,7 +32,7 @@ public class LsdFeignLoggerInterceptor extends Logger.JavaLogger {
     protected Response logAndRebufferResponse(final String configKey, final Level logLevel, final Response response, final long elapsedTime) throws IOException {
         super.logAndRebufferResponse(configKey, logLevel, response, elapsedTime);
         final InterceptedCall data = responseCaptor.captureResponseInteraction(response);
-        return resetBodyData(response, data.getBody().getBytes());
+        return resetBodyData(response, data.getBody() != null ? data.getBody().getBytes() : null);
     }
 
     private Response resetBodyData(final Response response, final byte[] bodyData) {
