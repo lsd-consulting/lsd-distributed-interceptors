@@ -7,6 +7,7 @@ import feign.Logger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.openfeign.FeignClientBuilder;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 public class FeignInterceptorConfig {
 
     @Bean
+    @ConditionalOnMissingBean(Logger.Level.class)
     public Logger.Level feignLoggerLevel() {
         return Logger.Level.BASIC;
     }
