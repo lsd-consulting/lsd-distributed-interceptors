@@ -52,5 +52,6 @@ jobs:
           path: build/libs/
       - store_artifacts:
           path: build/jacoco
+
       - codecov/upload:
           file: build/jacoco/test.exec
