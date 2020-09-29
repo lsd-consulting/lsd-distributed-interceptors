@@ -47,5 +47,6 @@ jobs:
           path: build/test-results
 
       - store_artifacts:
-          - path: build/libs/
-          - path: build/jacoco
+          path: build/libs/
+      - store_artifacts:
+          path: build/jacoco
