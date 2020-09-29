@@ -1,18 +1,16 @@
 package com.integreety.yatspec.e2e.teststate.mapper.destination;
 
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 
 import java.util.Map;
 
 import static java.util.Comparator.reverseOrder;
 
-@Value
 @RequiredArgsConstructor
 public class UserSuppliedDestinationMappings implements DestinationNameMappings {
 
-    Map<String, String> mappings;
-    DestinationNameMappings fallbackMapper;
+    private final Map<String, String> mappings;
+    private final DestinationNameMappings fallbackMapper;
 
     @Override
     public String mapForPath(final String path) {
