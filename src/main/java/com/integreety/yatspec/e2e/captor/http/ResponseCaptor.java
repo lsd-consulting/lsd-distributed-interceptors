@@ -5,7 +5,6 @@ import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepositor
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCallFactory;
 import feign.Response;
-import feign.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.integreety.yatspec.e2e.captor.repository.model.Type.RESPONSE;
+import static feign.Util.toByteArray;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @RequiredArgsConstructor
@@ -56,8 +56,7 @@ public class ResponseCaptor extends PathDerivingCaptor {
 
 
     private String extractResponseBodyToString(final Response response) throws IOException {
-        final byte[] bytes = Util.toByteArray(response.body().asInputStream());
-        return new String(bytes);
+        return response.body() != null ? new String(toByteArray(response.body().asInputStream())) : null;
     }
 
     private String deriveStatus(final int code) {
