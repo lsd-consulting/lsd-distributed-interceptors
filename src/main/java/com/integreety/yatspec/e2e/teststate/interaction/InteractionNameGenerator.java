@@ -30,7 +30,7 @@ public class InteractionNameGenerator {
             final String destination = destinationNameMappings.mapForPath(interceptedCall.getTarget());
             final String source = sourceNameMappings.mapFor(Pair.of(interceptedCall.getServiceName(), interceptedCall.getTarget()));
             reportTable.add(List.of(interceptedCall.getServiceName(), interceptedCall.getTarget(), source, interceptedCall.getTarget(), destination));
-            final String interactionName = interceptedCall.getType().getInteractionName().apply(buildInteraction(interceptedCall, destination, source));
+            final String interactionName = interceptedCall.getType().getInteractionName().apply(buildInteraction(interceptedCall, source, destination));
             log.info("Generated an interaction name={}", interactionName);
             final String body = indent(interceptedCall.getBody());
             interactions.add(Pair.of(interactionName, body));
@@ -45,7 +45,7 @@ public class InteractionNameGenerator {
         final AT_Row row = at.addRow(null, null, "Service name & path ---> Source", null, "Target ---> Destination");
         row.setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        for(final List<String> reportTableRow: reportTable) {
+        for (final List<String> reportTableRow : reportTable) {
             at.addRow(reportTableRow);
         }
         at.addRule();
@@ -54,7 +54,7 @@ public class InteractionNameGenerator {
         System.out.println(at.render());
     }
 
-    private Interaction buildInteraction(final InterceptedCall interceptedCall, final String destination, final String source) {
+    private Interaction buildInteraction(final InterceptedCall interceptedCall, final String source, final String destination) {
         return Interaction.builder()
                 .source(source)
                 .destination(destination)

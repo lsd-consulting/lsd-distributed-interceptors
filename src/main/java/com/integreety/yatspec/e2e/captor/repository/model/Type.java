@@ -12,8 +12,8 @@ public enum Type {
 
     REQUEST(i -> requestOf(i.getHttpMethod(), i.getPath(), i.getSource(), i.getDestination())),
     RESPONSE(i -> responseOf(i.getHttpStatus(), i.getDestination(), i.getSource())),
-    PUBLISH(i -> publishOf(i.getSource(), i.getPath())),
-    CONSUME(i -> consumeOf(i.getPath(), i.getSource()));
+    PUBLISH(i -> publishOf(i.getSource(), i.getDestination())),
+    CONSUME(i -> consumeOf(i.getDestination(), i.getSource()));
 
     private final Function<Interaction, String> interactionName;
 
