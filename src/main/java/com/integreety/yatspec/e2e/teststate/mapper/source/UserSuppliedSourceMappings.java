@@ -17,7 +17,7 @@ public class UserSuppliedSourceMappings implements SourceNameMappings {
         final Pair<String, String> key = mappings.keySet().stream()
                 .filter(p -> p.getLeft().equals(pair.getLeft()))
                 .sorted(reverseOrder())
-                .filter(p -> p.getRight().startsWith(pair.getRight()))
+                .filter(p -> pair.getRight().startsWith(p.getRight()))
                 .findFirst()
                 .orElse(pair);
         return mappings.getOrDefault(key, pair.getLeft());
