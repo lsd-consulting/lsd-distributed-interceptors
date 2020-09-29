@@ -1,0 +1,20 @@
+apply plugin: 'info.solidsoft.pitest'
+
+build.dependsOn "pitest"
+
+// perform mutation test and enforce coverage
+pitest {
+    pitestVersion = "1.5.2"
+    testPlugin = "junit5"
+    useClasspathFile = true
+    timeoutConstInMillis = 20000
+    targetClasses = ['com.integreety.yatspec.e2e.*']
+    excludedTestClasses = [
+    ]
+    excludedClasses = [
+    ]
+    threads = 4
+    outputFormats = ['HTML']
+    coverageThreshold = 36
+    mutationThreshold = 17
+}

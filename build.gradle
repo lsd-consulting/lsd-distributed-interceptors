@@ -8,6 +8,7 @@ plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.12.0'
     id "com.jfrog.bintray" version "1.8.5"
     id 'jacoco'
+    id 'info.solidsoft.pitest' version '1.5.2'
 }
 
 group = 'com.integreety'
@@ -123,4 +124,7 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:3.5.13'
+    testImplementation 'org.pitest:pitest-junit5-plugin:0.12'
 }
+
+apply from: 'pitest.gradle'

@@ -2,7 +2,7 @@
 - [ ] Increase coverage
 - [ ] Write README
 - [x] Add Jacoco
-- [ ] Add Pitest
+- [x] Add Pitest
 - [ ] Intercept the exchange name and routing key on rabbitTemplate
 - [ ] Prepare a report that will show what interaction was mapped to what name
 - [ ] Prepare a report that will show which user supplied name mappings were now used
