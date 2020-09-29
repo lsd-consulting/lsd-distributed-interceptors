@@ -48,4 +48,4 @@ jobs:
           - path: build/jacoco
 
       - store_test_results:
-          path: build/test-results
+          - path: build/test-results
