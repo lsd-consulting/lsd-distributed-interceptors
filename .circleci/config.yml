@@ -54,4 +54,4 @@ jobs:
           path: build/jacoco
 
       - codecov/upload:
-          file: build/jacoco/test.exec
+          file: build/reports/jacoco
