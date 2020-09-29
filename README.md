@@ -13,3 +13,5 @@ A set of interceptors gathering information for the LSD (Yatspec) library.
 
 ## Status
 Build: ![CircleCI](https://img.shields.io/circleci/build/gh/integreety/lsd-distributed-interceptor-library)
+
+Coverage: ![Codecov](https://img.shields.io/codecov/c/github/integreety/lsd-distributed-interceptor-library)
