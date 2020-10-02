@@ -5,18 +5,22 @@ import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.*;
+import com.mongodb.connection.SslSettings;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
-
 @Slf4j
 public class InterceptedDocumentMongoRepository implements InterceptedDocumentRepository {
 
@@ -28,9 +32,18 @@ public class InterceptedDocumentMongoRepository implements InterceptedDocumentRe
     private final CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
             fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 
-    public InterceptedDocumentMongoRepository(final String dbConnectionString) {
-        mongoClient = MongoClients.create(MongoClientSettings.builder()
-                .applyConnectionString(new ConnectionString(dbConnectionString))
+    public InterceptedDocumentMongoRepository(final String dbConnectionString,
+                                              final String trustStoreLocation,
+                                              final String trustStorePassword) {
+
+        final MongoClientSettings.Builder builder = MongoClientSettings.builder()
+                .applyConnectionString(new ConnectionString(dbConnectionString));
+
+        if (!isBlank(trustStoreLocation) && !isBlank(trustStorePassword)) {
+            builder.applyToSslSettings(sslSettingsBuilder -> loadCustomTrustStore(sslSettingsBuilder, trustStoreLocation, trustStorePassword));
+        }
+
+        mongoClient = MongoClients.create(builder
 //            .credential(credential)
                 .retryWrites(true)
                 .build());
@@ -40,6 +53,16 @@ public class InterceptedDocumentMongoRepository implements InterceptedDocumentRe
 //    MongoCredential credential = MongoCredential.createCredential(user, database, password);
 //    MongoClient mongoClient = new MongoClient(new ServerAddress("xxx", 27017),
 //    Arrays.asList(credential));
+    }
+
+    @SneakyThrows
+    private static void loadCustomTrustStore(final SslSettings.Builder builder, final String trustStoreLocation,
+                                             final String trustStorePassword) {
+        builder.context(new SSLContextBuilder()
+                .loadTrustMaterial(
+                        new File(trustStoreLocation), trustStorePassword.toCharArray()
+                ).build()
+        ).build();
     }
 
     @Override

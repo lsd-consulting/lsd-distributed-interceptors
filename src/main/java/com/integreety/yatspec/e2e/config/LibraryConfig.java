@@ -23,9 +23,6 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class LibraryConfig {
 
-    @Value("${yatspec.lsd.db.connectionstring}")
-    private String dbConnectionString;
-
     private final Tracer tracer;
 
     @Bean
@@ -83,7 +80,9 @@ public class LibraryConfig {
     }
 
     @Bean
-    public InterceptedDocumentRepository interceptedDocumentRepository() {
-        return new InterceptedDocumentMongoRepository(dbConnectionString);
+    public InterceptedDocumentRepository interceptedDocumentRepository(@Value("${yatspec.lsd.db.connectionstring}") final String dbConnectionString,
+                                                                       @Value("${yatspec.lsd.db.trustStoreLocation:#{null}}") final String trustStoreLocation,
+                                                                       @Value("${yatspec.lsd.db.trustStorePassword:#{null}}") final String trustStorePassword) {
+        return new InterceptedDocumentMongoRepository(dbConnectionString, trustStoreLocation, trustStorePassword);
     }
 }
