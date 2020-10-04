@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Map;
 
@@ -21,4 +22,6 @@ public class InterceptedCall {
     private String httpStatus;
     private String httpMethod;
     private Type type;
+    private String profile;
+    private ZonedDateTime createdAt;
 }

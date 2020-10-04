@@ -3,6 +3,7 @@ package com.integreety.yatspec.e2e.captor.repository.model;
 import com.integreety.yatspec.e2e.captor.trace.TraceIdRetriever;
 import lombok.RequiredArgsConstructor;
 
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import java.util.Map;
 public class InterceptedCallFactory {
 
     private final TraceIdRetriever traceIdRetriever; // TODO Should this be part of this class?
+    private final String profile;
 
     public InterceptedCall buildFrom(final String body,
                                      final Map<String, Collection<String>> headers, final String serviceName,
@@ -31,6 +33,8 @@ public class InterceptedCallFactory {
                 .httpStatus(httpStatus)
                 .httpMethod(httpMethod)
                 .type(type)
+                .profile(profile)
+                .createdAt(ZonedDateTime.now())
                 .build();
     }
 }

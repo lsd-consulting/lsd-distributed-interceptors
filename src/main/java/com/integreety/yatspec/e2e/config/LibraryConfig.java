@@ -67,8 +67,8 @@ public class LibraryConfig {
     }
 
     @Bean
-    public InterceptedCallFactory mapGenerator(final TraceIdRetriever traceIdRetriever) {
-        return new InterceptedCallFactory(traceIdRetriever);
+    public InterceptedCallFactory mapGenerator(final TraceIdRetriever traceIdRetriever, @Value("${spring.active.profile}") final String profile) {
+        return new InterceptedCallFactory(traceIdRetriever, profile);
     }
 
     @Bean

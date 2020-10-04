@@ -2,6 +2,7 @@ package com.integreety.yatspec.e2e.captor.repository.mongo;
 
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
+import com.integreety.yatspec.e2e.captor.repository.mongo.codec.ZonedDateTimeCodec;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.*;
@@ -10,6 +11,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
@@ -30,7 +32,8 @@ public class InterceptedDocumentMongoRepository implements InterceptedDocumentRe
 
     private final MongoClient mongoClient;
 
-    private final CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+    private final CodecRegistry codecRegistry = CodecRegistries.fromCodecs(new ZonedDateTimeCodec());
+    private final CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), codecRegistry,
             fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 
     public InterceptedDocumentMongoRepository(final String dbConnectionString,
