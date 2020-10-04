@@ -3,6 +3,7 @@ package com.integreety.yatspec.e2e.captor.repository.model;
 import com.integreety.yatspec.e2e.captor.trace.TraceIdRetriever;
 import lombok.RequiredArgsConstructor;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class InterceptedCallFactory {
                 .httpMethod(httpMethod)
                 .type(type)
                 .profile(profile)
-                .createdAt(ZonedDateTime.now())
+                .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
                 .build();
     }
 }
