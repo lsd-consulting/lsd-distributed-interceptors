@@ -32,7 +32,7 @@ public class TestStateLoggerShould {
     public void logInteractionName() {
         final InterceptedCall interceptedCall = InterceptedCall.builder().build();
         given(interceptedDocumentRepository.findByTraceId(traceId)).willReturn(singletonList(interceptedCall));
-        given(interactionNameGenerator.generate(any(), any(), eq(singletonList(interceptedCall))))
+        given(interactionNameGenerator.generate(any(), any(), eq(singletonList(interceptedCall)), any()))
                 .willReturn(singletonList(of("interactionName", "body")));
 
         underTest.logStatesFromDatabase(traceId, userSuppliedSourceMappings(Map.of()), userSuppliedDestinationMappings(Map.of()));

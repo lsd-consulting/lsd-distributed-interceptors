@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static java.util.Map.of;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 class UserSuppliedSourceMappingsShould {
 
@@ -40,5 +40,22 @@ class UserSuppliedSourceMappingsShould {
         ));
 
         assertThat(mappings.mapFor(Pair.of("ServiceA", "/name/one")), equalTo("Consumer"));
+    }
+
+    @Test
+    void findsUnusedMappings() {
+        final SourceNameMappings mappings = UserSuppliedSourceMappings.userSuppliedSourceMappings(of(
+                Pair.of("ServiceA", "/na"), "User",
+                Pair.of("ServiceA", "/name/one"), "Consumer",
+                Pair.of("ServiceA", "/name/one/other"), "Client",
+                Pair.of("ServiceA", "/name"), "Admin"
+        ));
+
+        mappings.mapFor(Pair.of("ServiceB", "/name/one"));
+        mappings.mapFor(Pair.of("ServiceA", "/name/one"));
+        mappings.mapFor(Pair.of("ServiceA", "/na"));
+        assertThat(mappings.getUnusedMappings().keySet(), hasSize(2));
+        assertThat(mappings.getUnusedMappings(), hasEntry(Pair.of("ServiceA", "/name/one/other"), "Client"));
+        assertThat(mappings.getUnusedMappings(), hasEntry(Pair.of("ServiceA", "/name"), "Admin"));
     }
 }

@@ -1,5 +1,7 @@
 package com.integreety.yatspec.e2e.teststate.mapper.destination;
 
+import java.util.Map;
+
 public class RegexResolvingNameMapper implements DestinationNameMappings {
 
     private static final String FIRST_PART_OF_PATH = "^/?(.*?)([/?].*|$)";
@@ -10,5 +12,10 @@ public class RegexResolvingNameMapper implements DestinationNameMappings {
         return path
                 .replaceFirst(FIRST_PART_OF_PATH, "$1")
                 .replaceAll(PLANT_UML_CRYPTONITE, "_");
+    }
+
+    @Override
+    public Map<String, String> getUnusedMappings() {
+        return Map.of();
     }
 }

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static java.util.Map.of;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 class UserSuppliedDestinationMappingsShould {
 
@@ -39,5 +39,22 @@ class UserSuppliedDestinationMappingsShould {
         ));
 
         assertThat(mappings.mapForPath("/name/one"), equalTo("MostSpecificNamingService"));
+    }
+
+    @Test
+    void findsUnusedMappings() {
+        final UserSuppliedDestinationMappings mappings = (UserSuppliedDestinationMappings) UserSuppliedDestinationMappings.userSuppliedDestinationMappings(of(
+                "/na", "FirstNamingService",
+                "/name/one", "MostSpecificNamingService",
+                "/name/one/other", "DifferentNamingService",
+                "/name", "MoreSpecificNamingService"
+        ));
+
+        mappings.mapForPath("/two");
+        mappings.mapForPath("/name/one");
+        mappings.mapForPath("/na");
+        assertThat(mappings.getUnusedMappings().keySet(), hasSize(2));
+        assertThat(mappings.getUnusedMappings(), hasEntry("/name/one/other", "DifferentNamingService"));
+        assertThat(mappings.getUnusedMappings(), hasEntry("/name", "MoreSpecificNamingService"));
     }
 }

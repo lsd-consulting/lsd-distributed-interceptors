@@ -4,6 +4,7 @@ import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.integreety.yatspec.e2e.teststate.interaction.InteractionNameGenerator;
 import com.integreety.yatspec.e2e.teststate.mapper.destination.DestinationNameMappings;
 import com.integreety.yatspec.e2e.teststate.mapper.source.SourceNameMappings;
+import com.integreety.yatspec.e2e.teststate.report.ReportRenderer;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -29,7 +30,7 @@ public class InteractionNameGeneratorIT {
     @ParameterizedTest
     @MethodSource("provideInterceptedCalls")
     public void shouldGenerateInteractionNames(final InterceptedCall interceptedCall, final String expectedInteractionName) {
-        final List<Pair<String, Object>> interactionNames = underTest.generate(userSuppliedSourceMappings(Map.of()), userSuppliedDestinationMappings(Map.of()), List.of(interceptedCall));
+        final List<Pair<String, Object>> interactionNames = underTest.generate(userSuppliedSourceMappings(Map.of()), userSuppliedDestinationMappings(Map.of()), List.of(interceptedCall), new ReportRenderer());
 
         assertThat(interactionNames, hasSize(1));
         assertThat(interactionNames.get(0).getLeft(), is(expectedInteractionName));
@@ -42,7 +43,7 @@ public class InteractionNameGeneratorIT {
         final Pair<String, String> source2 = Pair.of("service", "exchange");
         final SourceNameMappings sourceNameMappings = userSuppliedSourceMappings(Map.of(source1, "source1", source2, "source2"));
         final DestinationNameMappings destinationNameMappings = userSuppliedDestinationMappings(Map.of());
-        final List<Pair<String, Object>> interactionNames = underTest.generate(sourceNameMappings, destinationNameMappings, List.of(interceptedCall));
+        final List<Pair<String, Object>> interactionNames = underTest.generate(sourceNameMappings, destinationNameMappings, List.of(interceptedCall), new ReportRenderer());
 
         assertThat(interactionNames, hasSize(1));
         assertThat(interactionNames.get(0).getLeft(), is(expectedInteractionName));
@@ -53,7 +54,7 @@ public class InteractionNameGeneratorIT {
     public void shouldGenerateInteractionNamesUsingUserSuppliedDestinationMappings(final InterceptedCall interceptedCall, final String expectedInteractionName) {
         final SourceNameMappings sourceNameMappings = userSuppliedSourceMappings(Map.of());
         final DestinationNameMappings destinationNameMappings = userSuppliedDestinationMappings(Map.of("/abc/def", "dest1", "exchange", "dest2"));
-        final List<Pair<String, Object>> interactionNames = underTest.generate(sourceNameMappings, destinationNameMappings, List.of(interceptedCall));
+        final List<Pair<String, Object>> interactionNames = underTest.generate(sourceNameMappings, destinationNameMappings, List.of(interceptedCall), new ReportRenderer());
 
         assertThat(interactionNames, hasSize(1));
         assertThat(interactionNames.get(0).getLeft(), is(expectedInteractionName));
