@@ -21,6 +21,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
+
 @Slf4j
 public class InterceptedDocumentMongoRepository implements InterceptedDocumentRepository {
 
@@ -43,16 +44,16 @@ public class InterceptedDocumentMongoRepository implements InterceptedDocumentRe
             builder.applyToSslSettings(sslSettingsBuilder -> loadCustomTrustStore(sslSettingsBuilder, trustStoreLocation, trustStorePassword));
         }
 
-        mongoClient = MongoClients.create(builder
-//            .credential(credential)
-                .retryWrites(true)
-                .build());
+//    TODO We should also support other AuthenticationMechanisms
 //    String user = "xxxx"; // the user name
 //    String database = "admin"; // the name of the database in which the user is defined
 //    char[] password = "xxxx".toCharArray(); // the password as a character array
 //    MongoCredential credential = MongoCredential.createCredential(user, database, password);
-//    MongoClient mongoClient = new MongoClient(new ServerAddress("xxx", 27017),
-//    Arrays.asList(credential));
+
+        mongoClient = MongoClients.create(builder
+//            .credential(credential)
+                .retryWrites(true)
+                .build());
     }
 
     @SneakyThrows
