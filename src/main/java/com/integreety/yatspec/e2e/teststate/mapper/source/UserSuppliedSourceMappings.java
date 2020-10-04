@@ -25,18 +25,21 @@ public class UserSuppliedSourceMappings implements SourceNameMappings {
                 .findFirst()
                 .orElse(pair);
 
-        if (key.equals(pair)) {
-            usedMappings.add(key);
-        }
+        usedMappings.add(key);
         return mappings.getOrDefault(key, pair.getLeft());
     }
 
     @Override
     public Map<Pair<String, String>, String> getUnusedMappings() {
-        final HashMap<Pair<String, String>, String> unusedMappings = new HashMap<>(mappings);
-        for (final Pair<String, String> key: usedMappings) {
-            unusedMappings.remove(key);
-        }
+        final var unusedMappings = new HashMap<>(mappings);
+        usedMappings.forEach(key ->
+                mappings.keySet().stream()
+                        .filter(p -> p.getLeft().equals(key.getLeft()))
+                        .sorted(reverseOrder())
+                        .filter(p -> key.getRight().startsWith(p.getRight()))
+                        .findFirst()
+                        .ifPresent(unusedMappings::remove)
+        );
         return unusedMappings;
     }
 

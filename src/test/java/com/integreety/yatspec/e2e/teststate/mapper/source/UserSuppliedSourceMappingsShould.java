@@ -43,7 +43,7 @@ class UserSuppliedSourceMappingsShould {
     }
 
     @Test
-    void findsUnusedMappings() {
+    void findsUnusedMappingsWhenMatchingLessSpecificPath() {
         final SourceNameMappings mappings = UserSuppliedSourceMappings.userSuppliedSourceMappings(of(
                 Pair.of("ServiceA", "/na"), "User",
                 Pair.of("ServiceA", "/name/one"), "Consumer",
@@ -57,5 +57,17 @@ class UserSuppliedSourceMappingsShould {
         assertThat(mappings.getUnusedMappings().keySet(), hasSize(2));
         assertThat(mappings.getUnusedMappings(), hasEntry(Pair.of("ServiceA", "/name/one/other"), "Client"));
         assertThat(mappings.getUnusedMappings(), hasEntry(Pair.of("ServiceA", "/name"), "Admin"));
+    }
+
+    @Test
+    void findsUnusedMappingsWhenMatchingMoreSpecificPath() {
+        final SourceNameMappings mappings = UserSuppliedSourceMappings.userSuppliedSourceMappings(of(
+                Pair.of("ServiceA", "/name/one"), "Consumer",
+                Pair.of("ServiceA", "/name/one/other"), "Client"
+        ));
+
+        mappings.mapFor(Pair.of("ServiceA", "/name/one/two"));
+        assertThat(mappings.getUnusedMappings().keySet(), hasSize(1));
+        assertThat(mappings.getUnusedMappings(), hasEntry(Pair.of("ServiceA", "/name/one/other"), "Client"));
     }
 }
