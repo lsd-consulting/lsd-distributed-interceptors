@@ -25,7 +25,8 @@ public class RabbitCaptor {
         final MessageProperties messageProperties = message.getMessageProperties();
         final Map<String, Collection<String>> headers = headerRetriever.retrieve(messageProperties);
         final String service = propertyServiceNameDeriver.getServiceName();
-        final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(new String(message.getBody()), headers, service, exchange, type);
+        final String body = message.getBody() != null ? new String(message.getBody()) : null;
+        final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(body, headers, service, exchange, type);
         interceptedDocumentRepository.save(interceptedCall);
     }
 }
