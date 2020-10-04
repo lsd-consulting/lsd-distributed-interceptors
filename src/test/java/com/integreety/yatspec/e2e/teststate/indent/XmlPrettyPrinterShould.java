@@ -23,4 +23,10 @@ public class XmlPrettyPrinterShould {
         final Optional<String> result = XmlPrettyPrinter.indentXml(null);
         assertThat(result, is(empty()));
     }
+
+    @Test
+    public void handleNonXml() {
+        final Optional<String> result = XmlPrettyPrinter.indentXml("blah");
+        assertThat(result, is(empty()));
+    }
 }

@@ -23,4 +23,10 @@ public class JsonPrettyPrinterShould {
         final Optional<String> result = JsonPrettyPrinter.indentJson(null);
         assertThat(result, is(empty()));
     }
+
+    @Test
+    public void handleNonJson() {
+        final Optional<String> result = JsonPrettyPrinter.indentJson("< >");
+        assertThat(result, is(empty()));
+    }
 }
