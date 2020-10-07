@@ -14,8 +14,10 @@ import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.springframework.core.io.ClassPathResource;
 
-import java.io.File;
+import java.io.InputStream;
+import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,11 +64,15 @@ public class InterceptedDocumentMongoRepository implements InterceptedDocumentRe
     @SneakyThrows
     private static void loadCustomTrustStore(final SslSettings.Builder builder, final String trustStoreLocation,
                                              final String trustStorePassword) {
-        builder.context(new SSLContextBuilder()
-                .loadTrustMaterial(
-                        new File(trustStoreLocation), trustStorePassword.toCharArray()
-                ).build()
-        ).build();
+        try (final InputStream inputStream = new ClassPathResource(trustStoreLocation).getInputStream()) {
+            final KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            trustStore.load(inputStream, trustStorePassword.toCharArray());
+            builder.context(new SSLContextBuilder()
+                    .loadTrustMaterial(
+                            trustStore, null
+                    ).build()
+            );
+        }
     }
 
     @Override
