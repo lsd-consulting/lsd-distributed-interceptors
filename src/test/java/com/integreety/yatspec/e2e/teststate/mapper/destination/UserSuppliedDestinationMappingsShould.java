@@ -57,4 +57,16 @@ class UserSuppliedDestinationMappingsShould {
         assertThat(mappings.getUnusedMappings(), hasEntry("/name/one/other", "DifferentNamingService"));
         assertThat(mappings.getUnusedMappings(), hasEntry("/name", "MoreSpecificNamingService"));
     }
+
+    @Test
+    void findsUnusedMappingsWhenMatchingMoreSpecificPath() {
+        final DestinationNameMappings mappings = UserSuppliedDestinationMappings.userSuppliedDestinationMappings(of(
+                "/name/one", "MostSpecificNamingService",
+                "/name/one/other", "DifferentNamingService"
+        ));
+
+        mappings.mapForPath("/name/one/two");
+        assertThat(mappings.getUnusedMappings().keySet(), hasSize(1));
+        assertThat(mappings.getUnusedMappings(), hasEntry("/name/one/other", "DifferentNamingService"));
+    }
 }
