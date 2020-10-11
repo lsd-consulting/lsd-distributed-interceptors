@@ -27,7 +27,7 @@ jar {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
+    archiveClassifier.set('sources')
     from sourceSets.main.allSource
 }
 
@@ -103,6 +103,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     // Database driver for storing interactions
     implementation 'org.mongodb:mongo-java-driver:3.12.6'
@@ -123,6 +124,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.11'
     implementation 'de.vandermeer:asciitable:0.3.2'
 
+    // Tests
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:3.5.13'
     testImplementation 'org.pitest:pitest-junit5-plugin:0.12'
