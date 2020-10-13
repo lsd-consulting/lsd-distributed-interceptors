@@ -5,6 +5,7 @@ import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.integreety.yatspec.e2e.captor.repository.mongo.codec.ZonedDateTimeCodec;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoException;
 import com.mongodb.client.*;
 import com.mongodb.connection.SslSettings;
 import lombok.SneakyThrows;
@@ -79,7 +80,11 @@ public class InterceptedDocumentMongoRepository implements InterceptedDocumentRe
     public void save(final InterceptedCall interceptedCall) {
         final MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
         final MongoCollection<InterceptedCall> interceptedCalls = database.getCollection(COLLECTION_NAME, InterceptedCall.class).withCodecRegistry(pojoCodecRegistry);
-        interceptedCalls.insertOne(interceptedCall);
+        try {
+            interceptedCalls.insertOne(interceptedCall);
+        } catch (final MongoException e) {
+            log.error("Skipping persisting the interceptedCall due to exception - interceptedCall:{}, message:{}, stackTrace:{}", interceptedCall, e.getMessage(), e.getStackTrace());
+        }
     }
 
     @Override
@@ -92,6 +97,8 @@ public class InterceptedDocumentMongoRepository implements InterceptedDocumentRe
             while (cursor.hasNext()) {
                 result.add(cursor.next());
             }
+        } catch (final MongoException e) {
+            log.error("Failed to retrieve interceptedCalls - message:{}, stackTrace:{}", e.getMessage(), e.getStackTrace());
         }
         return result;
     }
