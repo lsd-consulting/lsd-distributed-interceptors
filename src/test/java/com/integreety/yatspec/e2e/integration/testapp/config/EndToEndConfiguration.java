@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Import;
 
 @EnableAutoConfiguration
 @Import({
-        StubbedServicesConfiguration.class,
         RabbitConfig.class,
         RabbitTemplateConfiguration.class,
         FeignInterceptorConfig.class,
