@@ -4,6 +4,7 @@ import com.integreety.yatspec.e2e.captor.http.mapper.PropertyServiceNameDeriver;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCallFactory;
+import com.integreety.yatspec.e2e.captor.trace.TraceIdRetriever;
 import feign.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -30,13 +31,15 @@ public class ResponseCaptor extends PathDerivingCaptor {
     private final InterceptedDocumentRepository interceptedDocumentRepository;
     private final InterceptedCallFactory interceptedCallFactory;
     private final PropertyServiceNameDeriver propertyServiceNameDeriver;
+    private final TraceIdRetriever traceIdRetriever;
 
     @SneakyThrows
     public InterceptedCall captureResponseInteraction(final Response response) {
         try {
             final String path = derivePath(response.request().url());
             final String serviceName = propertyServiceNameDeriver.getServiceName();
-            final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(extractResponseBodyToString(response), response.headers(), serviceName, path, deriveStatus(response.status()), null, RESPONSE);
+            final String traceId = traceIdRetriever.getTraceId(response.headers());
+            final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(extractResponseBodyToString(response), response.headers(), traceId, serviceName, path, deriveStatus(response.status()), null, RESPONSE);
             interceptedDocumentRepository.save(interceptedCall);
             return interceptedCall;
         } catch (final RuntimeException e) {
@@ -45,15 +48,15 @@ public class ResponseCaptor extends PathDerivingCaptor {
         }
     }
 
-    public void captureResponseInteraction(final ClientHttpResponse response, final String path) throws IOException {
+    public InterceptedCall captureResponseInteraction(final ClientHttpResponse response, final String path, final String traceId) throws IOException {
         final String body = copyBodyToString(response);
         final String serviceName = propertyServiceNameDeriver.getServiceName();
         final var headers = response.getHeaders().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> (Collection<String>) e.getValue()));
-        final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(body, headers, serviceName, path, response.getStatusCode().toString(), null, RESPONSE);
+        final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(body, headers, traceId, serviceName, path, response.getStatusCode().toString(), null, RESPONSE);
         interceptedDocumentRepository.save(interceptedCall);
+        return interceptedCall;
     }
-
 
     private String extractResponseBodyToString(final Response response) throws IOException {
         return response.body() != null ? new String(toByteArray(response.body().asInputStream())) : null;

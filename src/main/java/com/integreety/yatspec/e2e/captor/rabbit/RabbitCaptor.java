@@ -6,6 +6,7 @@ import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepositor
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCallFactory;
 import com.integreety.yatspec.e2e.captor.repository.model.Type;
+import com.integreety.yatspec.e2e.captor.trace.TraceIdRetriever;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
@@ -20,13 +21,15 @@ public class RabbitCaptor {
     private final InterceptedCallFactory interceptedCallFactory;
     private final PropertyServiceNameDeriver propertyServiceNameDeriver;
     private final HeaderRetriever headerRetriever;
+    private final TraceIdRetriever traceIdRetriever;
 
     public void captureInteraction(final String exchange, final Message message, final Type type) {
         final MessageProperties messageProperties = message.getMessageProperties();
         final Map<String, Collection<String>> headers = headerRetriever.retrieve(messageProperties);
+        final String traceId = traceIdRetriever.getTraceId(headers);
         final String service = propertyServiceNameDeriver.getServiceName();
         final String body = message.getBody() != null ? new String(message.getBody()) : null;
-        final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(body, headers, service, exchange, type);
+        final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(body, traceId, headers, service, exchange, type);
         interceptedDocumentRepository.save(interceptedCall);
     }
 }

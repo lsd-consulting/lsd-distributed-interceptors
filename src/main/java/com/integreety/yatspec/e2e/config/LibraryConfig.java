@@ -53,30 +53,34 @@ public class LibraryConfig {
     @Bean
     public RequestCaptor requestCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
                                        final InterceptedCallFactory interceptedCallFactory,
-                                       final PropertyServiceNameDeriver propertyServiceNameDeriver) {
+                                       final PropertyServiceNameDeriver propertyServiceNameDeriver,
+                                       final TraceIdRetriever traceIdRetriever) {
 
-        return new RequestCaptor(interceptedDocumentRepository, interceptedCallFactory, propertyServiceNameDeriver);
+
+        return new RequestCaptor(interceptedDocumentRepository, interceptedCallFactory, propertyServiceNameDeriver, traceIdRetriever);
     }
 
     @Bean
     public ResponseCaptor responseCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
                                          final InterceptedCallFactory interceptedCallFactory,
-                                         final PropertyServiceNameDeriver propertyServiceNameDeriver) {
+                                         final PropertyServiceNameDeriver propertyServiceNameDeriver,
+                                         final TraceIdRetriever traceIdRetriever) {
 
-        return new ResponseCaptor(interceptedDocumentRepository, interceptedCallFactory, propertyServiceNameDeriver);
+        return new ResponseCaptor(interceptedDocumentRepository, interceptedCallFactory, propertyServiceNameDeriver, traceIdRetriever);
     }
 
     @Bean
-    public InterceptedCallFactory mapGenerator(final TraceIdRetriever traceIdRetriever, @Value("${spring.profiles.active:#{''}}") final String profile) {
-        return new InterceptedCallFactory(traceIdRetriever, profile);
+    public InterceptedCallFactory mapGenerator(@Value("${spring.profiles.active:#{''}}") final String profile) {
+        return new InterceptedCallFactory(profile);
     }
 
     @Bean
     public RabbitCaptor publishCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
                                       final InterceptedCallFactory interceptedCallFactory,
                                       final HeaderRetriever headerRetriever,
-                                      final PropertyServiceNameDeriver propertyServiceNameDeriver) {
-        return new RabbitCaptor(interceptedDocumentRepository, interceptedCallFactory, propertyServiceNameDeriver, headerRetriever);
+                                      final PropertyServiceNameDeriver propertyServiceNameDeriver,
+                                      final TraceIdRetriever traceIdRetriever) {
+        return new RabbitCaptor(interceptedDocumentRepository, interceptedCallFactory, propertyServiceNameDeriver, headerRetriever, traceIdRetriever);
     }
 
     @Bean

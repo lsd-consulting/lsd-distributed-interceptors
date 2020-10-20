@@ -18,7 +18,7 @@ import static com.integreety.yatspec.e2e.captor.repository.model.Type.CONSUME;
     This config adds the interception of messages to RabbitMq listeners
 */
 @ConditionalOnProperty(name = {"yatspec.lsd.db.connectionstring"})
-@ConditionalOnBean(SimpleRabbitListenerContainerFactory.class)
+@ConditionalOnBean(SimpleRabbitListenerContainerFactory.class) // TODO What if there is no bean of this type?
 @Configuration
 @RequiredArgsConstructor
 public class RabbitListenerInterceptorConfig {

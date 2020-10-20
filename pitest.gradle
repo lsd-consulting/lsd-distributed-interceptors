@@ -9,12 +9,10 @@ pitest {
     useClasspathFile = true
     timeoutConstInMillis = 20000
     targetClasses = ['com.integreety.yatspec.e2e.*']
-    excludedTestClasses = [
-    ]
-    excludedClasses = [
-    ]
+    excludedTestClasses = ['com.integreety.yatspec.e2e.integration.EndToEndIT']
+    excludedClasses = [ ]
     threads = 4
     outputFormats = ['HTML']
-    coverageThreshold = 36
-    mutationThreshold = 16
+    coverageThreshold = 47
+    mutationThreshold = 22
 }
