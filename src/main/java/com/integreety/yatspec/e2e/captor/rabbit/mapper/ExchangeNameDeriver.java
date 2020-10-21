@@ -10,6 +10,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Slf4j
 public class ExchangeNameDeriver {
 
+    // TODO This method of determining the exchange name is not reliable
     private static final String TYPE_ID_HEADER = "__TypeId__";
 
     public String derive(final MessageProperties messageProperties, final String defaultExchangeName)  {

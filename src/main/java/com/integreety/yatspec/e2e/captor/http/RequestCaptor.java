@@ -41,7 +41,7 @@ public class RequestCaptor extends PathDerivingCaptor {
     }
 
     public InterceptedCall captureRequestInteraction(final HttpRequest request, final String body) {
-        final String path = request.getURI().getPath();
+        final String path = request.getURI().getPath() + "?" + request.getURI().getQuery();
         final String serviceName = propertyServiceNameDeriver.getServiceName();
         final var headers = request.getHeaders().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> (Collection<String>) e.getValue()));

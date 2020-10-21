@@ -1,5 +1,6 @@
 package com.integreety.yatspec.e2e.integration.testapp.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping(path = "/objects")
 public class TestController {
@@ -19,7 +21,8 @@ public class TestController {
 
     @GetMapping
     public ResponseEntity<String> getObjectByMessage(@RequestParam final String message) {
-        rabbitTemplate.convertAndSend("exchange", null, message);
-        return ResponseEntity.ok(message);
+        log.info("Received message:{}", message);
+        rabbitTemplate.convertAndSend("exchange", null, "from_controller");
+        return ResponseEntity.ok("response_from_controller");
     }
 }

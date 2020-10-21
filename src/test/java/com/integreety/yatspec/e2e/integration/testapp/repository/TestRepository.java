@@ -66,13 +66,17 @@ public class TestRepository {
     }
 
     public List<InterceptedCall> findAll(final String traceId) {
+        log.info("Retrieving interceptedCalls for traceId:{}", traceId);
+
         final MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
         final MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME).withCodecRegistry(pojoCodecRegistry);
 
         final List<InterceptedCall> result = new ArrayList<>();
         try (final MongoCursor<InterceptedCall> cursor = collection.find(eq("traceId", traceId), InterceptedCall.class).iterator()) {
             while (cursor.hasNext()) {
-                result.add(cursor.next());
+                final InterceptedCall interceptedCall = cursor.next();
+                log.info("Retrieved interceptedCall:{}", interceptedCall);
+                result.add(interceptedCall);
             }
         } catch (final MongoException e) {
             log.error("Failed to retrieve interceptedCalls - message:{}, stackTrace:{}", e.getMessage(), e.getStackTrace());

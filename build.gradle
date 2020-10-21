@@ -125,14 +125,16 @@ dependencies {
     implementation 'de.vandermeer:asciitable:0.3.2'
 
     // Tests
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
+    testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    testImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock'
+
     testCompileOnly 'org.projectlombok:lombok:1.18.10'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.10'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:3.5.13'
     testImplementation 'org.pitest:pitest-junit5-plugin:0.12'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
-    testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
     testImplementation 'com.github.fridujo:rabbitmq-mock:1.0.14'
     testImplementation 'org.awaitility:awaitility:4.0.3'

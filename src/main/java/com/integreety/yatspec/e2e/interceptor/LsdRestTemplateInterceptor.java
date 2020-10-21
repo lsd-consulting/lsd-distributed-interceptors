@@ -25,7 +25,7 @@ public class LsdRestTemplateInterceptor implements ClientHttpRequestInterceptor 
     public ClientHttpResponse intercept(final HttpRequest request, final byte[] body, final ClientHttpRequestExecution execution) throws IOException {
         final InterceptedCall interceptedCall = requestCaptor.captureRequestInteraction(request, new String(body));
         final ClientHttpResponse response = execution.execute(request, body);
-        responseCaptor.captureResponseInteraction(response, request.getURI().getPath(), interceptedCall.getTraceId());
+        responseCaptor.captureResponseInteraction(response, interceptedCall.getTarget(), interceptedCall.getTraceId());
         return response;
     }
 }
