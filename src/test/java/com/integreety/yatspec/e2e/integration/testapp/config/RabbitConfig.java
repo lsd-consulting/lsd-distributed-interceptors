@@ -8,13 +8,13 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import static java.lang.Boolean.FALSE;
 import static org.springframework.amqp.core.Binding.DestinationType.QUEUE;
 
-@Configuration
+@TestConfiguration
 @RequiredArgsConstructor
 public class RabbitConfig {
 
@@ -36,6 +36,7 @@ public class RabbitConfig {
     }
 
     @Bean
+//     TODO This should not have to be done - investigate
     public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(final SimpleRabbitListenerContainerFactoryConfigurer configurer) {
         final SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         configurer.configure(factory, connectionFactory);

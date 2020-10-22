@@ -1,13 +1,17 @@
 package com.integreety.yatspec.e2e.integration;
 
+import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.integreety.yatspec.e2e.integration.testapp.TestApplication;
-import com.integreety.yatspec.e2e.integration.testapp.config.EndToEndConfiguration;
+import com.integreety.yatspec.e2e.integration.testapp.config.RabbitConfig;
+import com.integreety.yatspec.e2e.integration.testapp.config.RabbitTemplateConfiguration;
+import com.integreety.yatspec.e2e.integration.testapp.config.RestConfig;
 import com.integreety.yatspec.e2e.integration.testapp.repository.TestRepository;
+import com.integreety.yatspec.e2e.teststate.TestStateLogger;
+import com.integreety.yatspec.e2e.teststate.mapper.destination.DestinationNameMappings;
+import com.integreety.yatspec.e2e.teststate.mapper.source.SourceNameMappings;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -23,14 +27,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.integreety.yatspec.e2e.captor.repository.model.Type.*;
 import static com.integreety.yatspec.e2e.integration.matcher.InterceptedCallMatcher.with;
 import static com.integreety.yatspec.e2e.teststate.TraceIdGenerator.generate;
+import static com.integreety.yatspec.e2e.teststate.mapper.destination.UserSuppliedDestinationMappings.userSuppliedDestinationMappings;
+import static com.integreety.yatspec.e2e.teststate.mapper.source.UserSuppliedSourceMappings.userSuppliedSourceMappings;
+import static org.apache.commons.lang3.tuple.Pair.of;
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -38,10 +46,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.RequestEntity.get;
 
 @Slf4j
+@SpringJUnitConfig(classes = {RestConfig.class, RabbitConfig.class, RabbitTemplateConfiguration.class})
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = {TestApplication.class})
-@SpringJUnitConfig(classes = EndToEndConfiguration.class)
 @TestPropertySource("classpath:application-test.properties")
-@Execution(ExecutionMode.SAME_THREAD)
 @AutoConfigureWireMock(port = 0)
 public class EndToEndIT {
 
@@ -51,10 +58,18 @@ public class EndToEndIT {
     private int serverPort;
 
     @Autowired
+    private TestRepository testRepository;
+
+    @Autowired
     private TestRestTemplate testRestTemplate;
 
+    @Autowired
+    private TestStateLogger testStateLogger;
+
+    @Autowired
+    private TestState testState;
+
     private final String traceId = generate();
-    private final TestRepository testRepository = new TestRepository();
 
     @Test
     public void shouldRecordAllInteractions() throws URISyntaxException {
@@ -83,6 +98,42 @@ public class EndToEndIT {
         assertThat("REQUEST interaction missing", interceptedCalls, hasItem(with(REQUEST, "lsdEnd2End", "from_listener", "/external-objects?message=from_feign")));
         assertThat("REQUEST interaction missing", interceptedCalls, hasItem(with(RESPONSE, "lsdEnd2End", "from_external", "/external-objects?message=from_feign")));
     }
+
+    @Test
+    public void shouldRecordUserSuppliedNames() throws URISyntaxException {
+        givenExternalApi();
+
+        final ResponseEntity<String> response = sendInitialRequest(traceId);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody(), containsString("response_from_controller"));
+
+        await().untilAsserted(() -> assertThat(testRepository.findAll(traceId), hasSize(6)));
+
+        testStateLogger.logStatesFromDatabase(traceId, sourceNameMappings, destinationNameMappings);
+
+        final Set<String> interactionNames = testState.getCapturedTypes().keySet();
+        assertThat(interactionNames, hasItem("GET /objects?message=from_test from Client to Controller"));
+        assertThat(interactionNames, hasItem("publish event from Controller to Exchange"));
+        assertThat(interactionNames, hasItem("200 OK response from Controller to Client"));
+        assertThat(interactionNames, hasItem("consume message from Exchange to Consumer"));
+        assertThat(interactionNames, hasItem("POST /external-objects?message=from_feign from Consumer to Wiremock"));
+        assertThat(interactionNames, hasItem("200 OK response from Wiremock to Consumer"));
+    }
+
+    private final SourceNameMappings sourceNameMappings = userSuppliedSourceMappings(Map.of(
+            of("lsdEnd2End", "/objects?message=from_test"), "Client",
+            of("lsdEnd2End", ""), "Controller",
+            of("lsdEnd2End", "exchange"), "Consumer",
+            of("lsdEnd2End", "/external-objects?message=from_feign"), "Consumer"
+    ));
+
+    private final DestinationNameMappings destinationNameMappings = userSuppliedDestinationMappings(Map.of(
+            "/objects?message=from_test", "Controller",
+            "", "Exchange",
+            "exchange", "Exchange",
+            "/external-objects?message=from_feign", "Wiremock"
+    ));
 
     private void givenExternalApi() {
         stubFor(post(urlEqualTo("/external-objects?message=from_feign"))

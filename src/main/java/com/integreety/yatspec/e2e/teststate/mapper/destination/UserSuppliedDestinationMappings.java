@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Comparator.reverseOrder;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @RequiredArgsConstructor
 public class UserSuppliedDestinationMappings implements DestinationNameMappings {
@@ -26,12 +25,13 @@ public class UserSuppliedDestinationMappings implements DestinationNameMappings 
                 .findFirst()
                 .orElse(DEFAULT_NAME);
 
-        if (!isBlank(nameKey) && !nameKey.equals(DEFAULT_NAME)) {
+        if (!nameKey.equals(DEFAULT_NAME)) {
             usedMappings.add(nameKey);
         }
         return mappings.getOrDefault(nameKey, fallbackMapper.mapForPath(path));
     }
 
+    @Override
     public Map<String, String> getUnusedMappings() {
         final HashMap<String, String> unusedMappings = new HashMap<>(mappings);
         for (final String name: usedMappings) {

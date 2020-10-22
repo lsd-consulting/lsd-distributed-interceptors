@@ -47,12 +47,14 @@ class UserSuppliedDestinationMappingsShould {
                 "/na", "FirstNamingService",
                 "/name/one", "MostSpecificNamingService",
                 "/name/one/other", "DifferentNamingService",
-                "/name", "MoreSpecificNamingService"
+                "/name", "MoreSpecificNamingService",
+                "", "SomeService"
         ));
 
         mappings.mapForPath("/two");
         mappings.mapForPath("/name/one");
         mappings.mapForPath("/na");
+        mappings.mapForPath("");
         assertThat(mappings.getUnusedMappings().keySet(), hasSize(2));
         assertThat(mappings.getUnusedMappings(), hasEntry("/name/one/other", "DifferentNamingService"));
         assertThat(mappings.getUnusedMappings(), hasEntry("/name", "MoreSpecificNamingService"));

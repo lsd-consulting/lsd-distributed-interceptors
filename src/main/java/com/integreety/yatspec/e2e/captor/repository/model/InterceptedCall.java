@@ -18,7 +18,7 @@ public class InterceptedCall {
     private String body;
     private Map<String, Collection<String>> headers;
     private String serviceName; // the calling service or the publisher or consumer
-    private String target; // the called URL or the exchange
+    private String target; // the called URL or the exchange name
     private String httpStatus;
     private String httpMethod;
     private Type type;

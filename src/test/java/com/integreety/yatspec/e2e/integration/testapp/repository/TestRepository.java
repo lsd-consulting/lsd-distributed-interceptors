@@ -16,6 +16,7 @@ import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @Slf4j
+@Component
 public class TestRepository {
     private static final String MONGODB_HOST = "localhost";
     private static final int MONGODB_PORT = 27017;
@@ -41,7 +43,7 @@ public class TestRepository {
     private static MongodExecutable mongodExecutable;
     private static MongoClient mongoClient;
 
-    static  {
+    static {
         final MongodStarter starter = MongodStarter.getDefaultInstance();
 
         final IMongodConfig mongodConfig;
@@ -58,6 +60,7 @@ public class TestRepository {
                     .applyConnectionString(new ConnectionString("mongodb://" + MONGODB_HOST + ":" + MONGODB_PORT + ""));
 
             mongoClient = MongoClients.create(builder
+
                     .retryWrites(true)
                     .build());
         } catch (final IOException e) {
