@@ -4,11 +4,12 @@ import brave.Tracer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
-import static java.util.Optional.empty;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,16 +25,10 @@ public class TraceIdRetriever {
     }
 
     private String retrieveTraceId(final Collection<String> b3Header, final Collection<String> xRequestInfo) {
-        Optional<String> traceIdOptional = empty();
-        if (b3Header != null && !b3Header.isEmpty()) {
-            traceIdOptional = getTraceIdFromB3Header(new ArrayList<>(b3Header));
-        }
+        final String traceId = getTraceIdFromB3Header(b3Header)
+                .orElseGet(() -> getTraceIdFromXRequestInfo(xRequestInfo)
+                .orElseGet(this::getTraceIdFromTracer));
 
-        if (traceIdOptional.isEmpty() && xRequestInfo != null && !xRequestInfo.isEmpty()) {
-            traceIdOptional = getTraceIdFromXRequestInfo(new ArrayList<>(xRequestInfo));
-        }
-
-        final String traceId = traceIdOptional.orElseGet(this::getTraceIdFromTracer);
         log.info("traceId retrieved={}", traceId);
         return traceId;
 
@@ -46,13 +41,20 @@ public class TraceIdRetriever {
         return (tracer.currentSpan() == null) ? tracer.nextSpan().context().traceIdString() : tracer.currentSpan().context().traceIdString();
     }
 
-    private Optional<String> getTraceIdFromXRequestInfo(final List<String> xRequestInfo) {
-        final String[] split = xRequestInfo.get(0).split(";");
-        final String referenceId = stream(split).map(String::trim).filter(x -> x.startsWith("referenceId")).findFirst().orElse("");
-        return stream(referenceId.split("=")).skip(1).findAny();
+    private Optional<String> getTraceIdFromXRequestInfo(final Collection<String> xRequestInfo) {
+        if (xRequestInfo != null) {
+            return xRequestInfo.stream().findFirst().flatMap(header ->
+                    Stream.of(header.split(";")).map(String::trim).filter(x -> x.startsWith("referenceId")).findFirst().flatMap(referenceId -> stream(referenceId.split("=")).skip(1).findAny()));
+        } else {
+            return Optional.empty();
+        }
     }
 
-    private Optional<String> getTraceIdFromB3Header(final List<String> b3Header) {
-        return Stream.of(b3Header.get(0).split("-")).findFirst();
+    private Optional<String> getTraceIdFromB3Header(final Collection<String> b3Header) {
+        if (b3Header != null) {
+            return b3Header.stream().findFirst().flatMap(header -> Stream.of(header.split("-")).findFirst());
+        } else {
+            return Optional.empty();
+        }
     }
 }
