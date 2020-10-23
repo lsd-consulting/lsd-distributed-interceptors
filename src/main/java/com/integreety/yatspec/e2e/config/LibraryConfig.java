@@ -9,7 +9,7 @@ import com.integreety.yatspec.e2e.captor.rabbit.RabbitCaptor;
 import com.integreety.yatspec.e2e.captor.rabbit.header.HeaderRetriever;
 import com.integreety.yatspec.e2e.captor.rabbit.mapper.ExchangeNameDeriver;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
-import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCallFactory;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedInteractionFactory;
 import com.integreety.yatspec.e2e.captor.repository.mongo.InterceptedDocumentMongoRepository;
 import com.integreety.yatspec.e2e.captor.trace.TraceIdRetriever;
 import lombok.RequiredArgsConstructor;
@@ -52,35 +52,35 @@ public class LibraryConfig {
 
     @Bean
     public RequestCaptor requestCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                       final InterceptedCallFactory interceptedCallFactory,
+                                       final InterceptedInteractionFactory interceptedInteractionFactory,
                                        final PropertyServiceNameDeriver propertyServiceNameDeriver,
                                        final TraceIdRetriever traceIdRetriever) {
 
 
-        return new RequestCaptor(interceptedDocumentRepository, interceptedCallFactory, propertyServiceNameDeriver, traceIdRetriever);
+        return new RequestCaptor(interceptedDocumentRepository, interceptedInteractionFactory, propertyServiceNameDeriver, traceIdRetriever);
     }
 
     @Bean
     public ResponseCaptor responseCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                         final InterceptedCallFactory interceptedCallFactory,
+                                         final InterceptedInteractionFactory interceptedInteractionFactory,
                                          final PropertyServiceNameDeriver propertyServiceNameDeriver,
                                          final TraceIdRetriever traceIdRetriever) {
 
-        return new ResponseCaptor(interceptedDocumentRepository, interceptedCallFactory, propertyServiceNameDeriver, traceIdRetriever);
+        return new ResponseCaptor(interceptedDocumentRepository, interceptedInteractionFactory, propertyServiceNameDeriver, traceIdRetriever);
     }
 
     @Bean
-    public InterceptedCallFactory mapGenerator(@Value("${spring.profiles.active:#{''}}") final String profile) {
-        return new InterceptedCallFactory(profile);
+    public InterceptedInteractionFactory mapGenerator(@Value("${spring.profiles.active:#{''}}") final String profile) {
+        return new InterceptedInteractionFactory(profile);
     }
 
     @Bean
     public RabbitCaptor publishCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                      final InterceptedCallFactory interceptedCallFactory,
+                                      final InterceptedInteractionFactory interceptedInteractionFactory,
                                       final HeaderRetriever headerRetriever,
                                       final PropertyServiceNameDeriver propertyServiceNameDeriver,
                                       final TraceIdRetriever traceIdRetriever) {
-        return new RabbitCaptor(interceptedDocumentRepository, interceptedCallFactory, propertyServiceNameDeriver, headerRetriever, traceIdRetriever);
+        return new RabbitCaptor(interceptedDocumentRepository, interceptedInteractionFactory, propertyServiceNameDeriver, headerRetriever, traceIdRetriever);
     }
 
     @Bean

@@ -2,7 +2,7 @@ package com.integreety.yatspec.e2e.teststate;
 
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
-import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedInteraction;
 import com.integreety.yatspec.e2e.teststate.interaction.InteractionNameGenerator;
 import org.junit.jupiter.api.Test;
 
@@ -30,9 +30,9 @@ public class TestStateLoggerShould {
 
     @Test
     public void logInteractionName() {
-        final InterceptedCall interceptedCall = InterceptedCall.builder().build();
-        given(interceptedDocumentRepository.findByTraceId(traceId)).willReturn(singletonList(interceptedCall));
-        given(interactionNameGenerator.generate(any(), any(), eq(singletonList(interceptedCall)), any()))
+        final InterceptedInteraction interceptedInteraction = InterceptedInteraction.builder().build();
+        given(interceptedDocumentRepository.findByTraceId(traceId)).willReturn(singletonList(interceptedInteraction));
+        given(interactionNameGenerator.generate(any(), any(), eq(singletonList(interceptedInteraction)), any()))
                 .willReturn(singletonList(of("interactionName", "body")));
 
         underTest.logStatesFromDatabase(traceId, userSuppliedSourceMappings(Map.of()), userSuppliedDestinationMappings(Map.of()));

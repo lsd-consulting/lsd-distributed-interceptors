@@ -1,7 +1,7 @@
 package com.integreety.yatspec.e2e.integration;
 
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
-import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedInteraction;
 import com.integreety.yatspec.e2e.integration.testapp.TestApplication;
 import com.integreety.yatspec.e2e.integration.testapp.config.RabbitConfig;
 import com.integreety.yatspec.e2e.integration.testapp.config.RabbitTemplateConfig;
@@ -34,7 +34,7 @@ import java.util.Set;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.integreety.yatspec.e2e.captor.repository.model.Type.*;
-import static com.integreety.yatspec.e2e.integration.matcher.InterceptedCallMatcher.with;
+import static com.integreety.yatspec.e2e.integration.matcher.InterceptedInteractionMatcher.with;
 import static com.integreety.yatspec.e2e.teststate.TraceIdGenerator.generate;
 import static com.integreety.yatspec.e2e.teststate.mapper.destination.UserSuppliedDestinationMappings.userSuppliedDestinationMappings;
 import static com.integreety.yatspec.e2e.teststate.mapper.source.UserSuppliedSourceMappings.userSuppliedSourceMappings;
@@ -88,22 +88,22 @@ public class EndToEndIT {
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), is("response_from_controller"));
 
-        final List<InterceptedCall> interceptedCalls = new ArrayList<>();
+        final List<InterceptedInteraction> interceptedInteractions = new ArrayList<>();
         await().untilAsserted(() -> {
-            final List<InterceptedCall> foundInterceptedCalls = testRepository.findAll(traceId);
-            assertThat(foundInterceptedCalls, hasSize(6));
-            interceptedCalls.addAll(foundInterceptedCalls);
+            final List<InterceptedInteraction> foundInterceptedInteractions = testRepository.findAll(traceId);
+            assertThat(foundInterceptedInteractions, hasSize(6));
+            interceptedInteractions.addAll(foundInterceptedInteractions);
         });
 
-        assertThat("REQUEST interaction missing", interceptedCalls, hasItem(with(REQUEST, "lsdEnd2End", NO_BODY, "/objects?message=from_test"))); // TODO Need to assert the parameter value
-        assertThat("REQUEST interaction missing", interceptedCalls, hasItem(with(RESPONSE, "lsdEnd2End", "response_from_controller", "/objects?message=from_test")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", NO_BODY, "/objects?message=from_test"))); // TODO Need to assert the parameter value
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "response_from_controller", "/objects?message=from_test")));
 
         // TODO Uncomment once the exchange name determination mechanism is fixed
-        // assertThat("PUBLISH interaction missing", interceptedCalls, hasItem(with(PUBLISH, "lsdEnd2End", "from_controller", "exchange")));
-        assertThat("CONSUMER interaction missing", interceptedCalls, hasItem(with(CONSUME, "lsdEnd2End", "from_controller", "exchange")));
+        // assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "from_controller", "exchange")));
+        assertThat("CONSUMER interaction missing", interceptedInteractions, hasItem(with(CONSUME, "lsdEnd2End", "from_controller", "exchange")));
 
-        assertThat("REQUEST interaction missing", interceptedCalls, hasItem(with(REQUEST, "lsdEnd2End", "from_listener", "/external-objects?message=from_feign")));
-        assertThat("REQUEST interaction missing", interceptedCalls, hasItem(with(RESPONSE, "lsdEnd2End", "from_external", "/external-objects?message=from_feign")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", "from_listener", "/external-objects?message=from_feign")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "from_external", "/external-objects?message=from_feign")));
     }
 
     @Test

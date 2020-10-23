@@ -8,22 +8,22 @@ import java.util.Collection;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class InterceptedCallFactory {
+public class InterceptedInteractionFactory {
 
     private final String profile;
 
-    public InterceptedCall buildFrom(final String body, final String traceId,
-                                     final Map<String, Collection<String>> headers, final String serviceName,
-                                     final String target, final Type type) {
+    public InterceptedInteraction buildFrom(final String body, final String traceId,
+                                            final Map<String, Collection<String>> headers, final String serviceName,
+                                            final String target, final Type type) {
 
         return buildFrom(body, headers, traceId, serviceName, target, null, null, type);
     }
 
-    public InterceptedCall buildFrom(final String body, final Map<String, Collection<String>> headers, final String traceId,
-                                     final String serviceName, final String target, final String httpStatus,
-                                     final String httpMethod, final Type type) {
+    public InterceptedInteraction buildFrom(final String body, final Map<String, Collection<String>> headers, final String traceId,
+                                            final String serviceName, final String target, final String httpStatus,
+                                            final String httpMethod, final Type type) {
 
-        return InterceptedCall.builder()
+        return InterceptedInteraction.builder()
                 .traceId(traceId)
                 .body(body)
                 .headers(headers)

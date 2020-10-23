@@ -2,7 +2,7 @@ package com.integreety.yatspec.e2e.interceptor;
 
 import com.integreety.yatspec.e2e.captor.http.RequestCaptor;
 import com.integreety.yatspec.e2e.captor.http.ResponseCaptor;
-import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedInteraction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
@@ -23,9 +23,9 @@ public class LsdRestTemplateInterceptor implements ClientHttpRequestInterceptor 
 
     @Override
     public ClientHttpResponse intercept(final HttpRequest request, final byte[] body, final ClientHttpRequestExecution execution) throws IOException {
-        final InterceptedCall interceptedCall = requestCaptor.captureRequestInteraction(request, new String(body));
+        final InterceptedInteraction interceptedInteraction = requestCaptor.captureRequestInteraction(request, new String(body));
         final ClientHttpResponse response = execution.execute(request, body);
-        responseCaptor.captureResponseInteraction(response, interceptedCall.getTarget(), interceptedCall.getTraceId());
+        responseCaptor.captureResponseInteraction(response, interceptedInteraction.getTarget(), interceptedInteraction.getTraceId());
         return response;
     }
 }

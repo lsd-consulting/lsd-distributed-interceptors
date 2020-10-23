@@ -1,6 +1,6 @@
 package com.integreety.yatspec.e2e.integration.testapp.repository;
 
-import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedInteraction;
 import com.integreety.yatspec.e2e.captor.repository.mongo.codec.ZonedDateTimeCodec;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoException;
@@ -70,21 +70,21 @@ public class TestRepository {
         return database.getCollection(COLLECTION_NAME).withCodecRegistry(pojoCodecRegistry);
     }
 
-    public List<InterceptedCall> findAll(final String traceId) {
-        log.info("Retrieving interceptedCalls for traceId:{}", traceId);
+    public List<InterceptedInteraction> findAll(final String traceId) {
+        log.info("Retrieving interceptedInteractions for traceId:{}", traceId);
 
         final MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
         final MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME).withCodecRegistry(pojoCodecRegistry);
 
-        final List<InterceptedCall> result = new ArrayList<>();
-        try (final MongoCursor<InterceptedCall> cursor = collection.find(eq("traceId", traceId), InterceptedCall.class).iterator()) {
+        final List<InterceptedInteraction> result = new ArrayList<>();
+        try (final MongoCursor<InterceptedInteraction> cursor = collection.find(eq("traceId", traceId), InterceptedInteraction.class).iterator()) {
             while (cursor.hasNext()) {
-                final InterceptedCall interceptedCall = cursor.next();
-                log.info("Retrieved interceptedCall:{}", interceptedCall);
-                result.add(interceptedCall);
+                final InterceptedInteraction interceptedInteraction = cursor.next();
+                log.info("Retrieved interceptedInteraction:{}", interceptedInteraction);
+                result.add(interceptedInteraction);
             }
         } catch (final MongoException e) {
-            log.error("Failed to retrieve interceptedCalls - message:{}, stackTrace:{}", e.getMessage(), e.getStackTrace());
+            log.error("Failed to retrieve interceptedInteractions - message:{}, stackTrace:{}", e.getMessage(), e.getStackTrace());
         }
         return result;
     }

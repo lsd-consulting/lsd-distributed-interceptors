@@ -13,7 +13,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InterceptedCall {
+public class InterceptedInteraction {
     private String traceId;
     private String body;
     private Map<String, Collection<String>> headers;

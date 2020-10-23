@@ -2,7 +2,7 @@ package com.integreety.yatspec.e2e.teststate;
 
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
-import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedInteraction;
 import com.integreety.yatspec.e2e.teststate.interaction.InteractionNameGenerator;
 import com.integreety.yatspec.e2e.teststate.mapper.destination.DestinationNameMappings;
 import com.integreety.yatspec.e2e.teststate.mapper.source.SourceNameMappings;
@@ -24,9 +24,9 @@ public class TestStateLogger {
     public void logStatesFromDatabase(final String traceId, final SourceNameMappings sourceNameMappings,
                                       final DestinationNameMappings destinationNameMappings) {
 
-        final List<InterceptedCall> interceptedCalls = interceptedDocumentRepository.findByTraceId(traceId);
+        final List<InterceptedInteraction> interceptedInteractions = interceptedDocumentRepository.findByTraceId(traceId);
         final ReportRenderer reportRenderer = new ReportRenderer();
-        for (final Pair<String, Object> interaction : interactionNameGenerator.generate(sourceNameMappings, destinationNameMappings, interceptedCalls, reportRenderer)) {
+        for (final Pair<String, Object> interaction : interactionNameGenerator.generate(sourceNameMappings, destinationNameMappings, interceptedInteractions, reportRenderer)) {
             testState.log(interaction.getLeft(), interaction.getRight());
         }
         reportRenderer.logUnusedSourceMappings(sourceNameMappings.getUnusedMappings());

@@ -1,7 +1,7 @@
 package com.integreety.yatspec.e2e.captor.repository.mongo;
 
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
-import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedInteraction;
 import com.integreety.yatspec.e2e.captor.repository.mongo.codec.ZonedDateTimeCodec;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -41,14 +41,14 @@ public class InterceptedDocumentMongoRepository implements InterceptedDocumentRe
             fromProviders(builder().automatic(true).build()));
 
 
-    private final MongoCollection<InterceptedCall> interceptedCalls;
+    private final MongoCollection<InterceptedInteraction> interceptedInteractions;
 
     public InterceptedDocumentMongoRepository(final String dbConnectionString,
                                               final String trustStoreLocation,
                                               final String trustStorePassword) {
 
         final MongoClient mongoClient = prepareMongoClient(dbConnectionString, trustStoreLocation, trustStorePassword);
-        interceptedCalls = prepareInterceptedCallCollection(mongoClient);
+        interceptedInteractions = prepareInterceptedInteractionCollection(mongoClient);
     }
 
     private MongoClient prepareMongoClient(final String dbConnectionString, final String trustStoreLocation, final String trustStorePassword) {
@@ -85,34 +85,34 @@ public class InterceptedDocumentMongoRepository implements InterceptedDocumentRe
         }
     }
 
-    private MongoCollection<InterceptedCall> prepareInterceptedCallCollection(final MongoClient mongoClient) {
-        final MongoCollection<InterceptedCall> interceptedCalls;
-        interceptedCalls = mongoClient.getDatabase(DATABASE_NAME).getCollection(COLLECTION_NAME, InterceptedCall.class).withCodecRegistry(pojoCodecRegistry);
-        interceptedCalls.createIndex(ascending("traceId"));
+    private MongoCollection<InterceptedInteraction> prepareInterceptedInteractionCollection(final MongoClient mongoClient) {
+        final MongoCollection<InterceptedInteraction> interceptedInteractions;
+        interceptedInteractions = mongoClient.getDatabase(DATABASE_NAME).getCollection(COLLECTION_NAME, InterceptedInteraction.class).withCodecRegistry(pojoCodecRegistry);
+        interceptedInteractions.createIndex(ascending("traceId"));
         final IndexOptions indexOptions = new IndexOptions().expireAfter(14L, DAYS);
-        interceptedCalls.createIndex(ascending("createdAt"), indexOptions);
-        return interceptedCalls;
+        interceptedInteractions.createIndex(ascending("createdAt"), indexOptions);
+        return interceptedInteractions;
     }
 
     @Override
-    public void save(final InterceptedCall interceptedCall) {
+    public void save(final InterceptedInteraction interceptedInteraction) {
         try {
-            interceptedCalls.insertOne(interceptedCall);
+            interceptedInteractions.insertOne(interceptedInteraction);
         } catch (final MongoException e) {
-            log.error("Skipping persisting the interceptedCall due to exception - interceptedCall:{}, message:{}, stackTrace:{}", interceptedCall, e.getMessage(), e.getStackTrace());
+            log.error("Skipping persisting the interceptedInteraction due to exception - interceptedInteraction:{}, message:{}, stackTrace:{}", interceptedInteraction, e.getMessage(), e.getStackTrace());
         }
     }
 
     @Override
-    public List<InterceptedCall> findByTraceId(final String traceId) {
-        final List<InterceptedCall> result = new ArrayList<>();
-        try (final MongoCursor<InterceptedCall> cursor = interceptedCalls.find(eq("traceId", traceId), InterceptedCall.class).iterator()) {
+    public List<InterceptedInteraction> findByTraceId(final String traceId) {
+        final List<InterceptedInteraction> result = new ArrayList<>();
+        try (final MongoCursor<InterceptedInteraction> cursor = interceptedInteractions.find(eq("traceId", traceId), InterceptedInteraction.class).iterator()) {
             while (cursor.hasNext()) {
                 result.add(cursor.next());
             }
         } catch (final MongoException e) {
             // TODO Should we swallow this exception?
-            log.error("Failed to retrieve interceptedCalls - message:{}, stackTrace:{}", e.getMessage(), e.getStackTrace());
+            log.error("Failed to retrieve interceptedInteractions - message:{}, stackTrace:{}", e.getMessage(), e.getStackTrace());
         }
         return result;
     }

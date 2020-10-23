@@ -3,8 +3,8 @@ package com.integreety.yatspec.e2e.captor.rabbit;
 import com.integreety.yatspec.e2e.captor.http.mapper.PropertyServiceNameDeriver;
 import com.integreety.yatspec.e2e.captor.rabbit.header.HeaderRetriever;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
-import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
-import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCallFactory;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedInteraction;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedInteractionFactory;
 import com.integreety.yatspec.e2e.captor.repository.model.Type;
 import com.integreety.yatspec.e2e.captor.trace.TraceIdRetriever;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.Map;
 public class RabbitCaptor {
 
     private final InterceptedDocumentRepository interceptedDocumentRepository;
-    private final InterceptedCallFactory interceptedCallFactory;
+    private final InterceptedInteractionFactory interceptedInteractionFactory;
     private final PropertyServiceNameDeriver propertyServiceNameDeriver;
     private final HeaderRetriever headerRetriever;
     private final TraceIdRetriever traceIdRetriever;
@@ -29,7 +29,7 @@ public class RabbitCaptor {
         final String traceId = traceIdRetriever.getTraceId(headers);
         final String service = propertyServiceNameDeriver.getServiceName();
         final String body = message.getBody() != null ? new String(message.getBody()) : null;
-        final InterceptedCall interceptedCall = interceptedCallFactory.buildFrom(body, traceId, headers, service, exchange, type);
-        interceptedDocumentRepository.save(interceptedCall);
+        final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(body, traceId, headers, service, exchange, type);
+        interceptedDocumentRepository.save(interceptedInteraction);
     }
 }

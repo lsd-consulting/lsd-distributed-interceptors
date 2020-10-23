@@ -1,6 +1,6 @@
 package com.integreety.yatspec.e2e.teststate.interaction;
 
-import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
+import com.integreety.yatspec.e2e.captor.repository.model.InterceptedInteraction;
 import com.integreety.yatspec.e2e.teststate.dto.Interaction;
 import com.integreety.yatspec.e2e.teststate.mapper.destination.DestinationNameMappings;
 import com.integreety.yatspec.e2e.teststate.mapper.source.SourceNameMappings;
@@ -21,29 +21,29 @@ public class InteractionNameGenerator {
 
     public List<Pair<String, Object>> generate(final SourceNameMappings sourceNameMappings,
                                                final DestinationNameMappings destinationNameMappings,
-                                               final List<InterceptedCall> interceptedCalls,
+                                               final List<InterceptedInteraction> interceptedInteractions,
                                                final ReportRenderer reportRenderer) {
 
         final List<Pair<String, Object>> interactions = new ArrayList<>();
-        for (final InterceptedCall interceptedCall : interceptedCalls) {
-            final String destination = destinationNameMappings.mapForPath(interceptedCall.getTarget());
-            final String source = sourceNameMappings.mapFor(Pair.of(interceptedCall.getServiceName(), interceptedCall.getTarget()));
-            reportRenderer.log(interceptedCall.getServiceName(), interceptedCall.getTarget(), source, destination);
-            final String interactionName = interceptedCall.getType().getInteractionName().apply(buildInteraction(interceptedCall, source, destination));
+        for (final InterceptedInteraction interceptedInteraction : interceptedInteractions) {
+            final String destination = destinationNameMappings.mapForPath(interceptedInteraction.getTarget());
+            final String source = sourceNameMappings.mapFor(Pair.of(interceptedInteraction.getServiceName(), interceptedInteraction.getTarget()));
+            reportRenderer.log(interceptedInteraction.getServiceName(), interceptedInteraction.getTarget(), source, destination);
+            final String interactionName = interceptedInteraction.getType().getInteractionName().apply(buildInteraction(interceptedInteraction, source, destination));
             log.info("Generated an interaction name={}", interactionName);
-            final String body = indent(interceptedCall.getBody());
+            final String body = indent(interceptedInteraction.getBody());
             interactions.add(Pair.of(interactionName, body));
         }
         return interactions;
     }
 
-    private Interaction buildInteraction(final InterceptedCall interceptedCall, final String source, final String destination) {
+    private Interaction buildInteraction(final InterceptedInteraction interceptedInteraction, final String source, final String destination) {
         return Interaction.builder()
                 .source(source)
                 .destination(destination)
-                .httpMethod(interceptedCall.getHttpMethod())
-                .httpStatus(interceptedCall.getHttpStatus())
-                .path(interceptedCall.getTarget())
+                .httpMethod(interceptedInteraction.getHttpMethod())
+                .httpStatus(interceptedInteraction.getHttpStatus())
+                .path(interceptedInteraction.getTarget())
                 .build();
     }
 
