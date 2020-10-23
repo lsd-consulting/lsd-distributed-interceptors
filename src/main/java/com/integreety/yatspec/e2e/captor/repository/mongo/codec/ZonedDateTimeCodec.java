@@ -19,7 +19,6 @@ public class ZonedDateTimeCodec  implements Codec<ZonedDateTime> {
         writer.writeDateTime(value.toInstant().toEpochMilli());
     }
 
-    @SneakyThrows
     @Override
     public ZonedDateTime decode(final BsonReader reader, final DecoderContext decoderContext) {
         return ZonedDateTime.ofInstant(Instant.ofEpochMilli(reader.readDateTime()), ZoneId.of("UTC"));
