@@ -13,7 +13,7 @@ public class TestListener {
 
     private final TestClient testClient;
 
-    @RabbitListener(queues = "queue")
+    @RabbitListener(queues = "queue-listener")
     public void consume(final String message) {
         log.info("Consuming message={}", message);
         testClient.post("from_listener");

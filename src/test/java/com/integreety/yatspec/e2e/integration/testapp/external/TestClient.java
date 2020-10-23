@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 @FeignClient(name = "testClient", url = "http://localhost:${wiremock.server.port}")
 public interface TestClient {
 
-    @PostMapping("/external-objects?message=from_feign")
+    @PostMapping("/external-api?message=from_feign")
     void post(String message);
 }

@@ -26,13 +26,13 @@ public class RabbitConfig {
     }
 
     @Bean
-    public Queue queue() {
-        return new Queue("queue");
+    public Queue queueListener() {
+        return new Queue("queue-listener");
     }
 
     @Bean
     public Binding binding() {
-        return new Binding("queue", QUEUE, "exchange", "queue", null);
+        return new Binding("queue-listener", QUEUE, "exchange", "queue-listener", null);
     }
 
     @Bean

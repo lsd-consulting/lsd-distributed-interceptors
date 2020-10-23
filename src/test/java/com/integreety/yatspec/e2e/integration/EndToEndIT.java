@@ -95,15 +95,15 @@ public class EndToEndIT {
             interceptedInteractions.addAll(foundInterceptedInteractions);
         });
 
-        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", NO_BODY, "/objects?message=from_test"))); // TODO Need to assert the parameter value
-        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "response_from_controller", "/objects?message=from_test")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", NO_BODY, "/api?message=from_test"))); // TODO Need to assert the parameter value
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "response_from_controller", "/api?message=from_test")));
 
         // TODO Uncomment once the exchange name determination mechanism is fixed
         // assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "from_controller", "exchange")));
         assertThat("CONSUMER interaction missing", interceptedInteractions, hasItem(with(CONSUME, "lsdEnd2End", "from_controller", "exchange")));
 
-        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", "from_listener", "/external-objects?message=from_feign")));
-        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "from_external", "/external-objects?message=from_feign")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", "from_listener", "/external-api?message=from_feign")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "from_external", "/external-api?message=from_feign")));
     }
 
     @Test
@@ -120,30 +120,30 @@ public class EndToEndIT {
         testStateLogger.logStatesFromDatabase(traceId, sourceNameMappings, destinationNameMappings);
 
         final Set<String> interactionNames = testState.getCapturedTypes().keySet();
-        assertThat(interactionNames, hasItem("GET /objects?message=from_test from Client to Controller"));
+        assertThat(interactionNames, hasItem("GET /api?message=from_test from Client to Controller"));
         assertThat(interactionNames, hasItem("publish event from Controller to Exchange"));
         assertThat(interactionNames, hasItem("200 OK response from Controller to Client"));
         assertThat(interactionNames, hasItem("consume message from Exchange to Consumer"));
-        assertThat(interactionNames, hasItem("POST /external-objects?message=from_feign from Consumer to Wiremock"));
+        assertThat(interactionNames, hasItem("POST /external-api?message=from_feign from Consumer to Wiremock"));
         assertThat(interactionNames, hasItem("200 OK response from Wiremock to Consumer"));
     }
 
     private final SourceNameMappings sourceNameMappings = userSuppliedSourceMappings(Map.of(
-            of("lsdEnd2End", "/objects?message=from_test"), "Client",
+            of("lsdEnd2End", "/api?message=from_test"), "Client",
             of("lsdEnd2End", ""), "Controller",
             of("lsdEnd2End", "exchange"), "Consumer",
-            of("lsdEnd2End", "/external-objects?message=from_feign"), "Consumer"
+            of("lsdEnd2End", "/external-api?message=from_feign"), "Consumer"
     ));
 
     private final DestinationNameMappings destinationNameMappings = userSuppliedDestinationMappings(Map.of(
-            "/objects?message=from_test", "Controller",
+            "/api?message=from_test", "Controller",
             "", "Exchange",
             "exchange", "Exchange",
-            "/external-objects?message=from_feign", "Wiremock"
+            "/external-api?message=from_feign", "Wiremock"
     ));
 
     private void givenExternalApi() {
-        stubFor(post(urlEqualTo("/external-objects?message=from_feign"))
+        stubFor(post(urlEqualTo("/external-api?message=from_feign"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody("from_external")));
@@ -151,7 +151,7 @@ public class EndToEndIT {
 
     public ResponseEntity<String> sendInitialRequest(final String traceId) throws URISyntaxException {
         log.info("Sending traceId:{}", traceId);
-        final RequestEntity<?> requestEntity = get(new URI("http://localhost:" + serverPort + "/objects?message=from_test"))
+        final RequestEntity<?> requestEntity = get(new URI("http://localhost:" + serverPort + "/api?message=from_test"))
                 .header("Content-Type", APPLICATION_JSON_VALUE)
                 .header("b3", traceId + "-" + traceId + "-1")
                 .build();
