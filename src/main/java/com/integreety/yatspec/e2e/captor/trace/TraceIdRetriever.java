@@ -4,15 +4,17 @@ import brave.Tracer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Stream;
+
+import static java.util.Arrays.stream;
+import static java.util.Optional.empty;
 
 @Slf4j
 @RequiredArgsConstructor
 public class TraceIdRetriever {
 
-    private final Tracer tracer; // TODO Should this be optional?
+    private final Tracer tracer;
 
     public String getTraceId(final Map<String, Collection<String>> headers) {
         log.info("headers received={}", headers);
@@ -22,29 +24,35 @@ public class TraceIdRetriever {
     }
 
     private String retrieveTraceId(final Collection<String> b3Header, final Collection<String> xRequestInfo) {
-        final String traceId;
-        if (b3Header != null && b3Header.size() > 0) {
-            traceId = getTraceIdFromB3Header(b3Header);
-        } else if (xRequestInfo != null && xRequestInfo.size() > 0) {
-            traceId = getTraceIdFromXRequestInfo(xRequestInfo);
-        } else {
-            traceId = getTraceIdFromTracer();
+        Optional<String> traceIdOptional = empty();
+        if (b3Header != null && !b3Header.isEmpty()) {
+            traceIdOptional = getTraceIdFromB3Header(new ArrayList<>(b3Header));
         }
+
+        if (traceIdOptional.isEmpty() && xRequestInfo != null && !xRequestInfo.isEmpty()) {
+            traceIdOptional = getTraceIdFromXRequestInfo(new ArrayList<>(xRequestInfo));
+        }
+
+        final String traceId = traceIdOptional.orElseGet(this::getTraceIdFromTracer);
         log.info("traceId retrieved={}", traceId);
         return traceId;
+
     }
 
+    /*
+     * The advantage of this approach is that it will create a new traceId and hopefully pass it on with the next request.
+     */
     private String getTraceIdFromTracer() {
         return (tracer.currentSpan() == null) ? tracer.nextSpan().context().traceIdString() : tracer.currentSpan().context().traceIdString();
     }
 
-    private String getTraceIdFromXRequestInfo(final Collection<String> xRequestInfo) {
-        final String[] split = xRequestInfo.stream().findFirst().get().split(";");
-        final String referenceId = Arrays.stream(split).map(String::trim).filter(x -> x.startsWith("referenceId")).findFirst().get();
-        return referenceId.split("=")[1];
+    private Optional<String> getTraceIdFromXRequestInfo(final List<String> xRequestInfo) {
+        final String[] split = xRequestInfo.get(0).split(";");
+        final String referenceId = stream(split).map(String::trim).filter(x -> x.startsWith("referenceId")).findFirst().orElse("");
+        return stream(referenceId.split("=")).skip(1).findAny();
     }
 
-    private String getTraceIdFromB3Header(final Collection<String> b3Header) {
-        return Arrays.stream(b3Header.stream().findFirst().get().split("-")).findFirst().get();
+    private Optional<String> getTraceIdFromB3Header(final List<String> b3Header) {
+        return Stream.of(b3Header.get(0).split("-")).findFirst();
     }
 }
