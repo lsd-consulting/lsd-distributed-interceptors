@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
+import static java.util.Optional.empty;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class TraceIdRetriever {
     private String retrieveTraceId(final Collection<String> b3Header, final Collection<String> xRequestInfo) {
         final String traceId = getTraceIdFromB3Header(b3Header)
                 .orElseGet(() -> getTraceIdFromXRequestInfo(xRequestInfo)
-                .orElseGet(this::getTraceIdFromTracer));
+                        .orElseGet(this::getTraceIdFromTracer));
 
         log.info("traceId retrieved={}", traceId);
         return traceId;
@@ -44,9 +45,13 @@ public class TraceIdRetriever {
     private Optional<String> getTraceIdFromXRequestInfo(final Collection<String> xRequestInfo) {
         if (xRequestInfo != null) {
             return xRequestInfo.stream().findFirst().flatMap(header ->
-                    Stream.of(header.split(";")).map(String::trim).filter(x -> x.startsWith("referenceId")).findFirst().flatMap(referenceId -> stream(referenceId.split("=")).skip(1).findAny()));
+                    Stream.of(header.split(";"))
+                            .map(String::trim)
+                            .filter(x -> x.startsWith("referenceId"))
+                            .findFirst()
+                            .flatMap(referenceId -> stream(referenceId.split("=")).skip(1).findAny()));
         } else {
-            return Optional.empty();
+            return empty();
         }
     }
 
@@ -54,7 +59,7 @@ public class TraceIdRetriever {
         if (b3Header != null) {
             return b3Header.stream().findFirst().flatMap(header -> Stream.of(header.split("-")).findFirst());
         } else {
-            return Optional.empty();
+            return empty();
         }
     }
 }
