@@ -6,15 +6,16 @@ import com.integreety.yatspec.e2e.captor.repository.mongo.codec.ZonedDateTimeCod
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoException;
-import com.mongodb.client.*;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.IndexOptions;
 import com.mongodb.connection.SslSettings;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.bson.Document;
-import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.InputStream;
@@ -22,27 +23,35 @@ import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Indexes.ascending;
+import static java.util.concurrent.TimeUnit.DAYS;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
+import static org.bson.codecs.configuration.CodecRegistries.*;
+import static org.bson.codecs.pojo.PojoCodecProvider.builder;
 
 @Slf4j
 public class InterceptedDocumentMongoRepository implements InterceptedDocumentRepository {
 
-    private static final String DATABASE_NAME = "lsd";
-    private static final String COLLECTION_NAME = "interceptedInteraction";
+    public static final String DATABASE_NAME = "lsd";
+    public static final String COLLECTION_NAME = "interceptedInteraction";
 
-    private final MongoClient mongoClient;
+    public static final CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromCodecs(new ZonedDateTimeCodec()),
+            fromProviders(builder().automatic(true).build()));
 
-    private final CodecRegistry codecRegistry = CodecRegistries.fromCodecs(new ZonedDateTimeCodec());
-    private final CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), codecRegistry,
-            fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+
+    private final MongoCollection<InterceptedCall> interceptedCalls;
 
     public InterceptedDocumentMongoRepository(final String dbConnectionString,
                                               final String trustStoreLocation,
                                               final String trustStorePassword) {
 
+        final MongoClient mongoClient = prepareMongoClient(dbConnectionString, trustStoreLocation, trustStorePassword);
+        interceptedCalls = prepareInterceptedCallCollection(mongoClient);
+    }
+
+    private MongoClient prepareMongoClient(final String dbConnectionString, final String trustStoreLocation, final String trustStorePassword) {
         final MongoClientSettings.Builder builder = MongoClientSettings.builder()
                 .applyConnectionString(new ConnectionString(dbConnectionString));
 
@@ -56,7 +65,7 @@ public class InterceptedDocumentMongoRepository implements InterceptedDocumentRe
 //    char[] password = "xxxx".toCharArray(); // the password as a character array
 //    MongoCredential credential = MongoCredential.createCredential(user, database, password);
 
-        mongoClient = MongoClients.create(builder
+        return MongoClients.create(builder
 //            .credential(credential)
                 .retryWrites(true)
                 .build());
@@ -76,10 +85,17 @@ public class InterceptedDocumentMongoRepository implements InterceptedDocumentRe
         }
     }
 
+    private MongoCollection<InterceptedCall> prepareInterceptedCallCollection(final MongoClient mongoClient) {
+        final MongoCollection<InterceptedCall> interceptedCalls;
+        interceptedCalls = mongoClient.getDatabase(DATABASE_NAME).getCollection(COLLECTION_NAME, InterceptedCall.class).withCodecRegistry(pojoCodecRegistry);
+        interceptedCalls.createIndex(ascending("traceId"));
+        final IndexOptions indexOptions = new IndexOptions().expireAfter(14L, DAYS);
+        interceptedCalls.createIndex(ascending("createdAt"), indexOptions);
+        return interceptedCalls;
+    }
+
     @Override
     public void save(final InterceptedCall interceptedCall) {
-        final MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
-        final MongoCollection<InterceptedCall> interceptedCalls = database.getCollection(COLLECTION_NAME, InterceptedCall.class).withCodecRegistry(pojoCodecRegistry);
         try {
             interceptedCalls.insertOne(interceptedCall);
         } catch (final MongoException e) {
@@ -89,15 +105,13 @@ public class InterceptedDocumentMongoRepository implements InterceptedDocumentRe
 
     @Override
     public List<InterceptedCall> findByTraceId(final String traceId) {
-        final MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
-        final MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME).withCodecRegistry(pojoCodecRegistry);
-
         final List<InterceptedCall> result = new ArrayList<>();
-        try (final MongoCursor<InterceptedCall> cursor = collection.find(eq("traceId", traceId), InterceptedCall.class).iterator()) {
+        try (final MongoCursor<InterceptedCall> cursor = interceptedCalls.find(eq("traceId", traceId), InterceptedCall.class).iterator()) {
             while (cursor.hasNext()) {
                 result.add(cursor.next());
             }
         } catch (final MongoException e) {
+            // TODO Should we swallow this exception?
             log.error("Failed to retrieve interceptedCalls - message:{}, stackTrace:{}", e.getMessage(), e.getStackTrace());
         }
         return result;

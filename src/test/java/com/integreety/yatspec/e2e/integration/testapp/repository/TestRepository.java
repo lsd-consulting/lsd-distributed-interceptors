@@ -3,7 +3,6 @@ package com.integreety.yatspec.e2e.integration.testapp.repository;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.integreety.yatspec.e2e.captor.repository.mongo.codec.ZonedDateTimeCodec;
 import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoException;
 import com.mongodb.client.*;
 import de.flapdoodle.embed.mongo.MongodExecutable;
@@ -13,59 +12,62 @@ import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
-import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mongodb.MongoClientSettings.builder;
+import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static com.mongodb.client.model.Filters.eq;
 import static de.flapdoodle.embed.mongo.distribution.Version.Main.PRODUCTION;
 import static de.flapdoodle.embed.process.runtime.Network.localhostIsIPv6;
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
+import static org.bson.codecs.configuration.CodecRegistries.*;
 
 @Slf4j
-@Component
 public class TestRepository {
-    private static final String MONGODB_HOST = "localhost";
-    private static final int MONGODB_PORT = 27017;
+    public static final String MONGODB_HOST = "localhost";
+    public static final int MONGODB_PORT = 27017;
+
     private static final String DATABASE_NAME = "lsd";
     private static final String COLLECTION_NAME = "interceptedInteraction";
 
-    private final CodecRegistry codecRegistry = CodecRegistries.fromCodecs(new ZonedDateTimeCodec());
-    private final CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), codecRegistry,
+    private static MongoClient mongoClient;
+    private static MongodExecutable mongodExecutable;
+
+    private final CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromCodecs(new ZonedDateTimeCodec()),
             fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 
-    private static MongodExecutable mongodExecutable;
-    private static MongoClient mongoClient;
-
-    static {
-        final MongodStarter starter = MongodStarter.getDefaultInstance();
-
-        final IMongodConfig mongodConfig;
+    public static void setupDatabase() {
         try {
-            mongodConfig = new MongodConfigBuilder()
+            final IMongodConfig mongodConfig = new MongodConfigBuilder()
                     .version(PRODUCTION)
                     .net(new Net(MONGODB_HOST, MONGODB_PORT, localhostIsIPv6()))
                     .build();
 
-            mongodExecutable = starter.prepare(mongodConfig);
+            mongodExecutable = MongodStarter.getDefaultInstance().prepare(mongodConfig);
             mongodExecutable.start();
 
-            final MongoClientSettings.Builder builder = MongoClientSettings.builder()
-                    .applyConnectionString(new ConnectionString("mongodb://" + MONGODB_HOST + ":" + MONGODB_PORT + ""));
 
-            mongoClient = MongoClients.create(builder
-
+            mongoClient = MongoClients.create(builder()
+                    .applyConnectionString(new ConnectionString("mongodb://" + MONGODB_HOST + ":" + MONGODB_PORT))
                     .retryWrites(true)
                     .build());
         } catch (final IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
+    }
+
+    public static void tearDownDatabase() {
+        mongoClient.close();
+        mongodExecutable.stop();
+    }
+
+    public MongoCollection<Document> getCollection() {
+        final MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
+        return database.getCollection(COLLECTION_NAME).withCodecRegistry(pojoCodecRegistry);
     }
 
     public List<InterceptedCall> findAll(final String traceId) {

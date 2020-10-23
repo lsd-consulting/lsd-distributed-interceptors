@@ -4,13 +4,15 @@ import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedCall;
 import com.integreety.yatspec.e2e.integration.testapp.TestApplication;
 import com.integreety.yatspec.e2e.integration.testapp.config.RabbitConfig;
-import com.integreety.yatspec.e2e.integration.testapp.config.RabbitTemplateConfiguration;
+import com.integreety.yatspec.e2e.integration.testapp.config.RabbitTemplateConfig;
+import com.integreety.yatspec.e2e.integration.testapp.config.RepositoryConfig;
 import com.integreety.yatspec.e2e.integration.testapp.config.RestConfig;
 import com.integreety.yatspec.e2e.integration.testapp.repository.TestRepository;
 import com.integreety.yatspec.e2e.teststate.TestStateLogger;
 import com.integreety.yatspec.e2e.teststate.mapper.destination.DestinationNameMappings;
 import com.integreety.yatspec.e2e.teststate.mapper.source.SourceNameMappings;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,7 +48,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.RequestEntity.get;
 
 @Slf4j
-@SpringJUnitConfig(classes = {RestConfig.class, RabbitConfig.class, RabbitTemplateConfiguration.class})
+@SpringJUnitConfig(classes = {RepositoryConfig.class, RestConfig.class, RabbitConfig.class, RabbitTemplateConfig.class})
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = {TestApplication.class})
 @TestPropertySource("classpath:application-test.properties")
 @AutoConfigureWireMock(port = 0)
@@ -70,6 +72,11 @@ public class EndToEndIT {
     private TestState testState;
 
     private final String traceId = generate();
+
+    @AfterAll
+    public static void tearDown() {
+        TestRepository.tearDownDatabase();
+    }
 
     @Test
     public void shouldRecordAllInteractions() throws URISyntaxException {

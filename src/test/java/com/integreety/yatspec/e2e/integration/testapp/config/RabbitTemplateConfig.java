@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 @TestConfiguration
 @EnableRabbit
 @Slf4j
-public class RabbitTemplateConfiguration {
+public class RabbitTemplateConfig {
 
     @Bean
     public CachingConnectionFactory connectionFactory() {
