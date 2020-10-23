@@ -17,10 +17,17 @@ public class TestController {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    @GetMapping("/api")
+    @GetMapping("/api-listener")
     public ResponseEntity<String> getObjectByMessage(@RequestParam final String message) {
         log.info("Received message:{}", message);
-        rabbitTemplate.convertAndSend("exchange", null, "from_controller");
+        rabbitTemplate.convertAndSend("exchange-listener", null, "from_controller");
+        return ResponseEntity.ok("response_from_controller");
+    }
+
+    @GetMapping("/api-rabbit-template")
+    public ResponseEntity<String> get(@RequestParam final String message) {
+        log.info("Received message:{}", message);
+        rabbitTemplate.convertAndSend("exchange-rabbit-template", null, "from_controller");
         return ResponseEntity.ok("response_from_controller");
     }
 }

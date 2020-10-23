@@ -21,8 +21,13 @@ public class RabbitConfig {
     private final CachingConnectionFactory connectionFactory;
 
     @Bean
-    public Exchange exchange() {
-        return new FanoutExchange("exchange");
+    public Exchange exchangeListener() {
+        return new FanoutExchange("exchange-listener");
+    }
+
+    @Bean
+    public Exchange exchangeTemplate() {
+        return new FanoutExchange("exchange-rabbit-template");
     }
 
     @Bean
@@ -31,8 +36,18 @@ public class RabbitConfig {
     }
 
     @Bean
-    public Binding binding() {
-        return new Binding("queue-listener", QUEUE, "exchange", "queue-listener", null);
+    public Queue queueRabbitTemplate() {
+        return new Queue("queue-rabbit-template");
+    }
+
+    @Bean
+    public Binding queueListenerToExchangeBinding() {
+        return new Binding("queue-listener", QUEUE, "exchange-listener", "queue-listener", null);
+    }
+
+    @Bean
+    public Binding queueRabbitTemplateToExchangeBinding() {
+        return new Binding("queue-rabbit-template", QUEUE, "exchange-rabbit-template", "queue-rabbit-template", null);
     }
 
     @Bean

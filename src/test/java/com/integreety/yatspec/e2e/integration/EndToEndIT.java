@@ -14,6 +14,7 @@ import com.integreety.yatspec.e2e.teststate.mapper.source.SourceNameMappings;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -66,6 +67,9 @@ public class EndToEndIT {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Autowired
     private TestStateLogger testStateLogger;
 
     @Autowired
@@ -79,11 +83,11 @@ public class EndToEndIT {
     }
 
     @Test
-    public void shouldRecordAllInteractions() throws URISyntaxException {
+    public void shouldRecordRestTemplateAndListenerInteractions() throws URISyntaxException {
 
         givenExternalApi();
 
-        final ResponseEntity<String> response = sendInitialRequest(traceId);
+        final ResponseEntity<String> response = sendInitialRequest("/api-listener", traceId);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), is("response_from_controller"));
@@ -95,12 +99,13 @@ public class EndToEndIT {
             interceptedInteractions.addAll(foundInterceptedInteractions);
         });
 
-        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", NO_BODY, "/api?message=from_test"))); // TODO Need to assert the parameter value
-        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "response_from_controller", "/api?message=from_test")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", NO_BODY, "/api-listener?message=from_test"))); // TODO Need to assert the parameter value
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "response_from_controller", "/api-listener?message=from_test")));
 
         // TODO Uncomment once the exchange name determination mechanism is fixed
-        // assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "from_controller", "exchange")));
-        assertThat("CONSUMER interaction missing", interceptedInteractions, hasItem(with(CONSUME, "lsdEnd2End", "from_controller", "exchange")));
+        // assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "from_controller", "exchange-listener")));
+         assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "from_controller", "")));
+        assertThat("CONSUMER interaction missing", interceptedInteractions, hasItem(with(CONSUME, "lsdEnd2End", "from_controller", "exchange-listener")));
 
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", "from_listener", "/external-api?message=from_feign")));
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "from_external", "/external-api?message=from_feign")));
@@ -110,7 +115,7 @@ public class EndToEndIT {
     public void shouldRecordUserSuppliedNames() throws URISyntaxException {
         givenExternalApi();
 
-        final ResponseEntity<String> response = sendInitialRequest(traceId);
+        final ResponseEntity<String> response = sendInitialRequest("/api-listener", traceId);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), containsString("response_from_controller"));
@@ -120,7 +125,7 @@ public class EndToEndIT {
         testStateLogger.logStatesFromDatabase(traceId, sourceNameMappings, destinationNameMappings);
 
         final Set<String> interactionNames = testState.getCapturedTypes().keySet();
-        assertThat(interactionNames, hasItem("GET /api?message=from_test from Client to Controller"));
+        assertThat(interactionNames, hasItem("GET /api-listener?message=from_test from Client to Controller"));
         assertThat(interactionNames, hasItem("publish event from Controller to Exchange"));
         assertThat(interactionNames, hasItem("200 OK response from Controller to Client"));
         assertThat(interactionNames, hasItem("consume message from Exchange to Consumer"));
@@ -128,17 +133,47 @@ public class EndToEndIT {
         assertThat(interactionNames, hasItem("200 OK response from Wiremock to Consumer"));
     }
 
+    @Test
+    public void shouldRecordReceivingMessagesWithRabbitTemplate() throws URISyntaxException {
+
+        final ResponseEntity<String> response = sendInitialRequest("/api-rabbit-template", traceId);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody(), is("response_from_controller"));
+
+        await().untilAsserted(() -> {
+            final String message = (String) rabbitTemplate.receiveAndConvert("queue-rabbit-template", 2000);
+            assertThat(message, is(notNullValue()));
+            assertThat(message, is("from_controller"));
+        });
+
+        final List<InterceptedInteraction> interceptedInteractions = new ArrayList<>();
+        await().untilAsserted(() -> {
+            final List<InterceptedInteraction> foundInterceptedInteractions = testRepository.findAll(traceId);
+            assertThat(foundInterceptedInteractions, hasSize(4));
+            interceptedInteractions.addAll(foundInterceptedInteractions);
+        });
+
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", NO_BODY, "/api-rabbit-template?message=from_test"))); // TODO Need to assert the parameter value
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "response_from_controller", "/api-rabbit-template?message=from_test")));
+
+        // TODO Uncomment once the exchange name determination mechanism is fixed
+        // assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "from_controller", "exchange-rabbit-template")));
+         assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "from_controller", "")));
+        assertThat("CONSUMER interaction missing", interceptedInteractions, hasItem(with(CONSUME, "lsdEnd2End", "from_controller", "exchange-rabbit-template")));
+    }
+
     private final SourceNameMappings sourceNameMappings = userSuppliedSourceMappings(Map.of(
-            of("lsdEnd2End", "/api?message=from_test"), "Client",
+            of("lsdEnd2End", "/api-listener?message=from_test"), "Client",
             of("lsdEnd2End", ""), "Controller",
-            of("lsdEnd2End", "exchange"), "Consumer",
+            of("lsdEnd2End", "exchange-listener"), "Consumer",
             of("lsdEnd2End", "/external-api?message=from_feign"), "Consumer"
     ));
 
     private final DestinationNameMappings destinationNameMappings = userSuppliedDestinationMappings(Map.of(
-            "/api?message=from_test", "Controller",
+            "/api-listener?message=from_test", "Controller",
             "", "Exchange",
-            "exchange", "Exchange",
+            "exchange-listener", "Exchange",
             "/external-api?message=from_feign", "Wiremock"
     ));
 
@@ -149,9 +184,9 @@ public class EndToEndIT {
                         .withBody("from_external")));
     }
 
-    public ResponseEntity<String> sendInitialRequest(final String traceId) throws URISyntaxException {
+    public ResponseEntity<String> sendInitialRequest(final String resourceName, final String traceId) throws URISyntaxException {
         log.info("Sending traceId:{}", traceId);
-        final RequestEntity<?> requestEntity = get(new URI("http://localhost:" + serverPort + "/api?message=from_test"))
+        final RequestEntity<?> requestEntity = get(new URI("http://localhost:" + serverPort + resourceName + "?message=from_test"))
                 .header("Content-Type", APPLICATION_JSON_VALUE)
                 .header("b3", traceId + "-" + traceId + "-1")
                 .build();
