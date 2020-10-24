@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
-import static java.util.Optional.empty;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,24 +41,18 @@ public class TraceIdRetriever {
         return (tracer.currentSpan() == null) ? tracer.nextSpan().context().traceIdString() : tracer.currentSpan().context().traceIdString();
     }
 
-    private Optional<String> getTraceIdFromXRequestInfo(final Collection<String> xRequestInfo) {
-        if (xRequestInfo != null) {
-            return xRequestInfo.stream().findFirst().flatMap(header ->
-                    Stream.of(header.split(";"))
-                            .map(String::trim)
-                            .filter(x -> x.startsWith("referenceId"))
-                            .findFirst()
-                            .flatMap(referenceId -> stream(referenceId.split("=")).skip(1).findAny()));
-        } else {
-            return empty();
-        }
+    private Optional<String> getTraceIdFromXRequestInfo(final Collection<String> xRequestInfoHeader) {
+        return Optional.ofNullable(xRequestInfoHeader)
+                .flatMap(xRequestInfo -> xRequestInfo.stream().findFirst().flatMap(header ->
+                        Stream.of(header.split(";"))
+                                .map(String::trim)
+                                .filter(x -> x.startsWith("referenceId"))
+                                .findFirst()
+                                .flatMap(referenceId -> stream(referenceId.split("=")).skip(1).findAny())));
     }
 
     private Optional<String> getTraceIdFromB3Header(final Collection<String> b3Header) {
-        if (b3Header != null) {
-            return b3Header.stream().findFirst().flatMap(header -> Stream.of(header.split("-")).findFirst());
-        } else {
-            return empty();
-        }
+        return Optional.ofNullable(b3Header)
+                .flatMap(b3 -> b3.stream().findFirst().flatMap(header -> Stream.of(header.split("-")).findFirst()));
     }
 }
