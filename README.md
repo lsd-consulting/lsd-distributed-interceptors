@@ -18,3 +18,5 @@
 ![Bintray](https://img.shields.io/bintray/dt/integreety/open/lsd-distributed-interceptor-library)
 
 A set of interceptors gathering information for the LSD (Yatspec) library.
+
+![Interceptor diagram](https://github.com/integreety/lsd-distributed-interceptor-library/blob/master/image/lsd-distributed-interceptor-library.png?raw=true)
