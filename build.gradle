@@ -1,8 +1,8 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-    id 'org.springframework.boot' version '2.2.7.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'org.springframework.boot' version '2.4.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java-library'
     id 'maven'
     id 'pl.allegro.tech.build.axion-release' version '1.12.0'
@@ -90,8 +90,8 @@ bintray {
 apply plugin: 'io.spring.dependency-management'
 dependencyManagement {
     imports {
-        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Hoxton.SR6'
-        mavenBom 'io.pivotal.spring.cloud:spring-cloud-services-dependencies:2.2.3.RELEASE'
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2020.0.1'
+        mavenBom 'io.pivotal.spring.cloud:spring-cloud-services-dependencies:3.2.0.RELEASE'
         mavenBom SpringBootPlugin.BOM_COORDINATES
     }
 }
@@ -132,7 +132,7 @@ dependencies {
 
     testCompileOnly 'org.projectlombok:lombok:1.18.10'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.10'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+    testImplementation 'org.junit.platform:junit-platform-commons:1.7.1'
     testImplementation 'org.mockito:mockito-junit-jupiter:3.5.13'
     testImplementation 'org.pitest:pitest-junit5-plugin:0.12'
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
