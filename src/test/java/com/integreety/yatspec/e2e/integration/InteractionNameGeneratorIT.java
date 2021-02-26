@@ -63,7 +63,11 @@ public class InteractionNameGeneratorIT {
     private static Stream<Arguments> provideInterceptedInteractions() {
         return Stream.of(
                 of(InterceptedInteraction.builder().target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").build(), "POST /abc/def from service to abc"),
+                of(InterceptedInteraction.builder().target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").headers(Map.of("Target-Name", List.of("Arnie"))).build(), "POST /abc/def from service to Arnie"),
+                of(InterceptedInteraction.builder().target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").headers(Map.of("Source-Name", List.of("Jean"))).build(), "POST /abc/def from Jean to abc"),
+                of(InterceptedInteraction.builder().target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").headers(Map.of("Source-Name", List.of("Jean"), "Target-Name", List.of("Arnie"))).build(), "POST /abc/def from Jean to Arnie"),
                 of(InterceptedInteraction.builder().target("/abc/def").serviceName("service").body(BODY).type(RESPONSE).httpStatus("200").build(), "200 response from abc to service"),
+                of(InterceptedInteraction.builder().target("/abc/def").serviceName("service").body(BODY).type(RESPONSE).httpStatus("200").headers(Map.of("Source-Name", List.of("Jean"), "Target-Name", List.of("Arnie"))).build(), "200 response from Arnie to Jean"),
                 of(InterceptedInteraction.builder().target("exchange").serviceName("service").body(BODY).type(PUBLISH).build(), "publish event from service to exchange"),
                 of(InterceptedInteraction.builder().target("exchange").serviceName("service").body(BODY).type(CONSUME).build(), "consume message from exchange to service")
         );
@@ -72,7 +76,9 @@ public class InteractionNameGeneratorIT {
     private static Stream<Arguments> provideInterceptedInteractionsWithSourceMappings() {
         return Stream.of(
                 of(InterceptedInteraction.builder().target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").build(), "POST /abc/def from source1 to abc"),
+                of(InterceptedInteraction.builder().target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").headers(Map.of("Source-Name", List.of("Jean"))).build(), "POST /abc/def from Jean to abc"),
                 of(InterceptedInteraction.builder().target("/abc/def").serviceName("service").body(BODY).type(RESPONSE).httpStatus("200").build(), "200 response from abc to source1"),
+                of(InterceptedInteraction.builder().target("/abc/def").serviceName("service").body(BODY).type(RESPONSE).httpStatus("200").headers(Map.of("Source-Name", List.of("Jean"))).build(), "200 response from abc to Jean"),
                 of(InterceptedInteraction.builder().target("exchange").serviceName("service").body(BODY).type(PUBLISH).build(), "publish event from source2 to exchange"),
                 of(InterceptedInteraction.builder().target("exchange").serviceName("service").body(BODY).type(CONSUME).build(), "consume message from exchange to source2")
         );
@@ -81,6 +87,7 @@ public class InteractionNameGeneratorIT {
     private static Stream<Arguments> provideInterceptedInteractionsWithDestinationMappings() {
         return Stream.of(
                 of(InterceptedInteraction.builder().target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").build(), "POST /abc/def from service to dest1"),
+                of(InterceptedInteraction.builder().target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").headers(Map.of("Target-Name", List.of("Arnie"))).build(), "POST /abc/def from service to Arnie"),
                 of(InterceptedInteraction.builder().target("/abc/def").serviceName("service").body(BODY).type(RESPONSE).httpStatus("200").build(), "200 response from dest1 to service"),
                 of(InterceptedInteraction.builder().target("exchange").serviceName("service").body(BODY).type(PUBLISH).build(), "publish event from service to dest2"),
                 of(InterceptedInteraction.builder().target("exchange").serviceName("service").body(BODY).type(CONSUME).build(), "consume message from dest2 to service")
