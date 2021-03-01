@@ -47,6 +47,7 @@ test {
     testLogging {
         events "skipped", "failed"
     }
+    systemProperty 'yatspec.output.dir', "$buildDir/reports/yatspec"
     finalizedBy jacocoTestReport
 }
 
