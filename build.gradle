@@ -109,7 +109,7 @@ dependencies {
     implementation 'org.mongodb:mongo-java-driver:3.12.6'
 
     // Yatspec
-    implementation 'com.github.nickmcdowall:yatspec:2020.1.13'
+    implementation 'com.github.nickmcdowall:yatspec:2021.0.2'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.12'
