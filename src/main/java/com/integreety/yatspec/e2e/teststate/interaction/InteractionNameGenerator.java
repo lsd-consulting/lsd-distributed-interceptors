@@ -22,6 +22,9 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 @RequiredArgsConstructor
 public class InteractionNameGenerator {
 
+    public static final String SOURCE_NAME_KEY = "Source-Name";
+    public static final String TARGET_NAME_KEY = "Target-Name";
+
     public List<Pair<String, Object>> generate(final SourceNameMappings sourceNameMappings,
                                                final DestinationNameMappings destinationNameMappings,
                                                final List<InterceptedInteraction> interceptedInteractions,
@@ -42,14 +45,14 @@ public class InteractionNameGenerator {
     }
 
     private String deriveSourceName(SourceNameMappings sourceNameMappings, InterceptedInteraction interceptedInteraction, Map<String, Collection<String>> headers) {
-        return isNotEmpty(headers) && headers.containsKey("Source-Name")
-                ? headers.get("Source-Name").stream().findFirst().orElse("")
+        return isNotEmpty(headers) && headers.containsKey(SOURCE_NAME_KEY)
+                ? headers.get(SOURCE_NAME_KEY).stream().findFirst().orElse("")
                 : sourceNameMappings.mapFor(Pair.of(interceptedInteraction.getServiceName(), interceptedInteraction.getTarget()));
     }
 
     private String deriveDestinationName(DestinationNameMappings destinationNameMappings, InterceptedInteraction interceptedInteraction, Map<String, Collection<String>> headers) {
-        return isNotEmpty(headers) && headers.containsKey("Target-Name")
-                ? headers.get("Target-Name").stream().findFirst().orElse("")
+        return isNotEmpty(headers) && headers.containsKey(TARGET_NAME_KEY)
+                ? headers.get(TARGET_NAME_KEY).stream().findFirst().orElse("")
                 : destinationNameMappings.mapForPath(interceptedInteraction.getTarget());
     }
 
