@@ -16,7 +16,8 @@ import java.util.Map;
 public class InterceptedInteraction {
     private String traceId;
     private String body;
-    private Map<String, Collection<String>> headers;
+    private Map<String, Collection<String>> requestHeaders;
+    private Map<String, Collection<String>> responseHeaders;
     private String serviceName; // the calling service or the publisher or consumer
     private String target; // the called URL or the exchange name
     private String httpStatus;
