@@ -32,9 +32,9 @@ public class InteractionNameGenerator {
 
         final List<Pair<String, Object>> interactions = new ArrayList<>();
         for (final InterceptedInteraction interceptedInteraction : interceptedInteractions) {
-            var headers = interceptedInteraction.getHeaders();
-            final String destination = deriveDestinationName(destinationNameMappings, interceptedInteraction, headers);
-            final String source = deriveSourceName(sourceNameMappings, interceptedInteraction, headers);
+            var requestHeaders = interceptedInteraction.getRequestHeaders();
+            final String destination = deriveDestinationName(destinationNameMappings, interceptedInteraction, requestHeaders);
+            final String source = deriveSourceName(sourceNameMappings, interceptedInteraction, requestHeaders);
             reportRenderer.log(interceptedInteraction.getServiceName(), interceptedInteraction.getTarget(), source, destination);
             final String interactionName = interceptedInteraction.getType().getInteractionName().apply(buildInteraction(interceptedInteraction, source, destination));
             log.info("Generated an interaction name={}", interactionName);

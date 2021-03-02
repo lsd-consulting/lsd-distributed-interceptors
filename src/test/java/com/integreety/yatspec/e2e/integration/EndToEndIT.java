@@ -95,7 +95,7 @@ public class EndToEndIT {
         final List<InterceptedInteraction> interceptedInteractions = new ArrayList<>();
         await().untilAsserted(() -> {
             final List<InterceptedInteraction> foundInterceptedInteractions = testRepository.findAll(traceId);
-            assertThat(foundInterceptedInteractions, hasSize(6));
+            assertThat(foundInterceptedInteractions, hasSize(8));
             interceptedInteractions.addAll(foundInterceptedInteractions);
         });
 
@@ -120,7 +120,7 @@ public class EndToEndIT {
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), containsString("response_from_controller"));
 
-        await().untilAsserted(() -> assertThat(testRepository.findAll(traceId), hasSize(6)));
+        await().untilAsserted(() -> assertThat(testRepository.findAll(traceId), hasSize(8)));
 
         testStateLogger.logStatesFromDatabase(traceId, sourceNameMappings, destinationNameMappings);
 
@@ -131,6 +131,8 @@ public class EndToEndIT {
         assertThat(interactionNames, hasItem("consume message from Exchange to Consumer"));
         assertThat(interactionNames, hasItem("POST /external-api?message=from_feign from Consumer to Wiremock"));
         assertThat(interactionNames, hasItem("200 OK response from Wiremock to Consumer"));
+        assertThat(interactionNames, hasItem("POST /external-api?message=from_feign from Consumer to Downstream"));
+        assertThat(interactionNames, hasItem("200 OK response from Downstream to Consumer"));
     }
 
     @Test
