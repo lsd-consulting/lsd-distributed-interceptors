@@ -13,6 +13,6 @@ pitest {
     excludedClasses = [ ]
     threads = 4
     outputFormats = ['HTML']
-    coverageThreshold = 47
-    mutationThreshold = 22
+    coverageThreshold = 58
+    mutationThreshold = 44
 }
