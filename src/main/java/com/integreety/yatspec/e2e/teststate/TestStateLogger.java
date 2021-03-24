@@ -23,9 +23,9 @@ public class TestStateLogger {
 
     public void logStatesFromDatabase(final SourceNameMappings sourceNameMappings,
                                       final DestinationNameMappings destinationNameMappings,
-                                      final String traceId) {
+                                      final String... traceIds) {
 
-        final List<InterceptedInteraction> interceptedInteractions = interceptedDocumentRepository.findByTraceId(traceId);
+        final List<InterceptedInteraction> interceptedInteractions = interceptedDocumentRepository.findByTraceId(traceIds);
         final ReportRenderer reportRenderer = new ReportRenderer();
         for (final Pair<String, Object> interaction : interactionNameGenerator.generate(sourceNameMappings, destinationNameMappings, interceptedInteractions, reportRenderer)) {
             testState.log(interaction.getLeft(), interaction.getRight());
