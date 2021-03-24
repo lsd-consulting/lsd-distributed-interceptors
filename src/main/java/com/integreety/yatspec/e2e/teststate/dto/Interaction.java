@@ -11,4 +11,5 @@ public class Interaction {
     String path;
     String httpStatus;
     String httpMethod;
+    String createdAt;
 }
