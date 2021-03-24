@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
-import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.in;
 import static com.mongodb.client.model.Indexes.ascending;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -104,9 +104,9 @@ public class InterceptedDocumentMongoRepository implements InterceptedDocumentRe
     }
 
     @Override
-    public List<InterceptedInteraction> findByTraceId(final String traceId) {
+    public List<InterceptedInteraction> findByTraceId(final String... traceId) {
         final List<InterceptedInteraction> result = new ArrayList<>();
-        try (final MongoCursor<InterceptedInteraction> cursor = interceptedInteractions.find(eq("traceId", traceId), InterceptedInteraction.class).iterator()) {
+        try (final MongoCursor<InterceptedInteraction> cursor = interceptedInteractions.find(in("traceId", traceId), InterceptedInteraction.class).iterator()) {
             while (cursor.hasNext()) {
                 result.add(cursor.next());
             }

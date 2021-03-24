@@ -122,7 +122,7 @@ public class EndToEndIT {
 
         await().untilAsserted(() -> assertThat(testRepository.findAll(traceId), hasSize(8)));
 
-        testStateLogger.logStatesFromDatabase(traceId, sourceNameMappings, destinationNameMappings);
+        testStateLogger.logStatesFromDatabase(sourceNameMappings, destinationNameMappings, traceId);
 
         final Set<String> interactionNames = testState.getCapturedTypes().keySet();
         assertThat(interactionNames, hasItem("GET /api-listener?message=from_test from Client to Controller"));

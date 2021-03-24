@@ -35,7 +35,7 @@ public class TestStateLoggerShould {
         given(interactionNameGenerator.generate(any(), any(), eq(singletonList(interceptedInteraction)), any()))
                 .willReturn(singletonList(of("interactionName", "body")));
 
-        underTest.logStatesFromDatabase(traceId, userSuppliedSourceMappings(Map.of()), userSuppliedDestinationMappings(Map.of()));
+        underTest.logStatesFromDatabase(userSuppliedSourceMappings(Map.of()), userSuppliedDestinationMappings(Map.of()), traceId);
 
         verify(testState).log(anyString(), anyString());
     }
