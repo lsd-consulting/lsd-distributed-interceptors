@@ -1,5 +1,6 @@
 package com.integreety.yatspec.e2e.integration;
 
+import com.googlecode.yatspec.junit.SequenceDiagramExtension;
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedInteraction;
 import com.integreety.yatspec.e2e.integration.testapp.TestApplication;
@@ -14,6 +15,7 @@ import com.integreety.yatspec.e2e.teststate.mapper.source.SourceNameMappings;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -53,6 +55,7 @@ import static org.springframework.http.RequestEntity.get;
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = {TestApplication.class})
 @TestPropertySource("classpath:application-test.properties")
 @AutoConfigureWireMock(port = 0)
+@ExtendWith(SequenceDiagramExtension.class)
 public class EndToEndIT {
 
     private static final String NO_BODY = "";
@@ -98,6 +101,8 @@ public class EndToEndIT {
             assertThat(foundInterceptedInteractions, hasSize(8));
             interceptedInteractions.addAll(foundInterceptedInteractions);
         });
+
+        testStateLogger.logStatesFromDatabase(sourceNameMappings, destinationNameMappings, traceId);
 
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", NO_BODY, "/api-listener?message=from_test"))); // TODO Need to assert the parameter value
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "response_from_controller", "/api-listener?message=from_test")));
@@ -155,6 +160,8 @@ public class EndToEndIT {
             assertThat(foundInterceptedInteractions, hasSize(4));
             interceptedInteractions.addAll(foundInterceptedInteractions);
         });
+
+        testStateLogger.logStatesFromDatabase(sourceNameMappings, destinationNameMappings, traceId);
 
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", NO_BODY, "/api-rabbit-template?message=from_test"))); // TODO Need to assert the parameter value
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "response_from_controller", "/api-rabbit-template?message=from_test")));
