@@ -123,7 +123,6 @@ dependencies {
     // Other
     implementation 'org.apache.httpcomponents:httpcore:4.4.13' // Needed for DB connection security
     implementation 'org.apache.commons:commons-lang3:3.11'
-    implementation 'de.vandermeer:asciitable:0.3.2'
 
     // Tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

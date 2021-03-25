@@ -8,10 +8,9 @@ import com.integreety.yatspec.e2e.integration.testapp.config.RabbitConfig;
 import com.integreety.yatspec.e2e.integration.testapp.config.RabbitTemplateConfig;
 import com.integreety.yatspec.e2e.integration.testapp.config.RepositoryConfig;
 import com.integreety.yatspec.e2e.integration.testapp.config.RestConfig;
+import com.integreety.yatspec.e2e.integration.testapp.controller.event.SomethingDoneEvent;
 import com.integreety.yatspec.e2e.integration.testapp.repository.TestRepository;
 import com.integreety.yatspec.e2e.teststate.TestStateLogger;
-import com.integreety.yatspec.e2e.teststate.mapper.destination.DestinationNameMappings;
-import com.integreety.yatspec.e2e.teststate.mapper.source.SourceNameMappings;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
@@ -22,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -32,16 +32,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.integreety.yatspec.e2e.captor.repository.model.Type.*;
 import static com.integreety.yatspec.e2e.integration.matcher.InterceptedInteractionMatcher.with;
 import static com.integreety.yatspec.e2e.teststate.TraceIdGenerator.generate;
-import static com.integreety.yatspec.e2e.teststate.mapper.destination.UserSuppliedDestinationMappings.userSuppliedDestinationMappings;
-import static com.integreety.yatspec.e2e.teststate.mapper.source.UserSuppliedSourceMappings.userSuppliedSourceMappings;
-import static org.apache.commons.lang3.tuple.Pair.of;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -102,22 +98,20 @@ public class EndToEndIT {
             interceptedInteractions.addAll(foundInterceptedInteractions);
         });
 
-        testStateLogger.logStatesFromDatabase(sourceNameMappings, destinationNameMappings, traceId);
+        testStateLogger.logStatesFromDatabase(traceId);
 
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", NO_BODY, "/api-listener?message=from_test"))); // TODO Need to assert the parameter value
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "response_from_controller", "/api-listener?message=from_test")));
 
-        // TODO Uncomment once the exchange name determination mechanism is fixed
-        // assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "from_controller", "exchange-listener")));
-         assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "from_controller", "")));
-        assertThat("CONSUMER interaction missing", interceptedInteractions, hasItem(with(CONSUME, "lsdEnd2End", "from_controller", "exchange-listener")));
+        assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "{\"message\":\"from_controller\"}", "SomethingDoneEvent")));
+        assertThat("CONSUMER interaction missing", interceptedInteractions, hasItem(with(CONSUME, "lsdEnd2End", "{\"message\":\"from_controller\"}", "SomethingDoneEvent")));
 
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", "from_listener", "/external-api?message=from_feign")));
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "from_external", "/external-api?message=from_feign")));
     }
 
     @Test
-    public void shouldRecordUserSuppliedNames() throws URISyntaxException {
+    public void shouldRecordHeaderSuppliedNames() throws URISyntaxException {
         givenExternalApi();
 
         final ResponseEntity<String> response = sendInitialRequest("/api-listener", traceId);
@@ -127,17 +121,17 @@ public class EndToEndIT {
 
         await().untilAsserted(() -> assertThat(testRepository.findAll(traceId), hasSize(8)));
 
-        testStateLogger.logStatesFromDatabase(sourceNameMappings, destinationNameMappings, traceId);
+        testStateLogger.logStatesFromDatabase(traceId);
 
         final Set<String> interactionNames = testState.getCapturedTypes().keySet();
         assertThat(interactionNames, hasItem("GET /api-listener?message=from_test from Client to Controller"));
-        assertThat(interactionNames, hasItem("publish event from Controller to Exchange"));
-        assertThat(interactionNames, hasItem("200 OK response from Controller to Client"));
-        assertThat(interactionNames, hasItem("consume message from Exchange to Consumer"));
-        assertThat(interactionNames, hasItem("POST /external-api?message=from_feign from Consumer to Wiremock"));
-        assertThat(interactionNames, hasItem("200 OK response from Wiremock to Consumer"));
-        assertThat(interactionNames, hasItem("POST /external-api?message=from_feign from Consumer to Downstream"));
-        assertThat(interactionNames, hasItem("200 OK response from Downstream to Consumer"));
+        assertThat(interactionNames, hasItem("publish event from lsdEnd2End to SomethingDoneEvent"));
+        assertThat(interactionNames, hasItem("200 OK response from /api-listener?message=from_test to lsdEnd2End"));
+        assertThat(interactionNames, hasItem("consume message from SomethingDoneEvent to lsdEnd2End"));
+        assertThat(interactionNames, hasItem("POST /external-api?message=from_feign from lsdEnd2End to /external-api?message=from_feign"));
+        assertThat(interactionNames, hasItem("200 OK response from /external-api?message=from_feign to lsdEnd2End"));
+        assertThat(interactionNames, hasItem("POST /external-api?message=from_feign from lsdEnd2End to Downstream"));
+        assertThat(interactionNames, hasItem("200 OK response from Downstream to lsdEnd2End"));
     }
 
     @Test
@@ -149,9 +143,10 @@ public class EndToEndIT {
         assertThat(response.getBody(), is("response_from_controller"));
 
         await().untilAsserted(() -> {
-            final String message = (String) rabbitTemplate.receiveAndConvert("queue-rabbit-template", 2000);
+            final ParameterizedTypeReference<SomethingDoneEvent> type = new ParameterizedTypeReference<>() {};
+            final SomethingDoneEvent message = rabbitTemplate.receiveAndConvert("queue-rabbit-template", 2000, type);
             assertThat(message, is(notNullValue()));
-            assertThat(message, is("from_controller"));
+            assertThat(message.getMessage(), is("from_controller"));
         });
 
         final List<InterceptedInteraction> interceptedInteractions = new ArrayList<>();
@@ -161,30 +156,14 @@ public class EndToEndIT {
             interceptedInteractions.addAll(foundInterceptedInteractions);
         });
 
-        testStateLogger.logStatesFromDatabase(sourceNameMappings, destinationNameMappings, traceId);
+        testStateLogger.logStatesFromDatabase(traceId);
 
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", NO_BODY, "/api-rabbit-template?message=from_test"))); // TODO Need to assert the parameter value
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "response_from_controller", "/api-rabbit-template?message=from_test")));
 
-        // TODO Uncomment once the exchange name determination mechanism is fixed
-        // assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "from_controller", "exchange-rabbit-template")));
-         assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "from_controller", "")));
-        assertThat("CONSUMER interaction missing", interceptedInteractions, hasItem(with(CONSUME, "lsdEnd2End", "from_controller", "exchange-rabbit-template")));
+        assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "{\"message\":\"from_controller\"}", "SomethingDoneEvent")));
+        assertThat("CONSUMER interaction missing", interceptedInteractions, hasItem(with(CONSUME, "lsdEnd2End", "{\"message\":\"from_controller\"}", "SomethingDoneEvent")));
     }
-
-    private final SourceNameMappings sourceNameMappings = userSuppliedSourceMappings(Map.of(
-            of("lsdEnd2End", "/api-listener?message=from_test"), "Client",
-            of("lsdEnd2End", ""), "Controller",
-            of("lsdEnd2End", "exchange-listener"), "Consumer",
-            of("lsdEnd2End", "/external-api?message=from_feign"), "Consumer"
-    ));
-
-    private final DestinationNameMappings destinationNameMappings = userSuppliedDestinationMappings(Map.of(
-            "/api-listener?message=from_test", "Controller",
-            "", "Exchange",
-            "exchange-listener", "Exchange",
-            "/external-api?message=from_feign", "Wiremock"
-    ));
 
     private void givenExternalApi() {
         stubFor(post(urlEqualTo("/external-api?message=from_feign"))
@@ -198,6 +177,8 @@ public class EndToEndIT {
         final RequestEntity<?> requestEntity = get(new URI("http://localhost:" + serverPort + resourceName + "?message=from_test"))
                 .header("Content-Type", APPLICATION_JSON_VALUE)
                 .header("b3", traceId + "-" + traceId + "-1")
+                .header("Source-Name", "Client")
+                .header("Target-Name", "Controller")
                 .build();
 
         return testRestTemplate.exchange(requestEntity, String.class);

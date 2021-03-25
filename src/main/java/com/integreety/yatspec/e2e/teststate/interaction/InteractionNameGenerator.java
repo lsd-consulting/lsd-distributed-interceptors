@@ -4,18 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedInteraction;
 import com.integreety.yatspec.e2e.config.mapper.ObjectMapperCreator;
 import com.integreety.yatspec.e2e.teststate.dto.Interaction;
-import com.integreety.yatspec.e2e.teststate.mapper.destination.DestinationNameMappings;
-import com.integreety.yatspec.e2e.teststate.mapper.source.SourceNameMappings;
-import com.integreety.yatspec.e2e.teststate.report.ReportRenderer;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import static com.integreety.yatspec.e2e.teststate.indent.JsonPrettyPrinter.indentJson;
 import static com.integreety.yatspec.e2e.teststate.indent.XmlPrettyPrinter.indentXml;
@@ -30,17 +25,12 @@ public class InteractionNameGenerator {
 
     private final ObjectMapper objectMapper = new ObjectMapperCreator().getObjectMapper();
 
-    public List<Pair<String, Object>> generate(final SourceNameMappings sourceNameMappings,
-                                               final DestinationNameMappings destinationNameMappings,
-                                               final List<InterceptedInteraction> interceptedInteractions,
-                                               final ReportRenderer reportRenderer) {
+    public List<Pair<String, Object>> generate(final List<InterceptedInteraction> interceptedInteractions) {
 
         final List<Pair<String, Object>> interactions = new ArrayList<>();
         for (final InterceptedInteraction interceptedInteraction : interceptedInteractions) {
-            final var requestHeaders = interceptedInteraction.getRequestHeaders();
-            final String destination = deriveDestinationName(destinationNameMappings, interceptedInteraction, requestHeaders);
-            final String source = deriveSourceName(sourceNameMappings, interceptedInteraction, requestHeaders);
-            reportRenderer.log(interceptedInteraction.getServiceName(), interceptedInteraction.getTarget(), source, destination);
+            final String destination = deriveDestinationName(interceptedInteraction);
+            final String source = deriveSourceName(interceptedInteraction);
             final String interactionName = interceptedInteraction.getType().getInteractionName().apply(buildInteraction(interceptedInteraction, source, destination));
             log.info("Generated an interaction name={}", interactionName);
             final String body = indent(interceptedInteraction.getBody());
@@ -49,16 +39,16 @@ public class InteractionNameGenerator {
         return interactions;
     }
 
-    private String deriveSourceName(final SourceNameMappings sourceNameMappings, final InterceptedInteraction interceptedInteraction, final Map<String, Collection<String>> headers) {
+    private String deriveSourceName(final InterceptedInteraction interceptedInteraction) {
+        final var headers = interceptedInteraction.getRequestHeaders();
         return isNotEmpty(headers) && headers.containsKey(SOURCE_NAME_KEY)
-                ? headers.get(SOURCE_NAME_KEY).stream().findFirst().orElse("")
-                : sourceNameMappings.mapFor(Pair.of(interceptedInteraction.getServiceName(), interceptedInteraction.getTarget()));
+                ? headers.get(SOURCE_NAME_KEY).stream().findFirst().orElse(interceptedInteraction.getServiceName()) : interceptedInteraction.getServiceName();
     }
 
-    private String deriveDestinationName(final DestinationNameMappings destinationNameMappings, final InterceptedInteraction interceptedInteraction, final Map<String, Collection<String>> headers) {
+    private String deriveDestinationName(final InterceptedInteraction interceptedInteraction) {
+        final var headers = interceptedInteraction.getRequestHeaders();
         return isNotEmpty(headers) && headers.containsKey(TARGET_NAME_KEY)
-                ? headers.get(TARGET_NAME_KEY).stream().findFirst().orElse("")
-                : destinationNameMappings.mapForPath(interceptedInteraction.getTarget());
+                ? headers.get(TARGET_NAME_KEY).stream().findFirst().orElse(interceptedInteraction.getTarget()) : interceptedInteraction.getTarget();
     }
 
     @SneakyThrows

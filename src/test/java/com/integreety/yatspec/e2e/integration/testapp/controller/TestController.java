@@ -1,5 +1,6 @@
 package com.integreety.yatspec.e2e.integration.testapp.controller;
 
+import com.integreety.yatspec.e2e.integration.testapp.controller.event.SomethingDoneEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +21,19 @@ public class TestController {
     @GetMapping("/api-listener")
     public ResponseEntity<String> getObjectByMessage(@RequestParam final String message) {
         log.info("Received message:{}", message);
-        rabbitTemplate.convertAndSend("exchange-listener", null, "from_controller");
+        rabbitTemplate.convertAndSend("exchange-listener", null, getEvent());
         return ResponseEntity.ok("response_from_controller");
     }
 
     @GetMapping("/api-rabbit-template")
     public ResponseEntity<String> get(@RequestParam final String message) {
         log.info("Received message:{}", message);
-        rabbitTemplate.convertAndSend("exchange-rabbit-template", null, "from_controller");
+        rabbitTemplate.convertAndSend("exchange-rabbit-template", null, getEvent());
         return ResponseEntity.ok("response_from_controller");
+    }
+
+    private SomethingDoneEvent getEvent() {
+        return SomethingDoneEvent.builder().message("from_controller").build();
     }
 }
 
