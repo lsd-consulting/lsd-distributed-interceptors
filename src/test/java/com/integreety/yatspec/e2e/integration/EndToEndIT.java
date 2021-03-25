@@ -30,9 +30,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.integreety.yatspec.e2e.captor.repository.model.Type.*;
@@ -132,6 +130,30 @@ public class EndToEndIT {
         assertThat(interactionNames, hasItem("200 OK response from /external-api?message=from_feign to lsdEnd2End"));
         assertThat(interactionNames, hasItem("POST /external-api?message=from_feign from lsdEnd2End to Downstream"));
         assertThat(interactionNames, hasItem("200 OK response from Downstream to lsdEnd2End"));
+    }
+
+    @Test
+    public void shouldRecordHeaderSuppliedNamesWithColours() throws URISyntaxException {
+        givenExternalApi();
+
+        final ResponseEntity<String> response = sendInitialRequest("/api-listener", traceId);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody(), containsString("response_from_controller"));
+
+        await().untilAsserted(() -> assertThat(testRepository.findAll(traceId), hasSize(8)));
+
+        testStateLogger.logStatesFromDatabase(Map.of(traceId, Optional.of("[#colour]")));
+
+        final Set<String> interactionNames = testState.getCapturedTypes().keySet();
+        assertThat(interactionNames, hasItem("GET /api-listener?message=from_test from Client to Controller [#colour]"));
+        assertThat(interactionNames, hasItem("publish event from lsdEnd2End to SomethingDoneEvent [#colour]"));
+        assertThat(interactionNames, hasItem("200 OK response from /api-listener?message=from_test to lsdEnd2End [#colour]"));
+        assertThat(interactionNames, hasItem("consume message from SomethingDoneEvent to lsdEnd2End [#colour]"));
+        assertThat(interactionNames, hasItem("POST /external-api?message=from_feign from lsdEnd2End to /external-api?message=from_feign [#colour]"));
+        assertThat(interactionNames, hasItem("200 OK response from /external-api?message=from_feign to lsdEnd2End [#colour]"));
+        assertThat(interactionNames, hasItem("POST /external-api?message=from_feign from lsdEnd2End to Downstream [#colour]"));
+        assertThat(interactionNames, hasItem("200 OK response from Downstream to lsdEnd2End [#colour]"));
     }
 
     @Test

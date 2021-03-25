@@ -104,7 +104,7 @@ public class InterceptedDocumentMongoRepository implements InterceptedDocumentRe
     }
 
     @Override
-    public List<InterceptedInteraction> findByTraceId(final String... traceId) {
+    public List<InterceptedInteraction> findByTraceIds(final String... traceId) {
         final List<InterceptedInteraction> result = new ArrayList<>();
         try (final MongoCursor<InterceptedInteraction> cursor = interceptedInteractions.find(in("traceId", traceId), InterceptedInteraction.class).iterator()) {
             while (cursor.hasNext()) {

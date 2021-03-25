@@ -10,10 +10,10 @@ import static com.integreety.yatspec.e2e.teststate.template.InteractionMessageTe
 @Getter
 public enum Type {
 
-    REQUEST(i -> requestOf(i.getHttpMethod(), i.getPath(), i.getSource(), i.getDestination())),
-    RESPONSE(i -> responseOf(i.getHttpStatus(), i.getDestination(), i.getSource())),
-    PUBLISH(i -> publishOf(i.getSource(), i.getDestination())),
-    CONSUME(i -> consumeOf(i.getDestination(), i.getSource()));
+    REQUEST(i -> requestOf(i.getHttpMethod(), i.getPath(), i.getSource(), i.getDestination(), i.getColour())),
+    RESPONSE(i -> responseOf(i.getHttpStatus(), i.getDestination(), i.getSource(), i.getColour())),
+    PUBLISH(i -> publishOf(i.getSource(), i.getDestination(), i.getColour())),
+    CONSUME(i -> consumeOf(i.getDestination(), i.getSource(), i.getColour()));
 
     private final Function<Interaction, String> interactionName;
 

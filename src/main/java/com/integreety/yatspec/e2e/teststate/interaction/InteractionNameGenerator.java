@@ -11,6 +11,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.integreety.yatspec.e2e.teststate.indent.JsonPrettyPrinter.indentJson;
 import static com.integreety.yatspec.e2e.teststate.indent.XmlPrettyPrinter.indentXml;
@@ -25,13 +27,14 @@ public class InteractionNameGenerator {
 
     private final ObjectMapper objectMapper = new ObjectMapperCreator().getObjectMapper();
 
-    public List<Pair<String, Object>> generate(final List<InterceptedInteraction> interceptedInteractions) {
+    public List<Pair<String, Object>> generate(final List<InterceptedInteraction> interceptedInteractions, final Map<String, Optional<String>> traceIdToColourMap) {
 
         final List<Pair<String, Object>> interactions = new ArrayList<>();
         for (final InterceptedInteraction interceptedInteraction : interceptedInteractions) {
             final String destination = deriveDestinationName(interceptedInteraction);
             final String source = deriveSourceName(interceptedInteraction);
-            final String interactionName = interceptedInteraction.getType().getInteractionName().apply(buildInteraction(interceptedInteraction, source, destination));
+            final String colour = traceIdToColourMap.get(interceptedInteraction.getTraceId()).orElse("");
+            final String interactionName = interceptedInteraction.getType().getInteractionName().apply(buildInteraction(interceptedInteraction, source, destination, colour));
             log.info("Generated an interaction name={}", interactionName);
             final String body = indent(interceptedInteraction.getBody());
             interactions.add(Pair.of(interactionName, body));
@@ -52,7 +55,7 @@ public class InteractionNameGenerator {
     }
 
     @SneakyThrows
-    private Interaction buildInteraction(final InterceptedInteraction interceptedInteraction, final String source, final String destination) {
+    private Interaction buildInteraction(final InterceptedInteraction interceptedInteraction, final String source, final String destination, final String colour) {
         return Interaction.builder()
                 .source(source)
                 .destination(destination)
@@ -60,6 +63,7 @@ public class InteractionNameGenerator {
                 .httpStatus(interceptedInteraction.getHttpStatus())
                 .path(interceptedInteraction.getTarget())
                 .createdAt(objectMapper.writeValueAsString(interceptedInteraction.getCreatedAt()))
+                .colour(colour)
                 .build();
     }
 

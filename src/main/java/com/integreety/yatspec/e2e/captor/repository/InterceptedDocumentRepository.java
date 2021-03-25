@@ -9,5 +9,5 @@ import java.util.List;
 */
 public interface InterceptedDocumentRepository {
     void save(final InterceptedInteraction interceptedInteraction);
-    List<InterceptedInteraction> findByTraceId(final String... traceId);
+    List<InterceptedInteraction> findByTraceIds(final String... traceId);
 }

@@ -12,4 +12,5 @@ public class Interaction {
     String httpStatus;
     String httpMethod;
     String createdAt;
+    String colour;
 }
