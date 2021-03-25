@@ -29,7 +29,7 @@ public class InteractionNameGeneratorIT {
     @ParameterizedTest
     @MethodSource("provideInterceptedInteractions")
     public void shouldGenerateInteractionNames(final InterceptedInteraction interceptedInteraction, final String expectedInteractionName) {
-        final List<Pair<String, Object>> interactionNames = underTest.generate(List.of(interceptedInteraction), Map.of(TRACE_ID, Optional.of("grey")));
+        final List<Pair<String, Object>> interactionNames = underTest.generate(List.of(interceptedInteraction), Map.of(TRACE_ID, Optional.of("[#grey]")));
 
         assertThat(interactionNames, hasSize(1));
         assertThat(interactionNames.get(0).getLeft(), is(expectedInteractionName));
@@ -37,14 +37,14 @@ public class InteractionNameGeneratorIT {
 
     private static Stream<Arguments> provideInterceptedInteractions() {
         return Stream.of(
-                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").build(), "POST /abc/def from service to /abc/def"),
-                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").requestHeaders(Map.of("Target-Name", List.of("Arnie"))).build(), "POST /abc/def from service to Arnie"),
-                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").requestHeaders(Map.of("Source-Name", List.of("Jean"))).build(), "POST /abc/def from Jean to /abc/def"),
-                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").requestHeaders(Map.of("Source-Name", List.of("Jean"), "Target-Name", List.of("Arnie"))).build(), "POST /abc/def from Jean to Arnie"),
-                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("/abc/def").serviceName("service").body(BODY).type(RESPONSE).httpStatus("200").build(), "200 response from /abc/def to service"),
-                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("/abc/def").serviceName("service").body(BODY).type(RESPONSE).httpStatus("200").requestHeaders(Map.of("Source-Name", List.of("Jean"), "Target-Name", List.of("Arnie"))).build(), "200 response from Arnie to Jean"),
-                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("exchange").serviceName("service").body(BODY).type(PUBLISH).build(), "publish event from service to exchange"),
-                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("exchange").serviceName("service").body(BODY).type(CONSUME).build(), "consume message from exchange to service")
+                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").build(), "POST /abc/def from service to /abc/def [#grey]"),
+                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").requestHeaders(Map.of("Target-Name", List.of("Arnie"))).build(), "POST /abc/def from service to Arnie [#grey]"),
+                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").requestHeaders(Map.of("Source-Name", List.of("Jean"))).build(), "POST /abc/def from Jean to /abc/def [#grey]"),
+                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("/abc/def").serviceName("service").body(BODY).type(REQUEST).httpMethod("POST").requestHeaders(Map.of("Source-Name", List.of("Jean"), "Target-Name", List.of("Arnie"))).build(), "POST /abc/def from Jean to Arnie [#grey]"),
+                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("/abc/def").serviceName("service").body(BODY).type(RESPONSE).httpStatus("200").build(), "200 response from /abc/def to service [#grey]"),
+                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("/abc/def").serviceName("service").body(BODY).type(RESPONSE).httpStatus("200").requestHeaders(Map.of("Source-Name", List.of("Jean"), "Target-Name", List.of("Arnie"))).build(), "200 response from Arnie to Jean [#grey]"),
+                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("exchange").serviceName("service").body(BODY).type(PUBLISH).build(), "publish event from service to exchange [#grey]"),
+                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("exchange").serviceName("service").body(BODY).type(CONSUME).build(), "consume message from exchange to service [#grey]")
         );
     }
 }
