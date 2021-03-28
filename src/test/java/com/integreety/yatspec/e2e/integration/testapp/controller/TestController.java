@@ -32,6 +32,16 @@ public class TestController {
         return ResponseEntity.ok("response_from_controller");
     }
 
+    @GetMapping("/setup1")
+    public ResponseEntity<String> setup1() {
+        return ResponseEntity.ok("{\"setup1\":\"done\"}");
+    }
+
+    @GetMapping("/setup2")
+    public ResponseEntity<String> setup2() {
+        return ResponseEntity.ok("{\"setup2\":\"done\"}");
+    }
+
     private SomethingDoneEvent getEvent() {
         return SomethingDoneEvent.builder().message("from_controller").build();
     }

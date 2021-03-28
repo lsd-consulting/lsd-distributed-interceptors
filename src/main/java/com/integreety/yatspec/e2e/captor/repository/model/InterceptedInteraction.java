@@ -19,7 +19,8 @@ public class InterceptedInteraction {
     private Map<String, Collection<String>> requestHeaders;
     private Map<String, Collection<String>> responseHeaders;
     private String serviceName; // the calling service or the publisher or consumer
-    private String target; // the called URL or the exchange name
+    private String target; // the called service or the exchange name
+    private String path; // the called URL or the exchange name
     private String httpStatus;
     private String httpMethod;
     private Type type;

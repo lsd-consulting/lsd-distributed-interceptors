@@ -39,10 +39,12 @@ public class ResponseCaptor extends PathDerivingCaptor {
     @SneakyThrows
     public InterceptedInteraction captureResponseInteraction(final Response response) {
         try {
+            final Map<String, Collection<String>> headers = response.request().headers();
             final String path = derivePath(response.request().url());
-            final String serviceName = propertyServiceNameDeriver.getServiceName();
+            final String target = headerExists(headers, TARGET_NAME_KEY) ? findHeader(headers, TARGET_NAME_KEY).orElse(derivePath(response.request().url())) : derivePath(response.request().url());
+            final String serviceName = headerExists(headers, SOURCE_NAME_KEY) ? findHeader(headers, SOURCE_NAME_KEY).orElse(propertyServiceNameDeriver.getServiceName()) : propertyServiceNameDeriver.getServiceName();
             final String traceId = traceIdRetriever.getTraceId(response.headers());
-            final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(extractResponseBodyToString(response), response.request().headers(), response.headers(), traceId, serviceName, path, deriveStatus(response.status()), null, RESPONSE);
+            final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(extractResponseBodyToString(response), headers, response.headers(), traceId, serviceName, target, path, deriveStatus(response.status()), null, RESPONSE);
             interceptedDocumentRepository.save(interceptedInteraction);
             return interceptedInteraction;
         } catch (final RuntimeException e) {
@@ -51,17 +53,17 @@ public class ResponseCaptor extends PathDerivingCaptor {
         }
     }
 
-    public InterceptedInteraction captureResponseInteraction(final HttpRequest request, final ClientHttpResponse response, final String path, final String traceId) throws IOException {
-        final String body = copyBodyToString(response);
-        final String serviceName = propertyServiceNameDeriver.getServiceName();
+    public InterceptedInteraction captureResponseInteraction(final HttpRequest request, final ClientHttpResponse response, final String target, final String path, final String traceId) throws IOException {
         final var requestHeaders = standardiseHeaders(request.getHeaders());
         final var responseHeaders = standardiseHeaders(response.getHeaders());
-        final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(body, responseHeaders, requestHeaders, traceId, serviceName, path, response.getStatusCode().toString(), null, RESPONSE);
+        final String serviceName = headerExists(requestHeaders, SOURCE_NAME_KEY) ? findHeader(requestHeaders, SOURCE_NAME_KEY).orElse(propertyServiceNameDeriver.getServiceName()) : propertyServiceNameDeriver.getServiceName();
+        final String body = copyBodyToString(response);
+        final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(body, responseHeaders, requestHeaders, traceId, serviceName, target, path, response.getStatusCode().toString(), null, RESPONSE);
         interceptedDocumentRepository.save(interceptedInteraction);
         return interceptedInteraction;
     }
 
-    private Map<String, Collection<String>> standardiseHeaders(HttpHeaders headers) {
+    private Map<String, Collection<String>> standardiseHeaders(final HttpHeaders headers) {
         return headers.entrySet().stream()
                 .collect(toMap(Entry::getKey, Entry::getValue));
     }

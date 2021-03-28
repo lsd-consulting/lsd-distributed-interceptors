@@ -29,7 +29,7 @@ public class RabbitCaptor {
         final String traceId = traceIdRetriever.getTraceId(headers);
         final String service = propertyServiceNameDeriver.getServiceName();
         final String body = message.getBody() != null ? new String(message.getBody()) : null;
-        final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(body, traceId, headers, service, exchange, type);
+        final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(body, traceId, headers, service, exchange, exchange, type);
         interceptedDocumentRepository.save(interceptedInteraction);
     }
 }

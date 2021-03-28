@@ -16,14 +16,10 @@ import java.util.Optional;
 
 import static com.integreety.yatspec.e2e.teststate.indent.JsonPrettyPrinter.indentJson;
 import static com.integreety.yatspec.e2e.teststate.indent.XmlPrettyPrinter.indentXml;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Slf4j
 @RequiredArgsConstructor
 public class InteractionNameGenerator {
-
-    public static final String SOURCE_NAME_KEY = "Source-Name";
-    public static final String TARGET_NAME_KEY = "Target-Name";
 
     private final ObjectMapper objectMapper = new ObjectMapperCreator().getObjectMapper();
 
@@ -31,10 +27,8 @@ public class InteractionNameGenerator {
 
         final List<Pair<String, Object>> interactions = new ArrayList<>();
         for (final InterceptedInteraction interceptedInteraction : interceptedInteractions) {
-            final String destination = deriveDestinationName(interceptedInteraction);
-            final String source = deriveSourceName(interceptedInteraction);
             final String colour = traceIdToColourMap.get(interceptedInteraction.getTraceId()).orElse("");
-            final String interactionName = interceptedInteraction.getType().getInteractionName().apply(buildInteraction(interceptedInteraction, source, destination, colour));
+            final String interactionName = interceptedInteraction.getType().getInteractionName().apply(buildInteraction(interceptedInteraction, colour));
             log.info("Generated an interaction name={}", interactionName);
             final String body = indent(interceptedInteraction.getBody());
             interactions.add(Pair.of(interactionName, body));
@@ -42,26 +36,14 @@ public class InteractionNameGenerator {
         return interactions;
     }
 
-    private String deriveSourceName(final InterceptedInteraction interceptedInteraction) {
-        final var headers = interceptedInteraction.getRequestHeaders();
-        return isNotEmpty(headers) && headers.containsKey(SOURCE_NAME_KEY)
-                ? headers.get(SOURCE_NAME_KEY).stream().findFirst().orElse(interceptedInteraction.getServiceName()) : interceptedInteraction.getServiceName();
-    }
-
-    private String deriveDestinationName(final InterceptedInteraction interceptedInteraction) {
-        final var headers = interceptedInteraction.getRequestHeaders();
-        return isNotEmpty(headers) && headers.containsKey(TARGET_NAME_KEY)
-                ? headers.get(TARGET_NAME_KEY).stream().findFirst().orElse(interceptedInteraction.getTarget()) : interceptedInteraction.getTarget();
-    }
-
     @SneakyThrows
-    private Interaction buildInteraction(final InterceptedInteraction interceptedInteraction, final String source, final String destination, final String colour) {
+    private Interaction buildInteraction(final InterceptedInteraction interceptedInteraction, final String colour) {
         return Interaction.builder()
-                .source(source)
-                .destination(destination)
+                .source(interceptedInteraction.getServiceName())
+                .destination(interceptedInteraction.getTarget())
                 .httpMethod(interceptedInteraction.getHttpMethod())
                 .httpStatus(interceptedInteraction.getHttpStatus())
-                .path(interceptedInteraction.getTarget())
+                .path(interceptedInteraction.getPath())
                 .createdAt(objectMapper.writeValueAsString(interceptedInteraction.getCreatedAt()))
                 .colour(colour)
                 .build();
