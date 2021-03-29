@@ -12,6 +12,7 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 public abstract class PathDerivingCaptor {
     static final String SOURCE_NAME_KEY = "Source-Name";
     static final String TARGET_NAME_KEY = "Target-Name";
+    static final String UNKNOWN_TARGET = "UNKNOWN_TARGET";
 
     private static final String EXTRACT_PATH = "https?://.*?(/.*)";
 

@@ -41,7 +41,7 @@ public class ResponseCaptor extends PathDerivingCaptor {
         try {
             final Map<String, Collection<String>> headers = response.request().headers();
             final String path = derivePath(response.request().url());
-            final String target = headerExists(headers, TARGET_NAME_KEY) ? findHeader(headers, TARGET_NAME_KEY).orElse(derivePath(response.request().url())) : derivePath(response.request().url());
+            final String target = headerExists(headers, TARGET_NAME_KEY) ? findHeader(headers, TARGET_NAME_KEY).orElse(derivePath(response.request().url())) : UNKNOWN_TARGET;
             final String serviceName = headerExists(headers, SOURCE_NAME_KEY) ? findHeader(headers, SOURCE_NAME_KEY).orElse(propertyServiceNameDeriver.getServiceName()) : propertyServiceNameDeriver.getServiceName();
             final String traceId = traceIdRetriever.getTraceId(response.headers());
             final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(extractResponseBodyToString(response), headers, response.headers(), traceId, serviceName, target, path, deriveStatus(response.status()), null, RESPONSE);

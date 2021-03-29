@@ -31,7 +31,7 @@ public class RequestCaptor extends PathDerivingCaptor {
             final String body = request.body() != null ? new String(request.body()) : null;
             final String path = derivePath(request.url());
             final String traceId = traceIdRetriever.getTraceId(headers);
-            final String target = headerExists(headers, TARGET_NAME_KEY) ? findHeader(headers, TARGET_NAME_KEY).orElse(derivePath(request.url())) : derivePath(request.url());
+            final String target = headerExists(headers, TARGET_NAME_KEY) ? findHeader(headers, TARGET_NAME_KEY).orElse(derivePath(request.url())) : UNKNOWN_TARGET;
             final String serviceName = headerExists(headers, SOURCE_NAME_KEY) ? findHeader(headers, SOURCE_NAME_KEY).orElse(propertyServiceNameDeriver.getServiceName()) : propertyServiceNameDeriver.getServiceName();
             final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(body, headers, traceId, serviceName, target, path, null, request.httpMethod().name(), REQUEST);
             interceptedDocumentRepository.save(interceptedInteraction);
@@ -47,7 +47,7 @@ public class RequestCaptor extends PathDerivingCaptor {
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> (Collection<String>) e.getValue()));
         final String path = generatePath(request);
         final String serviceName = headerExists(headers, SOURCE_NAME_KEY) ? findHeader(headers, SOURCE_NAME_KEY).orElse(propertyServiceNameDeriver.getServiceName()) : propertyServiceNameDeriver.getServiceName();
-        final String target = headerExists(headers, TARGET_NAME_KEY) ? findHeader(headers, TARGET_NAME_KEY).orElse(generatePath(request)) : generatePath(request);
+        final String target = headerExists(headers, TARGET_NAME_KEY) ? findHeader(headers, TARGET_NAME_KEY).orElse(generatePath(request)) : UNKNOWN_TARGET;
         final String traceId = traceIdRetriever.getTraceId(headers);
         final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(body, headers, traceId, serviceName, target, path, null, request.getMethodValue(), REQUEST);
         interceptedDocumentRepository.save(interceptedInteraction);

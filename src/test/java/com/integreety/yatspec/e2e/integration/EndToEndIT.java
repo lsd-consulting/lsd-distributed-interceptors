@@ -106,8 +106,8 @@ public class EndToEndIT {
         assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "{\"message\":\"from_controller\"}", "SomethingDoneEvent", "SomethingDoneEvent")));
         assertThat("CONSUMER interaction missing", interceptedInteractions, hasItem(with(CONSUME, "lsdEnd2End", "{\"message\":\"from_controller\"}", "SomethingDoneEvent", "SomethingDoneEvent")));
 
-        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", "from_listener", "/external-api?message=from_feign", "/external-api?message=from_feign")));
-        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "from_external", "/external-api?message=from_feign", "/external-api?message=from_feign")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", "from_listener", "UNKNOWN_TARGET", "/external-api?message=from_feign")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "from_external", "UNKNOWN_TARGET", "/external-api?message=from_feign")));
     }
 
     @Test
@@ -159,8 +159,8 @@ public class EndToEndIT {
         "publish event from lsdEnd2End to SomethingDoneEvent",
         "200 OK response from Controller to Client",
         "consume message from SomethingDoneEvent to lsdEnd2End",
-        "POST /external-api?message=from_feign from lsdEnd2End to /external-api?message=from_feign",
-        "200 OK response from /external-api?message=from_feign to lsdEnd2End",
+        "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET",
+        "200 OK response from UNKNOWN_TARGET to lsdEnd2End",
         "POST /external-api?message=from_feign from lsdEnd2End to Downstream",
         "200 OK response from Downstream to lsdEnd2End"));
     }
@@ -183,8 +183,8 @@ public class EndToEndIT {
                 "publish event from lsdEnd2End to SomethingDoneEvent [#colour1]",
                 "200 OK response from Controller to Client [#colour1]",
                 "consume message from SomethingDoneEvent to lsdEnd2End [#colour1]",
-                "POST /external-api?message=from_feign from lsdEnd2End to /external-api?message=from_feign [#colour1]",
-                "200 OK response from /external-api?message=from_feign to lsdEnd2End [#colour1]",
+                "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET [#colour1]",
+                "200 OK response from UNKNOWN_TARGET to lsdEnd2End [#colour1]",
                 "POST /external-api?message=from_feign from lsdEnd2End to Downstream [#colour1]",
                 "200 OK response from Downstream to lsdEnd2End [#colour1]"));
     }
@@ -214,8 +214,8 @@ public class EndToEndIT {
                 "publish event from lsdEnd2End to SomethingDoneEvent [#colour1]",
                 "200 OK response from Controller to Client [#colour1]",
                 "consume message from SomethingDoneEvent to lsdEnd2End [#colour1]",
-                "POST /external-api?message=from_feign from lsdEnd2End to /external-api?message=from_feign [#colour1]",
-                "200 OK response from /external-api?message=from_feign to lsdEnd2End [#colour1]",
+                "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET [#colour1]",
+                "200 OK response from UNKNOWN_TARGET to lsdEnd2End [#colour1]",
                 "POST /external-api?message=from_feign from lsdEnd2End to Downstream [#colour1]",
                 "200 OK response from Downstream to lsdEnd2End [#colour1]",
                 "GET /setup2?message=from_test from E2E to Setup2 [#colour2]",
