@@ -32,14 +32,22 @@ public class RabbitTemplateInterceptorConfig {
         rabbitTemplates.forEach(rabbitTemplate -> {
             rabbitTemplate.addBeforePublishPostProcessors(message -> {
                 log.info("Rabbit message properties before publishing:{}", message.getMessageProperties());
-                final String exchangeName = exchangeNameDeriver.derive(message.getMessageProperties(), rabbitTemplate.getExchange());
-                rabbitCaptor.captureInteraction(exchangeName, MessageBuilder.fromMessage(message).build(), PUBLISH);
+                try {
+                    final String exchangeName = exchangeNameDeriver.derive(message.getMessageProperties(), rabbitTemplate.getExchange());
+                    rabbitCaptor.captureInteraction(exchangeName, MessageBuilder.fromMessage(message).build(), PUBLISH);
+                } catch (final Throwable t) {
+                    log.error(t.getMessage(), t);
+                }
                 return message;
             });
             rabbitTemplate.addAfterReceivePostProcessors(message -> {
                 log.info("Rabbit message properties after receiving:{}", message.getMessageProperties());
-                final String exchangeName = exchangeNameDeriver.derive(message.getMessageProperties(), message.getMessageProperties().getReceivedExchange());
-                rabbitCaptor.captureInteraction(exchangeName, MessageBuilder.fromMessage(message).build(), CONSUME);
+                try {
+                    final String exchangeName = exchangeNameDeriver.derive(message.getMessageProperties(), message.getMessageProperties().getReceivedExchange());
+                    rabbitCaptor.captureInteraction(exchangeName, MessageBuilder.fromMessage(message).build(), CONSUME);
+                } catch (final Throwable t) {
+                    log.error(t.getMessage(), t);
+                }
                 return message;
             });
         });

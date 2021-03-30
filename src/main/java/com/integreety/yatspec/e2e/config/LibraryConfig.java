@@ -4,7 +4,9 @@ import brave.Tracer;
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import com.integreety.yatspec.e2e.captor.http.RequestCaptor;
 import com.integreety.yatspec.e2e.captor.http.ResponseCaptor;
-import com.integreety.yatspec.e2e.captor.http.mapper.PropertyServiceNameDeriver;
+import com.integreety.yatspec.e2e.captor.http.derive.PathDeriver;
+import com.integreety.yatspec.e2e.captor.http.derive.PropertyServiceNameDeriver;
+import com.integreety.yatspec.e2e.captor.http.derive.SourceTargetDeriver;
 import com.integreety.yatspec.e2e.captor.rabbit.RabbitCaptor;
 import com.integreety.yatspec.e2e.captor.rabbit.header.HeaderRetriever;
 import com.integreety.yatspec.e2e.captor.rabbit.mapper.ExchangeNameDeriver;
@@ -51,22 +53,34 @@ public class LibraryConfig {
     }
 
     @Bean
+    public PathDeriver pathDeriver() {
+        return new PathDeriver();
+    }
+
+    @Bean
+    public SourceTargetDeriver sourceTargetDeriver(final PropertyServiceNameDeriver propertyServiceNameDeriver) {
+        return new SourceTargetDeriver(propertyServiceNameDeriver);
+    }
+
+    @Bean
     public RequestCaptor requestCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
                                        final InterceptedInteractionFactory interceptedInteractionFactory,
-                                       final PropertyServiceNameDeriver propertyServiceNameDeriver,
+                                       final SourceTargetDeriver sourceTargetDeriver,
+                                       final PathDeriver pathDeriver,
                                        final TraceIdRetriever traceIdRetriever) {
 
 
-        return new RequestCaptor(interceptedDocumentRepository, interceptedInteractionFactory, propertyServiceNameDeriver, traceIdRetriever);
+        return new RequestCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver, pathDeriver, traceIdRetriever);
     }
 
     @Bean
     public ResponseCaptor responseCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
                                          final InterceptedInteractionFactory interceptedInteractionFactory,
-                                         final PropertyServiceNameDeriver propertyServiceNameDeriver,
+                                         final SourceTargetDeriver sourceTargetDeriver,
+                                         final PathDeriver pathDeriver,
                                          final TraceIdRetriever traceIdRetriever) {
 
-        return new ResponseCaptor(interceptedDocumentRepository, interceptedInteractionFactory, propertyServiceNameDeriver, traceIdRetriever);
+        return new ResponseCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver, pathDeriver, traceIdRetriever);
     }
 
     @Bean

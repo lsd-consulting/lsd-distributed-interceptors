@@ -1,4 +1,4 @@
-package com.integreety.yatspec.e2e.captor.http.mapper;
+package com.integreety.yatspec.e2e.captor.http.derive;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

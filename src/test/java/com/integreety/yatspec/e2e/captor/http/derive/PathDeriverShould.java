@@ -1,4 +1,4 @@
-package com.integreety.yatspec.e2e.captor.http;
+package com.integreety.yatspec.e2e.captor.http.derive;
 
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -7,9 +7,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class PathDerivingCaptorShould {
+public class PathDeriverShould {
 
-    private final PathDerivingCaptor pathDerivingCaptor = new PathDerivingCaptor() {};
+    private final PathDeriver underTest = new PathDeriver() {};
 
     @ParameterizedTest
     @CsvSource(value = {
@@ -18,7 +18,7 @@ public class PathDerivingCaptorShould {
             "https://www.bbc.co.uk/customer/1/address, /customer/1/address"
     })
     public void derivePath(final String url, final String expectedPath) {
-        final String path = pathDerivingCaptor.derivePath(url);
+        final String path = underTest.derivePathFrom(url);
         assertThat(path, is(expectedPath));
     }
 }

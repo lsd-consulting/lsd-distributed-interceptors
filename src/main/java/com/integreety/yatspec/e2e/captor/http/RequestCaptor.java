@@ -1,6 +1,7 @@
 package com.integreety.yatspec.e2e.captor.http;
 
-import com.integreety.yatspec.e2e.captor.http.mapper.PropertyServiceNameDeriver;
+import com.integreety.yatspec.e2e.captor.http.derive.PathDeriver;
+import com.integreety.yatspec.e2e.captor.http.derive.SourceTargetDeriver;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedInteraction;
 import com.integreety.yatspec.e2e.captor.repository.model.InterceptedInteractionFactory;
@@ -14,43 +15,41 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.integreety.yatspec.e2e.captor.convert.TypeConverter.convert;
 import static com.integreety.yatspec.e2e.captor.repository.model.Type.REQUEST;
 
 @Slf4j
 @RequiredArgsConstructor
-public class RequestCaptor extends PathDerivingCaptor {
+public class RequestCaptor {
 
     private final InterceptedDocumentRepository interceptedDocumentRepository;
     private final InterceptedInteractionFactory interceptedInteractionFactory;
-    private final PropertyServiceNameDeriver propertyServiceNameDeriver;
+    private final SourceTargetDeriver sourceTargetDeriver;
+    private final PathDeriver pathDeriver;
     private final TraceIdRetriever traceIdRetriever;
 
     public InterceptedInteraction captureRequestInteraction(final Request request) {
-        try {
-            final Map<String, Collection<String>> headers = request.headers();
-            final String body = request.body() != null ? new String(request.body()) : null;
-            final String path = derivePath(request.url());
-            final String traceId = traceIdRetriever.getTraceId(headers);
-            final String target = headerExists(headers, TARGET_NAME_KEY) ? findHeader(headers, TARGET_NAME_KEY).orElse(derivePath(request.url())) : UNKNOWN_TARGET;
-            final String serviceName = headerExists(headers, SOURCE_NAME_KEY) ? findHeader(headers, SOURCE_NAME_KEY).orElse(propertyServiceNameDeriver.getServiceName()) : propertyServiceNameDeriver.getServiceName();
-            final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(body, headers, traceId, serviceName, target, path, null, request.httpMethod().name(), REQUEST);
-            interceptedDocumentRepository.save(interceptedInteraction);
-            return interceptedInteraction;
-        } catch (final RuntimeException e) {
-            log.error(e.getMessage(), e);
-            throw e;
-        }
+        final Map<String, Collection<String>> headers = request.headers();
+        final String body = convert(request.body());
+        final String path = pathDeriver.derivePathFrom(request.url());
+        final String traceId = traceIdRetriever.getTraceId(headers);
+        final String target = sourceTargetDeriver.deriveTarget(headers, path);
+        final String serviceName = sourceTargetDeriver.deriveServiceName(headers);
+        final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(body, headers, traceId, serviceName, target, path, null, request.httpMethod().name(), REQUEST);
+        interceptedDocumentRepository.save(interceptedInteraction);
+        return interceptedInteraction;
     }
 
     public InterceptedInteraction captureRequestInteraction(final HttpRequest request, final String body) {
         final var headers = request.getHeaders().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> (Collection<String>) e.getValue()));
-        final String path = generatePath(request);
-        final String serviceName = headerExists(headers, SOURCE_NAME_KEY) ? findHeader(headers, SOURCE_NAME_KEY).orElse(propertyServiceNameDeriver.getServiceName()) : propertyServiceNameDeriver.getServiceName();
-        final String target = headerExists(headers, TARGET_NAME_KEY) ? findHeader(headers, TARGET_NAME_KEY).orElse(generatePath(request)) : UNKNOWN_TARGET;
+        final String path = pathDeriver.derivePathFrom(request);
+        final String serviceName = sourceTargetDeriver.deriveServiceName(headers);
+        final String target = sourceTargetDeriver.deriveTarget(headers, path);
         final String traceId = traceIdRetriever.getTraceId(headers);
         final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(body, headers, traceId, serviceName, target, path, null, request.getMethodValue(), REQUEST);
         interceptedDocumentRepository.save(interceptedInteraction);
         return interceptedInteraction;
     }
+
 }
