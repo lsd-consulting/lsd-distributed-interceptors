@@ -72,4 +72,13 @@ class LsdRestTemplateInterceptorShould {
 
         verify(responseCaptor).captureResponseInteraction(eq(httpRequest), eq(httpResponse), eq(target), eq(path), eq(traceId));
     }
+
+    @Test
+    void abortCapturingResponseWhenCapturingRequestFailed() throws IOException {
+        given(requestCaptor.captureRequestInteraction(any(), any())).willThrow(new RuntimeException("Error"));
+
+        underTest.intercept(httpRequest, body.getBytes(), execution);
+
+        verifyNoInteractions(responseCaptor);
+    }
 }
