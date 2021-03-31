@@ -25,11 +25,12 @@ public class LsdRestTemplateInterceptor implements ClientHttpRequestInterceptor 
 
     @Override
     public ClientHttpResponse intercept(final HttpRequest request, final byte[] body, final ClientHttpRequestExecution execution) throws IOException {
-        InterceptedInteraction interceptedInteraction = null;
+        final InterceptedInteraction interceptedInteraction;
         try {
             interceptedInteraction = requestCaptor.captureRequestInteraction(request, new String(body));
         } catch (final Throwable t) {
             log.error(t.getMessage(), t);
+            return execution.execute(request, body);
         }
         final ClientHttpResponse response = execution.execute(request, body);
         try {
