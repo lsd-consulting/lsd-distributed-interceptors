@@ -4,9 +4,10 @@ plugins {
     id 'org.springframework.boot' version '2.4.2'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java-library'
-    id 'maven'
+    id 'maven-publish'
     id 'pl.allegro.tech.build.axion-release' version '1.12.0'
-    id "com.jfrog.bintray" version "1.8.5"
+    id 'signing'
+    id 'io.github.gradle-nexus.publish-plugin' version '1.0.0'
     id 'jacoco'
     id 'info.solidsoft.pitest' version '1.5.2'
 }
@@ -31,9 +32,15 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
 artifacts {
     archives jar
     archives sourcesJar
+    archives javadocJar
 }
 
 repositories {
@@ -58,35 +65,62 @@ jacocoTestReport {
     }
 }
 
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    configurations = ['archives']
-    pkg {
-        repo = 'open'
-        name = 'lsd-distributed-interceptor-library'
-//        userOrg = System.getenv('BINTRAY_ORG')
-        override = false
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/integreety/lsd-distributed-interceptor-library.git'
-        publish = true
-        publicDownloadNumbers = true
-        version {
-            name = project.version
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = "$group"
+            artifactId = 'lsd-distributed-interceptor-library'
+            version = scmVersion.version
+
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = 'lsd-distributed-interceptor-library'
+                description = 'A set of interceptors gathering information for the LSD (Yatspec) library.'
+                url = 'https://github.com/nickmcdowall/yatspec.git'
+                licenses {
+                    license {
+                        name = "The Apache Software License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                        distribution = "repo"
+                    }
+                }
+                developers {
+                    developer {
+                        name = "Integreety Technology"
+                        email = "admin@integreety.co.uk"
+                        organization = 'Integreety Ltd.'
+                        organizationUrl = 'https://github.com/integreety'
+                    }
+                }
+                scm {
+                    url = "https://github.com/integreety/lsd-distributed-interceptor-library.git"
+                }
+            }
+            repositories {
+                maven {
+                    name = 'sonatype'
+                    url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                    credentials(PasswordCredentials)
+                }
+            }
         }
     }
 }
 
-//publishing {
-//    publications {
-//        mavenJava(MavenPublication) {
-//            from components.java
-//        }
-//    }
-//    repositories {
-//        mavenLocal()
-//    }
-//}
+nexusPublishing {
+    repositories {
+        sonatype {  //only for users registered in Sonatype after 24 Feb 2021
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
 
 apply plugin: 'io.spring.dependency-management'
 dependencyManagement {

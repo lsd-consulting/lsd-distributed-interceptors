@@ -43,7 +43,7 @@ jobs:
 
       - run: ./gradlew clean build
       - run: ./gradlew release
-      - run: ./gradlew bintrayUpload
+      - run: ./gradlew publishToSonatype closeAndReleaseStagingRepository
 
       - store_test_results:
           path: build/test-results
