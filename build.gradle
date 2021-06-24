@@ -12,7 +12,7 @@ plugins {
     id 'info.solidsoft.pitest' version '1.5.2'
 }
 
-group = 'com.integreety'
+group = 'io.github.lsd-consulting'
 project.version = scmVersion.version
 println "Build Version = ${project.version}"
 
@@ -54,7 +54,7 @@ test {
     testLogging {
         events "skipped", "failed"
     }
-    systemProperty 'yatspec.output.dir', "$buildDir/reports/yatspec"
+    systemProperty("lsd.core.report.outputDir", "$buildDir/reports/lsd")
     finalizedBy jacocoTestReport
 }
 
@@ -77,8 +77,8 @@ publishing {
             artifact javadocJar
             pom {
                 name = 'lsd-distributed-interceptor-library'
-                description = 'A set of interceptors gathering information for the LSD (Yatspec) library.'
-                url = 'https://github.com/nickmcdowall/yatspec.git'
+                description = 'A set of interceptors gathering information from distributed sources for the LSD library.'
+                url = 'https://github.com/lsd-consulting/lsd-distributed-interceptors'
                 licenses {
                     license {
                         name = "The Apache Software License, Version 2.0"
@@ -88,14 +88,20 @@ publishing {
                 }
                 developers {
                     developer {
-                        name = "Integreety Technology"
-                        email = "admin@integreety.co.uk"
+                        name = "Lukasz"
+                        email = "lukasz.gryzbon@gmail.com"
                         organization = 'Integreety Ltd.'
-                        organizationUrl = 'https://github.com/integreety'
+                        organizationUrl = 'https://www.integreety.co.uk'
+                    }
+                    developer {
+                        name = "Nick"
+                        email = "nicholas.mcdowall@gmail.com"
+                        organization = 'NKM IT Solutions'
+                        organizationUrl = 'https://github.com/nickmcdowall'
                     }
                 }
                 scm {
-                    url = "https://github.com/integreety/lsd-distributed-interceptor-library.git"
+                    url = "https://github.com/lsd-consulting/lsd-distributed-interceptors.git"
                 }
             }
             repositories {
@@ -143,8 +149,8 @@ dependencies {
     // Database driver for storing interactions
     implementation 'org.mongodb:mongo-java-driver:3.12.6'
 
-    // Yatspec
-    implementation 'com.github.nickmcdowall:yatspec:2021.0.2'
+    // LSD
+    implementation 'io.github.lsd-consulting:lsd-core:0.1.17'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.12'

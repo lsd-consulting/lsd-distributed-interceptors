@@ -27,7 +27,7 @@ public class InteractionNameGeneratorShould {
     @ParameterizedTest
     @MethodSource("provideInterceptedInteractions")
     public void generateInteractionNames(final InterceptedInteraction interceptedInteraction, final String expectedInteractionName) {
-        final List<Pair<String, Object>> interactionNames = underTest.generate(List.of(interceptedInteraction), Map.of(TRACE_ID, Optional.of("[#grey]")));
+        final List<Pair<String, String>> interactionNames = underTest.generate(List.of(interceptedInteraction), Map.of(TRACE_ID, Optional.of("[#grey]")));
 
         assertThat(interactionNames, hasSize(1));
         assertThat(interactionNames.get(0).getLeft(), is(expectedInteractionName));

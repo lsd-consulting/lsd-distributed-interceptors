@@ -1,17 +1,15 @@
 package com.integreety.yatspec.e2e.config;
 
-import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import com.integreety.yatspec.e2e.captor.repository.InterceptedDocumentRepository;
 import com.integreety.yatspec.e2e.teststate.TestStateLogger;
 import com.integreety.yatspec.e2e.teststate.interaction.InteractionNameGenerator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import com.lsd.LsdContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(name = "yatspec.lsd.db.connectionstring")
-@ConditionalOnBean(TestState.class)
+@ConditionalOnProperty(name = "lsd.db.connectionstring")
 public class TestStateCollectorConfig {
 
     @Bean
@@ -20,10 +18,9 @@ public class TestStateCollectorConfig {
     }
 
     @Bean
-    public TestStateLogger testStateCollector(final TestState testState,
-                                              final InterceptedDocumentRepository interceptedDocumentRepository,
+    public TestStateLogger testStateCollector(final InterceptedDocumentRepository interceptedDocumentRepository,
                                               final InteractionNameGenerator interactionNameGenerator) {
 
-        return new TestStateLogger(testState, interceptedDocumentRepository, interactionNameGenerator);
+        return new TestStateLogger(interceptedDocumentRepository, interactionNameGenerator, LsdContext.getInstance());
     }
 }

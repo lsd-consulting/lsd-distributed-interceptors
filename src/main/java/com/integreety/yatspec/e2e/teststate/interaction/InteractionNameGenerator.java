@@ -23,9 +23,9 @@ public class InteractionNameGenerator {
 
     private final ObjectMapper objectMapper = new ObjectMapperCreator().getObjectMapper();
 
-    public List<Pair<String, Object>> generate(final List<InterceptedInteraction> interceptedInteractions, final Map<String, Optional<String>> traceIdToColourMap) {
+    public List<Pair<String, String>> generate(final List<InterceptedInteraction> interceptedInteractions, final Map<String, Optional<String>> traceIdToColourMap) {
 
-        final List<Pair<String, Object>> interactions = new ArrayList<>();
+        final List<Pair<String, String>> interactions = new ArrayList<>();
         for (final InterceptedInteraction interceptedInteraction : interceptedInteractions) {
             final String colour = traceIdToColourMap.get(interceptedInteraction.getTraceId()).orElse("");
             final String interactionName = interceptedInteraction.getType().getInteractionName().apply(buildInteraction(interceptedInteraction, colour));

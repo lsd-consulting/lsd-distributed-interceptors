@@ -13,7 +13,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import java.io.IOException;
 
 /**
- * Created to intercept rest template calls for Yatspec interactions.
+ * Created to intercept rest template calls for LSD interactions.
  * Attempts to reset the input stream so that no data is lost on reading the response body
  */
 @Slf4j

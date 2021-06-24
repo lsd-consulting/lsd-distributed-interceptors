@@ -18,7 +18,7 @@ import static com.integreety.yatspec.e2e.captor.repository.model.Type.PUBLISH;
 
 @Slf4j
 @Configuration
-@ConditionalOnProperty(name = {"yatspec.lsd.db.connectionstring"})
+@ConditionalOnProperty(name = {"lsd.db.connectionstring"})
 @ConditionalOnClass(RabbitTemplate.class)
 @RequiredArgsConstructor
 public class RabbitTemplateInterceptorConfig {

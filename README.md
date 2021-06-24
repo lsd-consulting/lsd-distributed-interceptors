@@ -1,4 +1,7 @@
 ## TODOs:
+- Fix assertions in the e2e test
+- Remove `TestStateLoggerShould` from Pitest exclusions
+- Update badges in README  
 - Improve README
 - Create a demo project
 - Add timings to the LSD - diff between request and response
@@ -10,6 +13,6 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.integreety/lsd-distributed-interceptor-library)](https://img.shields.io/maven-central/v/com.integreety/lsd-distributed-interceptor-library)
 ![Codecov](https://img.shields.io/codecov/c/github/integreety/lsd-distributed-interceptor-library)
 
-A set of interceptors gathering information for the LSD (Yatspec) library.
+A set of interceptors gathering information from distributed sources for the LSD library.
 
 ![Interceptor diagram](https://github.com/integreety/lsd-distributed-interceptor-library/blob/master/image/lsd-distributed-interceptor-library.png?raw=true)

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 */
 @Getter
 @Setter
-@ConditionalOnProperty(name = {"yatspec.lsd.db.connectionstring"})
+@ConditionalOnProperty(name = {"lsd.db.connectionstring"})
 @Configuration
 @ConfigurationProperties(prefix = "yatspec.lsd.db")
 public class PropertyConfig {

@@ -1,7 +1,6 @@
 package com.integreety.yatspec.e2e.config;
 
 import brave.Tracer;
-import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import com.integreety.yatspec.e2e.captor.http.RequestCaptor;
 import com.integreety.yatspec.e2e.captor.http.ResponseCaptor;
 import com.integreety.yatspec.e2e.captor.http.derive.PathDeriver;
@@ -21,16 +20,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(name = "yatspec.lsd.db.connectionstring")
+@ConditionalOnProperty(name = "lsd.db.connectionstring")
 @RequiredArgsConstructor
 public class LibraryConfig {
 
     private final Tracer tracer;
-
-    @Bean
-    public TestState testState() {
-        return new TestState();
-    }
 
     @Bean
     public PropertyServiceNameDeriver propertyServiceNameDeriver(@Value("${info.app.name}") final String appName) {
@@ -98,9 +92,9 @@ public class LibraryConfig {
     }
 
     @Bean
-    public InterceptedDocumentRepository interceptedDocumentRepository(@Value("${yatspec.lsd.db.connectionstring}") final String dbConnectionString,
-                                                                       @Value("${yatspec.lsd.db.trustStoreLocation:#{null}}") final String trustStoreLocation,
-                                                                       @Value("${yatspec.lsd.db.trustStorePassword:#{null}}") final String trustStorePassword) {
+    public InterceptedDocumentRepository interceptedDocumentRepository(@Value("${lsd.db.connectionstring}") final String dbConnectionString,
+                                                                       @Value("${lsd.db.trustStoreLocation:#{null}}") final String trustStoreLocation,
+                                                                       @Value("${lsd.db.trustStorePassword:#{null}}") final String trustStorePassword) {
         return new InterceptedDocumentMongoRepository(dbConnectionString, trustStoreLocation, trustStorePassword);
     }
 }
