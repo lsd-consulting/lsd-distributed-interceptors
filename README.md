@@ -1,12 +1,3 @@
-## TODOs:
-- Fix assertions in the e2e test
-- Remove `TestStateLoggerShould` from Pitest exclusions
-- Update badges in README  
-- Improve README
-- Create a demo project
-- Add timings to the LSD - diff between request and response
-- Store the last successful run's traceId, so it's possible to create an automatic diff the next time the test fails
-
 # lsd-distributed-interceptor-library 
 ![GitHub](https://img.shields.io/github/license/integreety/lsd-distributed-interceptor-library) 
 ![CircleCI](https://img.shields.io/circleci/build/gh/integreety/lsd-distributed-interceptor-library)
