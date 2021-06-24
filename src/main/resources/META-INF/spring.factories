@@ -1,8 +1,8 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.integreety.yatspec.e2e.config.FeignInterceptorConfig,\
-  com.integreety.yatspec.e2e.config.LibraryConfig,\
-  com.integreety.yatspec.e2e.config.PropertyConfig,\
-  com.integreety.yatspec.e2e.config.RabbitListenerInterceptorConfig,\
-  com.integreety.yatspec.e2e.config.RabbitTemplateInterceptorConfig,\
-  com.integreety.yatspec.e2e.config.RestTemplateInterceptorConfig,\
-  com.integreety.yatspec.e2e.config.TestStateCollectorConfig
+  io.lsdconsulting.lsd.distributed.config.FeignInterceptorConfig,\
+  io.lsdconsulting.lsd.distributed.config.LibraryConfig,\
+  io.lsdconsulting.lsd.distributed.config.PropertyConfig,\
+  io.lsdconsulting.lsd.distributed.config.RabbitListenerInterceptorConfig,\
+  io.lsdconsulting.lsd.distributed.config.RabbitTemplateInterceptorConfig,\
+  io.lsdconsulting.lsd.distributed.config.RestTemplateInterceptorConfig,\
+  io.lsdconsulting.lsd.distributed.config.TestStateCollectorConfig
