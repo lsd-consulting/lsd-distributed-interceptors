@@ -6,4 +6,4 @@
 
 A set of interceptors gathering information from distributed sources for the LSD library.
 
-![Interceptor diagram](https://github.com/integreety/lsd-distributed-interceptor-library/blob/master/image/lsd-distributed-interceptor-library.png?raw=true)
+![Interceptor diagram](https://github.com/lsd-consulting/lsd-distributed-interceptors/blob/master/image/lsd-distributed-interceptor-library.png?raw=true)
