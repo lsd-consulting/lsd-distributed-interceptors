@@ -32,7 +32,7 @@ public class TestStateLoggerShould {
         given(interactionNameGenerator.generate(eq(singletonList(interceptedInteraction)), any()))
                 .willReturn(singletonList(of("interactionName", "body")));
 
-        underTest.logStatesFromDatabase(traceId);
+        underTest.captureInteractionsFromDatabase(traceId);
 
         verify(lsdContext).capture("interactionName", "body");
     }

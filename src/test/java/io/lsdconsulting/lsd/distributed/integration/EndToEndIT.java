@@ -1,5 +1,7 @@
 package io.lsdconsulting.lsd.distributed.integration;
 
+import com.lsd.LsdContext;
+import io.lsdconsulting.lsd.distributed.captor.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.integration.testapp.TestApplication;
 import io.lsdconsulting.lsd.distributed.integration.testapp.config.RabbitConfig;
@@ -10,9 +12,14 @@ import io.lsdconsulting.lsd.distributed.integration.testapp.controller.event.Som
 import io.lsdconsulting.lsd.distributed.integration.testapp.repository.TestRepository;
 import io.lsdconsulting.lsd.distributed.teststate.TestStateLogger;
 import io.lsdconsulting.lsd.distributed.teststate.TraceIdGenerator;
+import io.lsdconsulting.lsd.distributed.teststate.interaction.InteractionNameGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,7 +46,10 @@ import static io.lsdconsulting.lsd.distributed.integration.matcher.InterceptedIn
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.RequestEntity.get;
@@ -65,11 +75,24 @@ public class EndToEndIT {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    @Autowired
     private TestStateLogger testStateLogger;
+
+    @Autowired
+    private InterceptedDocumentRepository interceptedDocumentRepository;
+
+    @Autowired
+    private InteractionNameGenerator interactionNameGenerator;
 
     private final String setupTraceId = TraceIdGenerator.generate();
     private final String mainTraceId = TraceIdGenerator.generate();
+
+    private final LsdContext lsdContext = Mockito.mock(LsdContext.class);
+    private ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+
+    @BeforeEach
+    public void setup() {
+        testStateLogger = new TestStateLogger(interceptedDocumentRepository, interactionNameGenerator, lsdContext);
+    }
 
     @AfterAll
     public static void tearDown() {
@@ -93,7 +116,7 @@ public class EndToEndIT {
             interceptedInteractions.addAll(foundInterceptedInteractions);
         });
 
-        testStateLogger.logStatesFromDatabase(mainTraceId);
+        testStateLogger.captureInteractionsFromDatabase(mainTraceId);
 
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", NO_BODY, "Controller", "/api-listener?message=from_test"))); // TODO Need to assert the parameter value
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "response_from_controller", "Controller", "/api-listener?message=from_test")));
@@ -114,7 +137,8 @@ public class EndToEndIT {
         assertThat(response.getBody(), is("response_from_controller"));
 
         await().untilAsserted(() -> {
-            final ParameterizedTypeReference<SomethingDoneEvent> type = new ParameterizedTypeReference<>() {};
+            final ParameterizedTypeReference<SomethingDoneEvent> type = new ParameterizedTypeReference<>() {
+            };
             final SomethingDoneEvent message = rabbitTemplate.receiveAndConvert("queue-rabbit-template", 2000, type);
             assertThat(message, is(notNullValue()));
             assertThat(message.getMessage(), is("from_controller"));
@@ -127,7 +151,7 @@ public class EndToEndIT {
             interceptedInteractions.addAll(foundInterceptedInteractions);
         });
 
-        testStateLogger.logStatesFromDatabase(mainTraceId);
+        testStateLogger.captureInteractionsFromDatabase(mainTraceId);
 
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "Client", NO_BODY, "Controller", "/api-rabbit-template?message=from_test"))); // TODO Need to assert the parameter value
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "Client", "response_from_controller", "Controller", "/api-rabbit-template?message=from_test")));
@@ -138,83 +162,103 @@ public class EndToEndIT {
 
     @Test
     public void shouldRecordHeaderSuppliedNames() throws URISyntaxException {
-        givenExternalApi();
 
-        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "Controller");
+        try (MockedStatic<LsdContext> dummy = Mockito.mockStatic(LsdContext.class)) {
 
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody(), containsString("response_from_controller"));
+            dummy.when(LsdContext::getInstance).thenReturn(lsdContext);
+            doNothing().when(lsdContext).capture(argumentCaptor.capture(), any());
+            givenExternalApi();
 
-        await().untilAsserted(() -> assertThat(testRepository.findAll(mainTraceId), hasSize(8)));
+            final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "Controller");
 
-        testStateLogger.logStatesFromDatabase(mainTraceId);
+            assertThat(response.getStatusCode(), is(HttpStatus.OK));
+            assertThat(response.getBody(), containsString("response_from_controller"));
 
-//        final Set<String> interactionNames = testState.getCapturedTypes().keySet();
-//        assertThat(interactionNames, contains("GET /api-listener?message=from_test from Client to Controller",
-//        "publish event from lsdEnd2End to SomethingDoneEvent",
-//        "200 OK response from Controller to Client",
-//        "consume message from SomethingDoneEvent to lsdEnd2End",
-//        "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET",
-//        "200 OK response from UNKNOWN_TARGET to lsdEnd2End",
-//        "POST /external-api?message=from_feign from lsdEnd2End to Downstream",
-//        "200 OK response from Downstream to lsdEnd2End"));
+            await().untilAsserted(() -> assertThat(testRepository.findAll(mainTraceId), hasSize(8)));
+
+            testStateLogger.captureInteractionsFromDatabase(mainTraceId);
+
+            assertThat(argumentCaptor.getAllValues(), contains(
+                    "GET /api-listener?message=from_test from Client to Controller",
+                    "publish event from lsdEnd2End to SomethingDoneEvent",
+                    "200 OK response from Controller to Client",
+                    "consume message from SomethingDoneEvent to lsdEnd2End",
+                    "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET",
+                    "200 OK response from UNKNOWN_TARGET to lsdEnd2End",
+                    "POST /external-api?message=from_feign from lsdEnd2End to Downstream",
+                    "200 OK response from Downstream to lsdEnd2End"));
+        }
     }
 
     @Test
     public void shouldRecordHeaderSuppliedNamesWithColour() throws URISyntaxException {
-        givenExternalApi();
 
-        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "Controller");
+        try (MockedStatic<LsdContext> dummy = Mockito.mockStatic(LsdContext.class)) {
 
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody(), containsString("response_from_controller"));
+            dummy.when(LsdContext::getInstance).thenReturn(lsdContext);
+            doNothing().when(lsdContext).capture(argumentCaptor.capture(), any());
+            givenExternalApi();
 
-        await().untilAsserted(() -> assertThat(testRepository.findAll(mainTraceId), hasSize(8)));
+            final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "Controller");
 
-        testStateLogger.logStatesFromDatabase(Map.of(mainTraceId, Optional.of("[#colour1]")));
+            assertThat(response.getStatusCode(), is(HttpStatus.OK));
+            assertThat(response.getBody(), containsString("response_from_controller"));
 
-//        final Set<String> interactionNames = testState.getCapturedTypes().keySet();
-//        assertThat(interactionNames, contains("GET /api-listener?message=from_test from Client to Controller [#colour1]",
-//                "publish event from lsdEnd2End to SomethingDoneEvent [#colour1]",
-//                "200 OK response from Controller to Client [#colour1]",
-//                "consume message from SomethingDoneEvent to lsdEnd2End [#colour1]",
-//                "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET [#colour1]",
-//                "200 OK response from UNKNOWN_TARGET to lsdEnd2End [#colour1]",
-//                "POST /external-api?message=from_feign from lsdEnd2End to Downstream [#colour1]",
-//                "200 OK response from Downstream to lsdEnd2End [#colour1]"));
+            await().untilAsserted(() -> assertThat(testRepository.findAll(mainTraceId), hasSize(8)));
+
+            testStateLogger.captureInteractionsFromDatabase(Map.of(mainTraceId, Optional.of("[#colour1]")));
+
+            assertThat(argumentCaptor.getAllValues(), contains(
+                    "GET /api-listener?message=from_test from Client to Controller [#colour1]",
+                    "publish event from lsdEnd2End to SomethingDoneEvent [#colour1]",
+                    "200 OK response from Controller to Client [#colour1]",
+                    "consume message from SomethingDoneEvent to lsdEnd2End [#colour1]",
+                    "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET [#colour1]",
+                    "200 OK response from UNKNOWN_TARGET to lsdEnd2End [#colour1]",
+                    "POST /external-api?message=from_feign from lsdEnd2End to Downstream [#colour1]",
+                    "200 OK response from Downstream to lsdEnd2End [#colour1]"));
+        }
     }
+
 
     @Test
     public void shouldRecordHeaderSuppliedNamesWithMultipleTraceIds() throws URISyntaxException {
-        givenExternalApi();
 
-        sentRequest("/setup1", setupTraceId, "E2E", "Setup1");
+        try (MockedStatic<LsdContext> dummy = Mockito.mockStatic(LsdContext.class)) {
 
-        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "Controller");
+            dummy.when(LsdContext::getInstance).thenReturn(lsdContext);
+            doNothing().when(lsdContext).capture(argumentCaptor.capture(), any());
 
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody(), containsString("response_from_controller"));
+            givenExternalApi();
 
-        await().untilAsserted(() -> assertThat(testRepository.findAll(mainTraceId), hasSize(8)));
+            sentRequest("/setup1", setupTraceId, "E2E", "Setup1");
 
-        sentRequest("/setup2", setupTraceId, "E2E", "Setup2");
+            final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "Controller");
 
-        testStateLogger.logStatesFromDatabase(Map.of(mainTraceId, Optional.of("[#colour1]"), setupTraceId, Optional.of("[#colour2]")));
+            assertThat(response.getStatusCode(), is(HttpStatus.OK));
+            assertThat(response.getBody(), containsString("response_from_controller"));
 
-//        final Set<String> interactionNames = testState.getCapturedTypes().keySet();
-//        assertThat(interactionNames, contains(
-//                "GET /setup1?message=from_test from E2E to Setup1 [#colour2]",
-//                "200 OK response from Setup1 to E2E [#colour2]",
-//                "GET /api-listener?message=from_test from Client to Controller [#colour1]",
-//                "publish event from lsdEnd2End to SomethingDoneEvent [#colour1]",
-//                "200 OK response from Controller to Client [#colour1]",
-//                "consume message from SomethingDoneEvent to lsdEnd2End [#colour1]",
-//                "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET [#colour1]",
-//                "200 OK response from UNKNOWN_TARGET to lsdEnd2End [#colour1]",
-//                "POST /external-api?message=from_feign from lsdEnd2End to Downstream [#colour1]",
-//                "200 OK response from Downstream to lsdEnd2End [#colour1]",
-//                "GET /setup2?message=from_test from E2E to Setup2 [#colour2]",
-//                "200 OK response from Setup2 to E2E [#colour2]"));
+            await().untilAsserted(() -> assertThat(testRepository.findAll(mainTraceId), hasSize(8)));
+
+            sentRequest("/setup2", setupTraceId, "E2E", "Setup2");
+
+            testStateLogger.captureInteractionsFromDatabase(Map.of(mainTraceId, Optional.of("[#colour1]"), setupTraceId, Optional.of("[#colour2]")));
+
+            assertThat(argumentCaptor.getAllValues(), contains(
+                    "GET /setup1?message=from_test from E2E to Setup1 [#colour2]",
+                    "200 OK response from Setup1 to E2E [#colour2]",
+                    "GET /api-listener?message=from_test from Client to Controller [#colour1]",
+                    "publish event from lsdEnd2End to SomethingDoneEvent [#colour1]",
+                    "200 OK response from Controller to Client [#colour1]",
+                    "consume message from SomethingDoneEvent to lsdEnd2End [#colour1]",
+                    "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET [#colour1]",
+                    "200 OK response from UNKNOWN_TARGET to lsdEnd2End [#colour1]",
+                    "POST /external-api?message=from_feign from lsdEnd2End to Downstream [#colour1]",
+                    "200 OK response from Downstream to lsdEnd2End [#colour1]",
+                    "GET /setup2?message=from_test from E2E to Setup2 [#colour2]",
+                    "200 OK response from Setup2 to E2E [#colour2]"));
+
+        }
     }
 
     private void givenExternalApi() {

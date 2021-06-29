@@ -56,6 +56,15 @@ test {
     }
     systemProperty("lsd.core.report.outputDir", "$buildDir/reports/lsd")
     finalizedBy jacocoTestReport
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            println "Unit test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+            boolean skipTests = Boolean.parseBoolean(project.findProperty('SKIP_TESTS') ?: "false" as String)
+            if (result.testCount == 0 && !skipTests) {
+                throw new IllegalStateException("No tests were found. Failing the build")
+            }
+        }
+    }
 }
 
 jacocoTestReport {
@@ -173,13 +182,14 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.10'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.10'
     testImplementation 'org.junit.platform:junit-platform-commons:1.7.1'
-    testImplementation 'org.mockito:mockito-junit-jupiter:3.5.13'
+    testImplementation 'org.mockito:mockito-junit-jupiter:2.28.2'
     testImplementation 'org.pitest:pitest-junit5-plugin:0.12'
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
     testImplementation 'com.github.fridujo:rabbitmq-mock:1.0.14'
     testImplementation 'org.awaitility:awaitility:4.0.3'
 
     testImplementation 'com.github.tomakehurst:wiremock:2.26.3'
+//    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.11.5'
 
 }
 

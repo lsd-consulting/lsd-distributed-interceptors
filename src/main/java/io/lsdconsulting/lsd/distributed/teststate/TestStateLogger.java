@@ -18,13 +18,13 @@ public class TestStateLogger {
     private final InteractionNameGenerator interactionNameGenerator;
     private final LsdContext lsdContext;
 
-    public void logStatesFromDatabase(final String... traceIds) {
+    public void captureInteractionsFromDatabase(final String... traceIds) {
         final Map<String, Optional<String>> traceIdToColourMap = new HashMap<>();
         Arrays.stream(traceIds).forEach(x -> traceIdToColourMap.put(x, Optional.empty()));
-        logStatesFromDatabase(traceIdToColourMap);
+        captureInteractionsFromDatabase(traceIdToColourMap);
     }
 
-    public void logStatesFromDatabase(final Map<String, Optional<String>> traceIdToColourMap) {
+    public void captureInteractionsFromDatabase(final Map<String, Optional<String>> traceIdToColourMap) {
 
         final String[] traceIds = traceIdToColourMap.keySet().toArray(new String[0]);
         final List<InterceptedInteraction> interceptedInteractions = interceptedDocumentRepository.findByTraceIds(traceIds);
