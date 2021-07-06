@@ -1,6 +1,7 @@
 package io.lsdconsulting.lsd.distributed.integration;
 
 import com.lsd.LsdContext;
+import io.lsdconsulting.junit5.LsdExtension;
 import io.lsdconsulting.lsd.distributed.captor.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.integration.testapp.TestApplication;
@@ -17,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -59,6 +61,7 @@ import static org.springframework.http.RequestEntity.get;
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = {TestApplication.class})
 @TestPropertySource("classpath:application-test.properties")
 @AutoConfigureWireMock(port = 0)
+@ExtendWith(LsdExtension.class)
 public class EndToEndIT {
 
     private static final String NO_BODY = "";
