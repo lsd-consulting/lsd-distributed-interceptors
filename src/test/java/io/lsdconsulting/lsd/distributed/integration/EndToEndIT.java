@@ -180,13 +180,13 @@ public class EndToEndIT {
 
             assertThat(argumentCaptor.getAllValues(), contains(
                     "GET /api-listener?message=from_test from Client to Controller",
-                    "publish event from lsdEnd2End to SomethingDoneEvent",
+                    "publish event from LsdEnd2End to SomethingDoneEvent",
                     "200 OK response from Controller to Client",
-                    "consume message from SomethingDoneEvent to lsdEnd2End",
-                    "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET",
-                    "200 OK response from UNKNOWN_TARGET to lsdEnd2End",
-                    "POST /external-api?message=from_feign from lsdEnd2End to Downstream",
-                    "200 OK response from Downstream to lsdEnd2End"));
+                    "consume message from SomethingDoneEvent to LsdEnd2End",
+                    "POST /external-api?message=from_feign from LsdEnd2End to UNKNOWN_TARGET",
+                    "200 OK response from UNKNOWN_TARGET to LsdEnd2End",
+                    "POST /external-api?message=from_feign from LsdEnd2End to Downstream",
+                    "200 OK response from Downstream to LsdEnd2End"));
         }
     }
 
@@ -210,13 +210,13 @@ public class EndToEndIT {
 
             assertThat(argumentCaptor.getAllValues(), contains(
                     "GET /api-listener?message=from_test from Client to Controller [#colour1]",
-                    "publish event from lsdEnd2End to SomethingDoneEvent [#colour1]",
+                    "publish event from LsdEnd2End to SomethingDoneEvent [#colour1]",
                     "200 OK response from Controller to Client [#colour1]",
-                    "consume message from SomethingDoneEvent to lsdEnd2End [#colour1]",
-                    "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET [#colour1]",
-                    "200 OK response from UNKNOWN_TARGET to lsdEnd2End [#colour1]",
-                    "POST /external-api?message=from_feign from lsdEnd2End to Downstream [#colour1]",
-                    "200 OK response from Downstream to lsdEnd2End [#colour1]"));
+                    "consume message from SomethingDoneEvent to LsdEnd2End [#colour1]",
+                    "POST /external-api?message=from_feign from LsdEnd2End to UNKNOWN_TARGET [#colour1]",
+                    "200 OK response from UNKNOWN_TARGET to LsdEnd2End [#colour1]",
+                    "POST /external-api?message=from_feign from LsdEnd2End to Downstream [#colour1]",
+                    "200 OK response from Downstream to LsdEnd2End [#colour1]"));
         }
     }
 
@@ -248,13 +248,13 @@ public class EndToEndIT {
                     "GET /setup1?message=from_test from E2E to Setup1 [#colour2]",
                     "200 OK response from Setup1 to E2E [#colour2]",
                     "GET /api-listener?message=from_test from Client to Controller [#colour1]",
-                    "publish event from lsdEnd2End to SomethingDoneEvent [#colour1]",
+                    "publish event from LsdEnd2End to SomethingDoneEvent [#colour1]",
                     "200 OK response from Controller to Client [#colour1]",
-                    "consume message from SomethingDoneEvent to lsdEnd2End [#colour1]",
-                    "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET [#colour1]",
-                    "200 OK response from UNKNOWN_TARGET to lsdEnd2End [#colour1]",
-                    "POST /external-api?message=from_feign from lsdEnd2End to Downstream [#colour1]",
-                    "200 OK response from Downstream to lsdEnd2End [#colour1]",
+                    "consume message from SomethingDoneEvent to LsdEnd2End [#colour1]",
+                    "POST /external-api?message=from_feign from LsdEnd2End to UNKNOWN_TARGET [#colour1]",
+                    "200 OK response from UNKNOWN_TARGET to LsdEnd2End [#colour1]",
+                    "POST /external-api?message=from_feign from LsdEnd2End to Downstream [#colour1]",
+                    "200 OK response from Downstream to LsdEnd2End [#colour1]",
                     "GET /setup2?message=from_test from E2E to Setup2 [#colour2]",
                     "200 OK response from Setup2 to E2E [#colour2]"));
 
