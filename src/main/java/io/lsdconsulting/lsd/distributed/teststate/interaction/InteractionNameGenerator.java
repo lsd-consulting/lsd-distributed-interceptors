@@ -1,6 +1,7 @@
 package io.lsdconsulting.lsd.distributed.teststate.interaction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lsd.diagram.ValidComponentName;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.config.mapper.ObjectMapperCreator;
 import io.lsdconsulting.lsd.distributed.teststate.dto.Interaction;
@@ -39,8 +40,8 @@ public class InteractionNameGenerator {
     @SneakyThrows
     private Interaction buildInteraction(final InterceptedInteraction interceptedInteraction, final String colour) {
         return Interaction.builder()
-                .source(interceptedInteraction.getServiceName())
-                .destination(interceptedInteraction.getTarget())
+                .source(ValidComponentName.of(interceptedInteraction.getServiceName()))
+                .destination(ValidComponentName.of(interceptedInteraction.getTarget()))
                 .httpMethod(interceptedInteraction.getHttpMethod())
                 .httpStatus(interceptedInteraction.getHttpStatus())
                 .path(interceptedInteraction.getPath())
