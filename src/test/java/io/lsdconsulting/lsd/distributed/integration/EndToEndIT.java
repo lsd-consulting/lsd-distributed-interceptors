@@ -52,6 +52,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.RequestEntity.get;
@@ -89,7 +90,8 @@ public class EndToEndIT {
     private final String setupTraceId = TraceIdGenerator.generate();
     private final String mainTraceId = TraceIdGenerator.generate();
 
-    private final LsdContext lsdContext = Mockito.spy(LsdContext.class);
+    private final LsdContext realContext = LsdContext.getInstance();
+    private final LsdContext lsdContext = spy(realContext);
     private final ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
 
     @BeforeEach
