@@ -1,6 +1,7 @@
 package io.lsdconsulting.lsd.distributed.integration;
 
 import com.lsd.LsdContext;
+import com.lsd.ParticipantType;
 import io.lsdconsulting.junit5.LsdExtension;
 import io.lsdconsulting.lsd.distributed.captor.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteraction;
@@ -35,6 +36,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -102,6 +104,18 @@ public class EndToEndIT {
     @AfterAll
     public static void tearDown() {
         TestRepository.tearDownDatabase();
+    }
+
+    @PostConstruct
+    public void postConstruct() {
+        lsdContext.addParticipants(List.of(
+                ParticipantType.ACTOR.called("Client"),
+                ParticipantType.PARTICIPANT.called("LsdEnd2End"),
+                ParticipantType.PARTICIPANT.called("Controller"),
+                ParticipantType.QUEUE.called("SomethingDoneEvent"),
+                ParticipantType.PARTICIPANT.called("UNKNOWN_TARGET"),
+                ParticipantType.PARTICIPANT.called("Downstream")
+        ));
     }
 
     @Test
