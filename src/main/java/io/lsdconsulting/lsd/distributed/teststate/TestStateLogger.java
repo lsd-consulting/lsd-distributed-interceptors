@@ -31,5 +31,6 @@ public class TestStateLogger {
         for (final Pair<String, String> interaction : interactionNameGenerator.generate(interceptedInteractions, traceIdToColourMap)) {
             lsdContext.capture(interaction.getLeft(), interaction.getRight());
         }
+        lsdContext.completeReport("Some title");
     }
 }

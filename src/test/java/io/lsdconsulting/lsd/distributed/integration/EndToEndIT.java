@@ -89,8 +89,8 @@ public class EndToEndIT {
     private final String setupTraceId = TraceIdGenerator.generate();
     private final String mainTraceId = TraceIdGenerator.generate();
 
-    private final LsdContext lsdContext = Mockito.mock(LsdContext.class);
-    private ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+    private final LsdContext lsdContext = Mockito.spy(LsdContext.class);
+    private final ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
 
     @BeforeEach
     public void setup() {
@@ -194,6 +194,20 @@ public class EndToEndIT {
     }
 
     @Test
+    public void shouldRecordHeaderSuppliedNames2() throws URISyntaxException {
+        givenExternalApi();
+
+        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "Controller");
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody(), containsString("response_from_controller"));
+
+        await().untilAsserted(() -> assertThat(testRepository.findAll(mainTraceId), hasSize(8)));
+
+        testStateLogger.captureInteractionsFromDatabase(mainTraceId);
+    }
+
+    @Test
     public void shouldRecordHeaderSuppliedNamesWithColour() throws URISyntaxException {
 
         try (MockedStatic<LsdContext> dummy = Mockito.mockStatic(LsdContext.class)) {
@@ -222,7 +236,6 @@ public class EndToEndIT {
                     "200 OK response from Downstream to lsdEnd2End [#colour1]"));
         }
     }
-
 
     @Test
     public void shouldRecordHeaderSuppliedNamesWithMultipleTraceIds() throws URISyntaxException {
@@ -262,6 +275,25 @@ public class EndToEndIT {
                     "200 OK response from Setup2 to E2E [#colour2]"));
 
         }
+    }
+
+    @Test
+    public void shouldRecordHeaderSuppliedNamesWithMultipleTraceIds2() throws URISyntaxException {
+        givenExternalApi();
+
+        sentRequest("/setup1", setupTraceId, "E2E", "Setup1");
+
+        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "Controller");
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody(), containsString("response_from_controller"));
+
+        await().untilAsserted(() -> assertThat(testRepository.findAll(mainTraceId), hasSize(8)));
+
+        sentRequest("/setup2", setupTraceId, "E2E", "Setup2");
+
+        testStateLogger.captureInteractionsFromDatabase(Map.of(mainTraceId, Optional.of("[#colour1]"), setupTraceId, Optional.of("[#colour2]")));
+
     }
 
     private void givenExternalApi() {

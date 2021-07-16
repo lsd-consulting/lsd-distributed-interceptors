@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.config.mapper.ObjectMapperCreator;
 import io.lsdconsulting.lsd.distributed.teststate.dto.Interaction;
-import io.lsdconsulting.lsd.distributed.teststate.indent.JsonPrettyPrinter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static io.lsdconsulting.lsd.distributed.teststate.indent.XmlPrettyPrinter.indentXml;
+import static lsd.format.Formatter.indent;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,7 +48,4 @@ public class InteractionNameGenerator {
                 .build();
     }
 
-    private String indent(final String document) {
-        return JsonPrettyPrinter.indentJson(document).orElseGet(() -> indentXml(document).orElse(document));
-    }
 }
