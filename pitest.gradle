@@ -10,12 +10,11 @@ pitest {
     timeoutConstInMillis = 20000
     targetClasses = ['io.lsdconsulting.lsd.distributed.*']
     excludedTestClasses = [
-            'io.lsdconsulting.lsd.distributed.integration.EndToEndIT',
-            'io.lsdconsulting.lsd.distributed.teststate.TestStateLoggerShould'
+            'io.lsdconsulting.lsd.distributed.integration.EndToEndIT'
     ]
     excludedClasses = [ 'io.lsdconsulting.lsd.distributed.config.*']
     threads = 4
     outputFormats = ['HTML']
-    coverageThreshold = 70
-    mutationThreshold = 58
+    coverageThreshold = 76
+    mutationThreshold = 61
 }

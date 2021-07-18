@@ -1,11 +1,14 @@
 package io.lsdconsulting.lsd.distributed.captor.convert;
 
 import feign.Response;
+import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 
 import static feign.Util.toByteArray;
+import static lombok.AccessLevel.PRIVATE;
 
+@NoArgsConstructor(access = PRIVATE)
 public class TypeConverter {
 
     public static String convert(final byte[] body) {
