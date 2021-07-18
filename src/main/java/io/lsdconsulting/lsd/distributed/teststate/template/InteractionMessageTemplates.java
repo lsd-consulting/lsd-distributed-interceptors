@@ -1,8 +1,13 @@
 package io.lsdconsulting.lsd.distributed.teststate.template;
 
+import lombok.NoArgsConstructor;
+
+import static lombok.AccessLevel.PRIVATE;
+
 /**
  * Useful to keep the interaction messages consistent across various interceptors.
  */
+@NoArgsConstructor(access = PRIVATE)
 public class InteractionMessageTemplates {
 
     public static final String REQUEST_TEMPLATE = "%s %s from %s to %s %s";
