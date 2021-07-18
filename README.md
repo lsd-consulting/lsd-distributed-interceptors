@@ -29,7 +29,7 @@ To use the `lsd-distributed-interceptors` library just add it to the production 
 implementation "io.github.lsd-consulting:lsd-distributed-interceptor-library:1.0.0"
 ```
 
-and configure through environment properties:
+and configure through app properties:
 
 ```properties
 # the trust store configuration is optional
