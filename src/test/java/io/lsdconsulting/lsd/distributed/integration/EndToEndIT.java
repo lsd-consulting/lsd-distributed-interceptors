@@ -108,8 +108,7 @@ public class EndToEndIT {
     public void postConstruct() {
         lsdContext.addParticipants(List.of(
                 ParticipantType.ACTOR.called("Client"),
-                ParticipantType.PARTICIPANT.called("Controller"),
-                ParticipantType.PARTICIPANT.called("LsdEnd2End"),
+                ParticipantType.PARTICIPANT.called("TestApp"),
                 ParticipantType.QUEUE.called("SomethingDoneEvent"),
                 ParticipantType.PARTICIPANT.called("UNKNOWN_TARGET"),
                 ParticipantType.PARTICIPANT.called("Downstream")
@@ -120,7 +119,7 @@ public class EndToEndIT {
     public void shouldRecordRestTemplateAndListenerInteractions() throws URISyntaxException {
         givenExternalApi();
 
-        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, null, "Controller");
+        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, null, "TestApp");
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), is("response_from_controller"));
@@ -134,19 +133,19 @@ public class EndToEndIT {
 
         testStateLogger.captureInteractionsFromDatabase(mainTraceId);
 
-        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", NO_BODY, "Controller", "/api-listener?message=from_test"))); // TODO Need to assert the parameter value
-        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "response_from_controller", "Controller", "/api-listener?message=from_test")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "TestApp", NO_BODY, "TestApp", "/api-listener?message=from_test")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "TestApp", "response_from_controller", "TestApp", "/api-listener?message=from_test")));
 
-        assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "{\"message\":\"from_controller\"}", "SomethingDoneEvent", "SomethingDoneEvent")));
-        assertThat("CONSUMER interaction missing", interceptedInteractions, hasItem(with(CONSUME, "lsdEnd2End", "{\"message\":\"from_controller\"}", "SomethingDoneEvent", "SomethingDoneEvent")));
+        assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "TestApp", "{\"message\":\"from_controller\"}", "SomethingDoneEvent", "SomethingDoneEvent")));
+        assertThat("CONSUMER interaction missing", interceptedInteractions, hasItem(with(CONSUME, "TestApp", "{\"message\":\"from_controller\"}", "SomethingDoneEvent", "SomethingDoneEvent")));
 
-        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "lsdEnd2End", "from_listener", "UNKNOWN_TARGET", "/external-api?message=from_feign")));
-        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "lsdEnd2End", "from_external", "UNKNOWN_TARGET", "/external-api?message=from_feign")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "TestApp", "from_listener", "UNKNOWN_TARGET", "/external-api?message=from_feign")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "TestApp", "from_external", "UNKNOWN_TARGET", "/external-api?message=from_feign")));
     }
 
     @Test
     public void shouldRecordReceivingMessagesWithRabbitTemplate() throws URISyntaxException {
-        final ResponseEntity<String> response = sentRequest("/api-rabbit-template", mainTraceId, "Client", "Controller");
+        final ResponseEntity<String> response = sentRequest("/api-rabbit-template", mainTraceId, "Client", "TestApp");
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), is("response_from_controller"));
@@ -168,11 +167,11 @@ public class EndToEndIT {
 
         testStateLogger.captureInteractionsFromDatabase(mainTraceId);
 
-        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "Client", NO_BODY, "Controller", "/api-rabbit-template?message=from_test"))); // TODO Need to assert the parameter value
-        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "Client", "response_from_controller", "Controller", "/api-rabbit-template?message=from_test")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "Client", NO_BODY, "TestApp", "/api-rabbit-template?message=from_test")));
+        assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "Client", "response_from_controller", "TestApp", "/api-rabbit-template?message=from_test")));
 
-        assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "lsdEnd2End", "{\"message\":\"from_controller\"}", "SomethingDoneEvent", "SomethingDoneEvent")));
-        assertThat("CONSUMER interaction missing", interceptedInteractions, hasItem(with(CONSUME, "lsdEnd2End", "{\"message\":\"from_controller\"}", "SomethingDoneEvent", "SomethingDoneEvent")));
+        assertThat("PUBLISH interaction missing", interceptedInteractions, hasItem(with(PUBLISH, "TestApp", "{\"message\":\"from_controller\"}", "SomethingDoneEvent", "SomethingDoneEvent")));
+        assertThat("CONSUMER interaction missing", interceptedInteractions, hasItem(with(CONSUME, "TestApp", "{\"message\":\"from_controller\"}", "SomethingDoneEvent", "SomethingDoneEvent")));
     }
 
     @Test
@@ -180,7 +179,7 @@ public class EndToEndIT {
         doNothing().when(lsdContext).capture(argumentCaptor.capture(), any());
         givenExternalApi();
 
-        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "Controller");
+        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "TestApp");
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), containsString("response_from_controller"));
@@ -190,21 +189,21 @@ public class EndToEndIT {
         testStateLogger.captureInteractionsFromDatabase(mainTraceId);
 
         assertThat(argumentCaptor.getAllValues(), contains(
-                "GET /api-listener?message=from_test from Client to Controller",
-                "publish event from lsdEnd2End to SomethingDoneEvent",
-                "200 OK response from Controller to Client",
-                "consume message from SomethingDoneEvent to lsdEnd2End",
-                "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET",
-                "200 OK response from UNKNOWN_TARGET to lsdEnd2End",
-                "POST /external-api?message=from_feign from lsdEnd2End to Downstream",
-                "200 OK response from Downstream to lsdEnd2End"));
+                "GET /api-listener?message=from_test from Client to TestApp",
+                "publish event from TestApp to SomethingDoneEvent",
+                "200 OK response from TestApp to Client",
+                "consume message from SomethingDoneEvent to TestApp",
+                "POST /external-api?message=from_feign from TestApp to UNKNOWN_TARGET",
+                "200 OK response from UNKNOWN_TARGET to TestApp",
+                "POST /external-api?message=from_feign from TestApp to Downstream",
+                "200 OK response from Downstream to TestApp"));
     }
 
     @Test
-    public void shouldRecordHeaderSuppliedNames2() throws URISyntaxException {
+    public void shouldRecordHeaderSuppliedNamesWithDiagram() throws URISyntaxException {
         givenExternalApi();
 
-        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "Controller");
+        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "TestApp");
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), containsString("response_from_controller"));
@@ -219,7 +218,7 @@ public class EndToEndIT {
         doNothing().when(lsdContext).capture(argumentCaptor.capture(), any());
         givenExternalApi();
 
-        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "Controller");
+        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "TestApp");
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), containsString("response_from_controller"));
@@ -229,14 +228,14 @@ public class EndToEndIT {
         testStateLogger.captureInteractionsFromDatabase(Map.of(mainTraceId, Optional.of("[#blue]")));
 
         assertThat(argumentCaptor.getAllValues(), contains(
-                "GET /api-listener?message=from_test from Client to Controller [#blue]",
-                "publish event from lsdEnd2End to SomethingDoneEvent [#blue]",
-                "200 OK response from Controller to Client [#blue]",
-                "consume message from SomethingDoneEvent to lsdEnd2End [#blue]",
-                "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET [#blue]",
-                "200 OK response from UNKNOWN_TARGET to lsdEnd2End [#blue]",
-                "POST /external-api?message=from_feign from lsdEnd2End to Downstream [#blue]",
-                "200 OK response from Downstream to lsdEnd2End [#blue]"));
+                "GET /api-listener?message=from_test from Client to TestApp [#blue]",
+                "publish event from TestApp to SomethingDoneEvent [#blue]",
+                "200 OK response from TestApp to Client [#blue]",
+                "consume message from SomethingDoneEvent to TestApp [#blue]",
+                "POST /external-api?message=from_feign from TestApp to UNKNOWN_TARGET [#blue]",
+                "200 OK response from UNKNOWN_TARGET to TestApp [#blue]",
+                "POST /external-api?message=from_feign from TestApp to Downstream [#blue]",
+                "200 OK response from Downstream to TestApp [#blue]"));
     }
 
     @Test
@@ -247,7 +246,7 @@ public class EndToEndIT {
 
         sentRequest("/setup1", setupTraceId, "E2E", "Setup1");
 
-        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "Controller");
+        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "TestApp");
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), containsString("response_from_controller"));
@@ -261,25 +260,25 @@ public class EndToEndIT {
         assertThat(argumentCaptor.getAllValues(), contains(
                 "GET /setup1?message=from_test from E2E to Setup1 [#green]",
                 "200 OK response from Setup1 to E2E [#green]",
-                "GET /api-listener?message=from_test from Client to Controller [#blue]",
-                "publish event from lsdEnd2End to SomethingDoneEvent [#blue]",
-                "200 OK response from Controller to Client [#blue]",
-                "consume message from SomethingDoneEvent to lsdEnd2End [#blue]",
-                "POST /external-api?message=from_feign from lsdEnd2End to UNKNOWN_TARGET [#blue]",
-                "200 OK response from UNKNOWN_TARGET to lsdEnd2End [#blue]",
-                "POST /external-api?message=from_feign from lsdEnd2End to Downstream [#blue]",
-                "200 OK response from Downstream to lsdEnd2End [#blue]",
+                "GET /api-listener?message=from_test from Client to TestApp [#blue]",
+                "publish event from TestApp to SomethingDoneEvent [#blue]",
+                "200 OK response from TestApp to Client [#blue]",
+                "consume message from SomethingDoneEvent to TestApp [#blue]",
+                "POST /external-api?message=from_feign from TestApp to UNKNOWN_TARGET [#blue]",
+                "200 OK response from UNKNOWN_TARGET to TestApp [#blue]",
+                "POST /external-api?message=from_feign from TestApp to Downstream [#blue]",
+                "200 OK response from Downstream to TestApp [#blue]",
                 "GET /setup2?message=from_test from E2E to Setup2 [#green]",
                 "200 OK response from Setup2 to E2E [#green]"));
     }
 
     @Test
-    public void shouldRecordHeaderSuppliedNamesWithMultipleTraceIds2() throws URISyntaxException {
+    public void shouldRecordHeaderSuppliedNamesWithMultipleTraceIdsWithDiagram() throws URISyntaxException {
         givenExternalApi();
 
         sentRequest("/setup1", setupTraceId, "E2E", "Setup1");
 
-        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "Controller");
+        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "TestApp");
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), containsString("response_from_controller"));

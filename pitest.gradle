@@ -15,6 +15,6 @@ pitest {
     excludedClasses = [ 'io.lsdconsulting.lsd.distributed.config.*']
     threads = 4
     outputFormats = ['HTML']
-    coverageThreshold = 70
-    mutationThreshold = 58
+    coverageThreshold = 73
+    mutationThreshold = 62
 }

@@ -7,3 +7,17 @@
 A set of interceptors gathering information from distributed sources for the LSD library.
 
 ![Interceptor diagram](https://github.com/lsd-consulting/lsd-distributed-interceptors/blob/master/image/lsd-distributed-interceptor-library.png?raw=true)
+
+Here is a sample of an LSD that this library can generate:
+
+![LSD](https://github.com/lsd-consulting/lsd-distributed-interceptors/blob/master/image/lsd-example.png?raw=true)
+
+along with the source for the LSD:
+
+![LSD](https://github.com/lsd-consulting/lsd-distributed-interceptors/blob/master/image/lsd-source-example.png?raw=true)
+
+
+It also generates a component diagram:
+
+![Component diagram](https://github.com/lsd-consulting/lsd-distributed-interceptors/blob/master/image/lsd-component-diagram-example.png?raw=true)
+
