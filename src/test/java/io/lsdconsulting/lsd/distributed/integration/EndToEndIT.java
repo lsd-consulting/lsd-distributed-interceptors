@@ -197,7 +197,7 @@ public class EndToEndIT {
 
         await().untilAsserted(() -> assertThat(testRepository.findAll(mainTraceId), hasSize(8)));
 
-        testStateLogger.captureInteractionsFromDatabase(mainTraceId);
+      testStateLogger.captureInteractionsFromDatabase(mainTraceId);
     }
 
     @Test
@@ -275,7 +275,6 @@ public class EndToEndIT {
         sentRequest("/setup2", setupTraceId, "E2E", "Setup2");
 
         testStateLogger.captureInteractionsFromDatabase(Map.of(mainTraceId, Optional.of("[#blue]"), setupTraceId, Optional.of("[#green]")));
-
     }
 
     private void givenExternalApi() {
