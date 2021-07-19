@@ -150,8 +150,8 @@ dependencies {
 
     // Spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
@@ -177,7 +177,6 @@ dependencies {
     // Tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
-    testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
     testImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock'
 
     testCompileOnly 'org.projectlombok:lombok:1.18.10'
