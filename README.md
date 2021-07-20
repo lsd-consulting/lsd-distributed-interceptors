@@ -14,7 +14,7 @@ Here is a sample of an LSD that this library can generate:
 
 along with the source for the LSD:
 
-![LSD](https://github.com/lsd-consulting/lsd-distributed-interceptors/blob/master/image/lsd-source-example.png?raw=true)
+![LSD Source](https://github.com/lsd-consulting/lsd-distributed-interceptors/blob/master/image/lsd-source-example.png?raw=true)
 
 
 It also generates a component diagram:
