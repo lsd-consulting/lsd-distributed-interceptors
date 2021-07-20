@@ -2,7 +2,7 @@ package io.lsdconsulting.lsd.distributed.teststate;
 
 import com.lsd.LsdContext;
 import io.lsdconsulting.lsd.distributed.captor.repository.InterceptedDocumentRepository;
-import io.lsdconsulting.lsd.distributed.teststate.interaction.InteractionNameGenerator;
+import io.lsdconsulting.lsd.distributed.teststate.interaction.InteractionGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TestStateLogger {
     private final InterceptedDocumentRepository interceptedDocumentRepository;
-    private final InteractionNameGenerator interactionNameGenerator;
+    private final InteractionGenerator interactionGenerator;
     private final LsdContext lsdContext;
 
     public void captureInteractionsFromDatabase(final String... traceIds) {
@@ -27,7 +27,7 @@ public class TestStateLogger {
     public void captureInteractionsFromDatabase(final Map<String, Optional<String>> traceIdToColourMap) {
         var traceIds = traceIdToColourMap.keySet().toArray(new String[0]);
         var interceptedInteractions = interceptedDocumentRepository.findByTraceIds(traceIds);
-        for (var interaction : interactionNameGenerator.generate(interceptedInteractions, traceIdToColourMap)) {
+        for (var interaction : interactionGenerator.generate(interceptedInteractions, traceIdToColourMap)) {
             lsdContext.capture(interaction.getLeft(), interaction.getRight());
         }
     }

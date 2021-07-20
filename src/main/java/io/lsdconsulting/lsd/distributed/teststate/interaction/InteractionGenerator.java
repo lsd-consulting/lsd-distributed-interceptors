@@ -1,25 +1,27 @@
 package io.lsdconsulting.lsd.distributed.teststate.interaction;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsd.diagram.ValidComponentName;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.config.mapper.ObjectMapperCreator;
 import io.lsdconsulting.lsd.distributed.teststate.dto.Interaction;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import static lsd.format.Formatter.indent;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
+import static io.lsdconsulting.lsd.distributed.captor.repository.model.Type.*;
+import static lsd.format.PrettyPrinter.prettyPrintJson;
 
 @Slf4j
 @RequiredArgsConstructor
-public class InteractionNameGenerator {
+public class InteractionGenerator {
 
     private final ObjectMapper objectMapper = new ObjectMapperCreator().getObjectMapper();
 
@@ -30,10 +32,34 @@ public class InteractionNameGenerator {
             final String colour = traceIdToColourMap.get(interceptedInteraction.getTraceId()).orElse("");
             final String interactionName = interceptedInteraction.getType().getInteractionName().apply(buildInteraction(interceptedInteraction, colour));
             log.info("Generated an interaction name={}", interactionName);
-            final String body = indent(interceptedInteraction.getBody());
+            final String body = prettyPrintJson(buildInteractionBody(interceptedInteraction));
             interactions.add(Pair.of(interactionName, body));
         }
         return interactions;
+    }
+
+    private InteractionBody buildInteractionBody(InterceptedInteraction interceptedInteraction) {
+        return InteractionBody.builder()
+                .requestHeaders(interceptedInteraction.getType().equals(REQUEST) ? interceptedInteraction.getRequestHeaders() : null)
+                .responseHeaders(interceptedInteraction.getType().equals(RESPONSE) ? interceptedInteraction.getResponseHeaders() : null)
+                .headers(List.of(PUBLISH, CONSUME).contains(interceptedInteraction.getType()) ? interceptedInteraction.getRequestHeaders() : null)
+                .body(interceptedInteraction.getBody())
+                .build();
+    }
+
+    @Value
+    @Builder
+    static class InteractionBody {
+        @JsonInclude(NON_EMPTY)
+        Map<String, Collection<String>> requestHeaders;
+
+        @JsonInclude(NON_EMPTY)
+        Map<String, Collection<String>> responseHeaders;
+
+        @JsonInclude(NON_EMPTY)
+        Map<String, Collection<String>> headers;
+
+        String body;
     }
 
     @SneakyThrows

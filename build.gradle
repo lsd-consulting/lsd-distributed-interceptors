@@ -160,7 +160,7 @@ dependencies {
 
     // LSD
     implementation 'io.github.lsd-consulting:lsd-core:0.1.25'
-    implementation 'io.github.lsd-consulting:lsd-formatting-library:0.1.1'
+    implementation 'io.github.lsd-consulting:lsd-formatting-library:0.1.5'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.12'
