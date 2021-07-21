@@ -17,6 +17,7 @@ import java.util.*;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 import static io.lsdconsulting.lsd.distributed.captor.repository.model.Type.*;
+import static java.util.Optional.ofNullable;
 import static lsd.format.PrettyPrinter.prettyPrintJson;
 
 @Slf4j
@@ -29,7 +30,7 @@ public class InteractionGenerator {
 
         final List<Pair<String, String>> interactions = new ArrayList<>();
         for (final InterceptedInteraction interceptedInteraction : interceptedInteractions) {
-            final String colour = traceIdToColourMap.get(interceptedInteraction.getTraceId()).orElse("");
+            final String colour = ofNullable(traceIdToColourMap.get(interceptedInteraction.getTraceId())).flatMap(x -> x).orElse("");
             final String interactionName = interceptedInteraction.getType().getInteractionName().apply(buildInteraction(interceptedInteraction, colour));
             log.info("Generated an interaction name={}", interactionName);
             final String body = prettyPrintJson(buildInteractionBody(interceptedInteraction));

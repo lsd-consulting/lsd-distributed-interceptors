@@ -1,7 +1,9 @@
 package io.lsdconsulting.lsd.distributed.teststate.interaction;
 
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteraction;
+import io.lsdconsulting.lsd.distributed.captor.repository.model.Type;
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -13,12 +15,11 @@ import java.util.stream.Stream;
 
 import static io.lsdconsulting.lsd.distributed.captor.repository.model.Type.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.params.provider.Arguments.of;
 import static wiremock.org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
-public class InteractionGeneratorShould {
+class InteractionGeneratorShould {
 
     private static final String TRACE_ID = randomAlphabetic(10);
 
@@ -26,7 +27,7 @@ public class InteractionGeneratorShould {
 
     @ParameterizedTest
     @MethodSource("provideInterceptedInteractions")
-    public void generateInteractions(final InterceptedInteraction interceptedInteraction, final String expectedInteractionName, final String expectedBody) {
+    void generateInteractions(final InterceptedInteraction interceptedInteraction, final String expectedInteractionName, final String expectedBody) {
         final List<Pair<String, String>> interactionNames = underTest.generate(List.of(interceptedInteraction), Map.of(TRACE_ID, Optional.of("[#grey]")));
 
         assertThat(interactionNames, hasSize(1));
@@ -41,5 +42,59 @@ public class InteractionGeneratorShould {
                 of(InterceptedInteraction.builder().traceId(TRACE_ID).target("exchange").serviceName("service").type(PUBLISH).body("{\"key1\":\"value1\",\"key2\":\"value2\"}").build(), "publish event from Service to Exchange [#grey]", "{\n  \"body\": \"{\\\"key1\\\":\\\"value1\\\",\\\"key2\\\":\\\"value2\\\"}\"\n}"),
                 of(InterceptedInteraction.builder().traceId(TRACE_ID).target("exchange").serviceName("service").type(CONSUME).body("").build(), "consume message from Exchange to Service [#grey]", "{\n  \"body\": \"\"\n}")
         );
+    }
+
+    @Test
+    void generateRequestHeadersInBody() {
+        InterceptedInteraction interceptedInteraction = buildInterceptedInteraction(REQUEST)
+                .requestHeaders(Map.of("header", List.of("value")))
+                .build();
+
+
+        final List<Pair<String, String>> interactionNames = underTest.generate(List.of(interceptedInteraction), Map.of());
+
+        String body = interactionNames.get(0).getRight();
+
+        assertThat(body, containsString("requestHeaders"));
+        assertThat(body, not(containsString("responseHeaders")));
+        assertThat(body, not(containsString("headers")));
+    }
+
+    @Test
+    void generateResponseHeadersInBody() {
+        InterceptedInteraction interceptedInteraction = buildInterceptedInteraction(RESPONSE)
+                .responseHeaders(Map.of("header", List.of("value")))
+                .build();
+
+        final List<Pair<String, String>> interactionNames = underTest.generate(List.of(interceptedInteraction), Map.of());
+
+        String body = interactionNames.get(0).getRight();
+
+        assertThat(body, containsString("responseHeaders"));
+        assertThat(body, not(containsString("requestHeaders")));
+        assertThat(body, not(containsString("headers")));
+    }
+
+    @Test
+    void generateHeadersInBody() {
+        InterceptedInteraction interceptedInteraction = buildInterceptedInteraction(PUBLISH)
+                .requestHeaders(Map.of("header", List.of("value")))
+                .build();
+
+        final List<Pair<String, String>> interactionNames = underTest.generate(List.of(interceptedInteraction), Map.of());
+
+        String body = interactionNames.get(0).getRight();
+
+        assertThat(body, containsString("headers"));
+        assertThat(body, not(containsString("responseHeaders")));
+        assertThat(body, not(containsString("requestHeaders")));
+    }
+
+    private InterceptedInteraction.InterceptedInteractionBuilder buildInterceptedInteraction(Type type) {
+        return InterceptedInteraction.builder()
+                .traceId(TRACE_ID)
+                .type(type)
+                .target("target")
+                .serviceName("service");
     }
 }
