@@ -95,12 +95,12 @@ public class EndToEndIT {
     private final ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         testStateLogger = new TestStateLogger(interceptedDocumentRepository, interactionGenerator, lsdContext);
     }
 
     @PostConstruct
-    public void postConstruct() {
+    void postConstruct() {
         lsdContext.addParticipants(List.of(
                 ACTOR.called("Client"),
                 PARTICIPANT.called("TestApp"),
@@ -111,12 +111,12 @@ public class EndToEndIT {
     }
 
     @AfterAll
-    public static void tearDown() {
+    static void tearDown() {
         TestRepository.tearDownDatabase();
     }
 
     @Test
-    public void shouldRecordRestTemplateAndListenerInteractions() throws URISyntaxException {
+    void shouldRecordRestTemplateAndListenerInteractions() throws URISyntaxException {
         givenExternalApi();
 
         final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, null, "TestApp");
@@ -144,7 +144,7 @@ public class EndToEndIT {
     }
 
     @Test
-    public void shouldRecordReceivingMessagesWithRabbitTemplate() throws URISyntaxException {
+    void shouldRecordReceivingMessagesWithRabbitTemplate() throws URISyntaxException {
         final ResponseEntity<String> response = sentRequest("/api-rabbit-template", mainTraceId, "Client", "TestApp");
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -175,7 +175,7 @@ public class EndToEndIT {
     }
 
     @Test
-    public void shouldRecordHeaderSuppliedNames() throws URISyntaxException {
+    void shouldRecordHeaderSuppliedNames() throws URISyntaxException {
         doNothing().when(lsdContext).capture(argumentCaptor.capture(), any());
         givenExternalApi();
 
@@ -200,7 +200,7 @@ public class EndToEndIT {
     }
 
     @Test
-    public void shouldRecordHeaderSuppliedNamesWithDiagram() throws URISyntaxException {
+    void shouldRecordHeaderSuppliedNamesWithDiagram() throws URISyntaxException {
         givenExternalApi();
 
         final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "TestApp");
@@ -214,7 +214,7 @@ public class EndToEndIT {
     }
 
     @Test
-    public void shouldRecordHeaderSuppliedNamesWithColour() throws URISyntaxException {
+    void shouldRecordHeaderSuppliedNamesWithColour() throws URISyntaxException {
         doNothing().when(lsdContext).capture(argumentCaptor.capture(), any());
         givenExternalApi();
 
@@ -239,7 +239,7 @@ public class EndToEndIT {
     }
 
     @Test
-    public void shouldRecordHeaderSuppliedNamesWithMultipleTraceIds() throws URISyntaxException {
+    void shouldRecordHeaderSuppliedNamesWithMultipleTraceIds() throws URISyntaxException {
         doNothing().when(lsdContext).capture(argumentCaptor.capture(), any());
 
         givenExternalApi();
@@ -273,7 +273,7 @@ public class EndToEndIT {
     }
 
     @Test
-    public void shouldRecordHeaderSuppliedNamesWithMultipleTraceIdsWithDiagram() throws URISyntaxException {
+    void shouldRecordHeaderSuppliedNamesWithMultipleTraceIdsWithDiagram() throws URISyntaxException {
         givenExternalApi();
 
         sentRequest("/setup1", setupTraceId, "E2E", "Setup1");
@@ -297,7 +297,7 @@ public class EndToEndIT {
                         .withBody("from_external")));
     }
 
-    public ResponseEntity<String> sentRequest(final String resourceName, final String traceId, final String sourceName, final String targetName) throws URISyntaxException {
+    ResponseEntity<String> sentRequest(final String resourceName, final String traceId, final String sourceName, final String targetName) throws URISyntaxException {
         log.info("Sending traceId:{}", traceId);
         final RequestEntity<?> requestEntity = get(new URI("http://localhost:" + serverPort + resourceName + "?message=from_test"))
                 .header("Content-Type", APPLICATION_JSON_VALUE)
