@@ -33,6 +33,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.lsd.ParticipantType.*;
 import static io.lsdconsulting.lsd.distributed.captor.repository.model.Type.*;
 import static io.lsdconsulting.lsd.distributed.integration.matcher.InterceptedInteractionMatcher.with;
 import static org.awaitility.Awaitility.await;
@@ -95,6 +97,17 @@ public class EndToEndIT {
     @BeforeEach
     public void setup() {
         testStateLogger = new TestStateLogger(interceptedDocumentRepository, interactionGenerator, lsdContext);
+    }
+
+    @PostConstruct
+    public void postConstruct() {
+        lsdContext.addParticipants(List.of(
+                ACTOR.called("Client"),
+                PARTICIPANT.called("TestApp"),
+                QUEUE.called("SomethingDoneEvent"),
+                PARTICIPANT.called("UNKNOWN_TARGET"),
+                PARTICIPANT.called("Downstream")
+        ));
     }
 
     @AfterAll
