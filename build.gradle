@@ -160,7 +160,7 @@ dependencies {
     implementation 'org.mongodb:mongo-java-driver:3.12.6'
 
     // LSD
-    implementation 'io.github.lsd-consulting:lsd-core:0.1.25'
+    implementation 'io.github.lsd-consulting:lsd-core:0.1.29'
     implementation 'io.github.lsd-consulting:lsd-formatting-library:0.1.5'
 
     // Lombok
