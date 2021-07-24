@@ -3,7 +3,7 @@ package io.lsdconsulting.lsd.distributed.config;
 import com.lsd.LsdContext;
 import io.lsdconsulting.lsd.distributed.captor.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.teststate.TestStateLogger;
-import io.lsdconsulting.lsd.distributed.teststate.interaction.InteractionNameGenerator;
+import io.lsdconsulting.lsd.distributed.teststate.interaction.InteractionGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,14 +13,14 @@ import org.springframework.context.annotation.Configuration;
 public class TestStateCollectorConfig {
 
     @Bean
-    public InteractionNameGenerator interactionNameGenerator() {
-        return new InteractionNameGenerator();
+    public InteractionGenerator interactionGenerator() {
+        return new InteractionGenerator();
     }
 
     @Bean
     public TestStateLogger testStateCollector(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                              final InteractionNameGenerator interactionNameGenerator) {
+                                              final InteractionGenerator interactionGenerator) {
 
-        return new TestStateLogger(interceptedDocumentRepository, interactionNameGenerator, LsdContext.getInstance());
+        return new TestStateLogger(interceptedDocumentRepository, interactionGenerator, LsdContext.getInstance());
     }
 }

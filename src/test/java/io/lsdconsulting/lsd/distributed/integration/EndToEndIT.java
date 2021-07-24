@@ -13,7 +13,7 @@ import io.lsdconsulting.lsd.distributed.integration.testapp.controller.event.Som
 import io.lsdconsulting.lsd.distributed.integration.testapp.repository.TestRepository;
 import io.lsdconsulting.lsd.distributed.teststate.TestStateLogger;
 import io.lsdconsulting.lsd.distributed.teststate.TraceIdGenerator;
-import io.lsdconsulting.lsd.distributed.teststate.interaction.InteractionNameGenerator;
+import io.lsdconsulting.lsd.distributed.teststate.interaction.InteractionGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -83,7 +83,7 @@ public class EndToEndIT {
     private InterceptedDocumentRepository interceptedDocumentRepository;
 
     @Autowired
-    private InteractionNameGenerator interactionNameGenerator;
+    private InteractionGenerator interactionGenerator;
 
     private final String setupTraceId = TraceIdGenerator.generate();
     private final String mainTraceId = TraceIdGenerator.generate();
@@ -94,7 +94,7 @@ public class EndToEndIT {
 
     @BeforeEach
     void setup() {
-        testStateLogger = new TestStateLogger(interceptedDocumentRepository, interactionNameGenerator, lsdContext);
+        testStateLogger = new TestStateLogger(interceptedDocumentRepository, interactionGenerator, lsdContext);
     }
 
     @PostConstruct
