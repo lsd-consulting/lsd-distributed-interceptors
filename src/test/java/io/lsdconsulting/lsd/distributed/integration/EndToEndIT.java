@@ -33,6 +33,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -41,13 +42,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.lsd.ParticipantType.*;
 import static io.lsdconsulting.lsd.distributed.captor.repository.model.Type.*;
 import static io.lsdconsulting.lsd.distributed.integration.matcher.InterceptedInteractionMatcher.with;
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
@@ -93,17 +93,28 @@ public class EndToEndIT {
     private final ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         testStateLogger = new TestStateLogger(interceptedDocumentRepository, interactionNameGenerator, lsdContext);
     }
 
+    @PostConstruct
+    void postConstruct() {
+        lsdContext.addParticipants(List.of(
+                ACTOR.called("Client"),
+                PARTICIPANT.called("TestApp"),
+                QUEUE.called("SomethingDoneEvent"),
+                PARTICIPANT.called("UNKNOWN_TARGET"),
+                PARTICIPANT.called("Downstream")
+        ));
+    }
+
     @AfterAll
-    public static void tearDown() {
+    static void tearDown() {
         TestRepository.tearDownDatabase();
     }
 
     @Test
-    public void shouldRecordRestTemplateAndListenerInteractions() throws URISyntaxException {
+    void shouldRecordRestTemplateAndListenerInteractions() throws URISyntaxException {
         givenExternalApi();
 
         final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, null, "TestApp");
@@ -131,7 +142,7 @@ public class EndToEndIT {
     }
 
     @Test
-    public void shouldRecordReceivingMessagesWithRabbitTemplate() throws URISyntaxException {
+    void shouldRecordReceivingMessagesWithRabbitTemplate() throws URISyntaxException {
         final ResponseEntity<String> response = sentRequest("/api-rabbit-template", mainTraceId, "Client", "TestApp");
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -162,7 +173,7 @@ public class EndToEndIT {
     }
 
     @Test
-    public void shouldRecordHeaderSuppliedNames() throws URISyntaxException {
+    void shouldRecordHeaderSuppliedNames() throws URISyntaxException {
         doNothing().when(lsdContext).capture(argumentCaptor.capture(), any());
         givenExternalApi();
 
@@ -187,7 +198,7 @@ public class EndToEndIT {
     }
 
     @Test
-    public void shouldRecordHeaderSuppliedNamesWithDiagram() throws URISyntaxException {
+    void shouldRecordHeaderSuppliedNamesWithDiagram() throws URISyntaxException {
         givenExternalApi();
 
         final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, "Client", "TestApp");
@@ -201,7 +212,7 @@ public class EndToEndIT {
     }
 
     @Test
-    public void shouldRecordHeaderSuppliedNamesWithColour() throws URISyntaxException {
+    void shouldRecordHeaderSuppliedNamesWithColour() throws URISyntaxException {
         doNothing().when(lsdContext).capture(argumentCaptor.capture(), any());
         givenExternalApi();
 
@@ -226,7 +237,7 @@ public class EndToEndIT {
     }
 
     @Test
-    public void shouldRecordHeaderSuppliedNamesWithMultipleTraceIds() throws URISyntaxException {
+    void shouldRecordHeaderSuppliedNamesWithMultipleTraceIds() throws URISyntaxException {
         doNothing().when(lsdContext).capture(argumentCaptor.capture(), any());
 
         givenExternalApi();
@@ -260,7 +271,7 @@ public class EndToEndIT {
     }
 
     @Test
-    public void shouldRecordHeaderSuppliedNamesWithMultipleTraceIdsWithDiagram() throws URISyntaxException {
+    void shouldRecordHeaderSuppliedNamesWithMultipleTraceIdsWithDiagram() throws URISyntaxException {
         givenExternalApi();
 
         sentRequest("/setup1", setupTraceId, "E2E", "Setup1");
@@ -277,6 +288,24 @@ public class EndToEndIT {
         testStateLogger.captureInteractionsFromDatabase(Map.of(mainTraceId, Optional.of("[#blue]"), setupTraceId, Optional.of("[#green]")));
     }
 
+    @Test
+    void shouldRecordObfuscatedHeaders() throws URISyntaxException {
+        givenExternalApi();
+
+        final ResponseEntity<String> response = sentRequest("/api-listener", mainTraceId, null, "TestApp");
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+
+        final List<InterceptedInteraction> interceptedInteractions = new ArrayList<>();
+        await().untilAsserted(() -> {
+            final List<InterceptedInteraction> foundInterceptedInteractions = testRepository.findAll(mainTraceId);
+            assertThat(foundInterceptedInteractions, hasSize(8));
+            interceptedInteractions.addAll(foundInterceptedInteractions);
+        });
+
+        assertThat("Header obfuscation did not work ", interceptedInteractions, not(hasItem(hasProperty("requestHeaders", hasEntry("Authorization", List.of("Password"))))));
+    }
+
     private void givenExternalApi() {
         stubFor(post(urlEqualTo("/external-api?message=from_feign"))
                 .willReturn(aResponse()
@@ -284,13 +313,14 @@ public class EndToEndIT {
                         .withBody("from_external")));
     }
 
-    public ResponseEntity<String> sentRequest(final String resourceName, final String traceId, final String sourceName, final String targetName) throws URISyntaxException {
+    private ResponseEntity<String> sentRequest(final String resourceName, final String traceId, final String sourceName, final String targetName) throws URISyntaxException {
         log.info("Sending traceId:{}", traceId);
         final RequestEntity<?> requestEntity = get(new URI("http://localhost:" + serverPort + resourceName + "?message=from_test"))
                 .header("Content-Type", APPLICATION_JSON_VALUE)
                 .header("b3", traceId + "-" + traceId + "-1")
                 .header("Source-Name", sourceName)
                 .header("Target-Name", targetName)
+                .header("Authorization", "Basic password")
                 .build();
 
         return testRestTemplate.exchange(requestEntity, String.class);

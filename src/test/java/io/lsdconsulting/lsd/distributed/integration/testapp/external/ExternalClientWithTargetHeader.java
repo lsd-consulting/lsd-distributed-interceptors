@@ -16,7 +16,9 @@ public interface ExternalClientWithTargetHeader {
     class ClientConfig {
         @Bean
         public RequestInterceptor headersInterceptor() {
-            return template -> template.header("Target-Name", "Downstream");
+            return template -> template
+                    .header("Authorization", "Password")
+                    .header("Target-Name", "Downstream");
         }
     }
 }

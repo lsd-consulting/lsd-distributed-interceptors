@@ -1,13 +1,14 @@
 package io.lsdconsulting.lsd.distributed.config;
 
 import brave.Tracer;
+import io.lsdconsulting.lsd.distributed.captor.header.HeaderRetriever;
+import io.lsdconsulting.lsd.distributed.captor.header.Obfuscator;
 import io.lsdconsulting.lsd.distributed.captor.http.RequestCaptor;
 import io.lsdconsulting.lsd.distributed.captor.http.ResponseCaptor;
 import io.lsdconsulting.lsd.distributed.captor.http.derive.PathDeriver;
 import io.lsdconsulting.lsd.distributed.captor.http.derive.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.captor.http.derive.SourceTargetDeriver;
 import io.lsdconsulting.lsd.distributed.captor.rabbit.RabbitCaptor;
-import io.lsdconsulting.lsd.distributed.captor.rabbit.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.captor.rabbit.mapper.ExchangeNameDeriver;
 import io.lsdconsulting.lsd.distributed.captor.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteractionFactory;
@@ -37,8 +38,13 @@ public class LibraryConfig {
     }
 
     @Bean
-    public HeaderRetriever headerRetriever() {
-        return new HeaderRetriever();
+    public Obfuscator obfuscator() {
+        return new Obfuscator();
+    }
+
+    @Bean
+    public HeaderRetriever headerRetriever(Obfuscator obfuscator) {
+        return new HeaderRetriever(obfuscator);
     }
 
     @Bean
@@ -61,10 +67,11 @@ public class LibraryConfig {
                                        final InterceptedInteractionFactory interceptedInteractionFactory,
                                        final SourceTargetDeriver sourceTargetDeriver,
                                        final PathDeriver pathDeriver,
-                                       final TraceIdRetriever traceIdRetriever) {
+                                       final TraceIdRetriever traceIdRetriever,
+                                       final HeaderRetriever headerRetriever) {
 
 
-        return new RequestCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver, pathDeriver, traceIdRetriever);
+        return new RequestCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver, pathDeriver, traceIdRetriever, headerRetriever);
     }
 
     @Bean
@@ -72,9 +79,10 @@ public class LibraryConfig {
                                          final InterceptedInteractionFactory interceptedInteractionFactory,
                                          final SourceTargetDeriver sourceTargetDeriver,
                                          final PathDeriver pathDeriver,
-                                         final TraceIdRetriever traceIdRetriever) {
+                                         final TraceIdRetriever traceIdRetriever,
+                                         final HeaderRetriever headerRetriever) {
 
-        return new ResponseCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver, pathDeriver, traceIdRetriever);
+        return new ResponseCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver, pathDeriver, traceIdRetriever, headerRetriever);
     }
 
     @Bean
@@ -85,10 +93,11 @@ public class LibraryConfig {
     @Bean
     public RabbitCaptor publishCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
                                       final InterceptedInteractionFactory interceptedInteractionFactory,
-                                      final HeaderRetriever headerRetriever,
                                       final PropertyServiceNameDeriver propertyServiceNameDeriver,
-                                      final TraceIdRetriever traceIdRetriever) {
-        return new RabbitCaptor(interceptedDocumentRepository, interceptedInteractionFactory, propertyServiceNameDeriver, headerRetriever, traceIdRetriever);
+                                      final TraceIdRetriever traceIdRetriever,
+                                      final HeaderRetriever headerRetriever) {
+
+        return new RabbitCaptor(interceptedDocumentRepository, interceptedInteractionFactory, propertyServiceNameDeriver, traceIdRetriever, headerRetriever);
     }
 
     @Bean
