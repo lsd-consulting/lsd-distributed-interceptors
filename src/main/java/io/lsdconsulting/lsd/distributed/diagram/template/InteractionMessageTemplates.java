@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.teststate.template;
+package io.lsdconsulting.lsd.distributed.diagram.template;
 
 import lombok.NoArgsConstructor;
 

@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.teststate.interaction;
+package io.lsdconsulting.lsd.distributed.diagram.interaction;
 
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.Type;

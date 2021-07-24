@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.teststate.dto;
+package io.lsdconsulting.lsd.distributed.diagram.dto;
 
 import lombok.Builder;
 import lombok.Value;

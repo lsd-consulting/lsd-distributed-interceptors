@@ -1,8 +1,8 @@
-package io.lsdconsulting.lsd.distributed.teststate;
+package io.lsdconsulting.lsd.distributed.diagram;
 
 import com.lsd.LsdContext;
 import io.lsdconsulting.lsd.distributed.captor.repository.InterceptedDocumentRepository;
-import io.lsdconsulting.lsd.distributed.teststate.interaction.InteractionGenerator;
+import io.lsdconsulting.lsd.distributed.diagram.interaction.InteractionGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
-public class TestStateLogger {
+public class LsdLogger {
     private final InterceptedDocumentRepository interceptedDocumentRepository;
     private final InteractionGenerator interactionGenerator;
     private final LsdContext lsdContext;

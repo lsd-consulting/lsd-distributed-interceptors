@@ -1,7 +1,7 @@
 package io.lsdconsulting.lsd.distributed.captor.repository.model;
 
-import io.lsdconsulting.lsd.distributed.teststate.dto.Interaction;
-import io.lsdconsulting.lsd.distributed.teststate.template.InteractionMessageTemplates;
+import io.lsdconsulting.lsd.distributed.diagram.dto.Interaction;
+import io.lsdconsulting.lsd.distributed.diagram.template.InteractionMessageTemplates;
 import lombok.Getter;
 
 import java.util.function.Function;

@@ -4,6 +4,9 @@ import com.lsd.LsdContext;
 import io.lsdconsulting.junit5.LsdExtension;
 import io.lsdconsulting.lsd.distributed.captor.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteraction;
+import io.lsdconsulting.lsd.distributed.diagram.LsdLogger;
+import io.lsdconsulting.lsd.distributed.diagram.TraceIdGenerator;
+import io.lsdconsulting.lsd.distributed.diagram.interaction.InteractionGenerator;
 import io.lsdconsulting.lsd.distributed.integration.testapp.TestApplication;
 import io.lsdconsulting.lsd.distributed.integration.testapp.config.RabbitConfig;
 import io.lsdconsulting.lsd.distributed.integration.testapp.config.RabbitTemplateConfig;
@@ -11,9 +14,6 @@ import io.lsdconsulting.lsd.distributed.integration.testapp.config.RepositoryCon
 import io.lsdconsulting.lsd.distributed.integration.testapp.config.RestConfig;
 import io.lsdconsulting.lsd.distributed.integration.testapp.controller.event.SomethingDoneEvent;
 import io.lsdconsulting.lsd.distributed.integration.testapp.repository.TestRepository;
-import io.lsdconsulting.lsd.distributed.teststate.TestStateLogger;
-import io.lsdconsulting.lsd.distributed.teststate.TraceIdGenerator;
-import io.lsdconsulting.lsd.distributed.teststate.interaction.InteractionGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -77,13 +77,13 @@ public class EndToEndIT {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    private TestStateLogger testStateLogger;
-
     @Autowired
     private InterceptedDocumentRepository interceptedDocumentRepository;
 
     @Autowired
     private InteractionGenerator interactionGenerator;
+
+    private LsdLogger lsdLogger;
 
     private final String setupTraceId = TraceIdGenerator.generate();
     private final String mainTraceId = TraceIdGenerator.generate();
@@ -94,7 +94,7 @@ public class EndToEndIT {
 
     @BeforeEach
     void setup() {
-        testStateLogger = new TestStateLogger(interceptedDocumentRepository, interactionGenerator, lsdContext);
+        lsdLogger = new LsdLogger(interceptedDocumentRepository, interactionGenerator, lsdContext);
     }
 
     @PostConstruct
@@ -129,7 +129,7 @@ public class EndToEndIT {
             interceptedInteractions.addAll(foundInterceptedInteractions);
         });
 
-        testStateLogger.captureInteractionsFromDatabase(mainTraceId);
+        lsdLogger.captureInteractionsFromDatabase(mainTraceId);
 
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "TestApp", NO_BODY, "TestApp", "/api-listener?message=from_test")));
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "TestApp", "response_from_controller", "TestApp", "/api-listener?message=from_test")));
@@ -163,7 +163,7 @@ public class EndToEndIT {
             interceptedInteractions.addAll(foundInterceptedInteractions);
         });
 
-        testStateLogger.captureInteractionsFromDatabase(mainTraceId);
+        lsdLogger.captureInteractionsFromDatabase(mainTraceId);
 
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(REQUEST, "Client", NO_BODY, "TestApp", "/api-rabbit-template?message=from_test")));
         assertThat("REQUEST interaction missing", interceptedInteractions, hasItem(with(RESPONSE, "Client", "response_from_controller", "TestApp", "/api-rabbit-template?message=from_test")));
@@ -184,7 +184,7 @@ public class EndToEndIT {
 
         await().untilAsserted(() -> assertThat(testRepository.findAll(mainTraceId), hasSize(8)));
 
-        testStateLogger.captureInteractionsFromDatabase(mainTraceId);
+        lsdLogger.captureInteractionsFromDatabase(mainTraceId);
 
         assertThat(argumentCaptor.getAllValues(), contains(
                 "GET /api-listener?message=from_test from Client to TestApp",
@@ -208,7 +208,7 @@ public class EndToEndIT {
 
         await().untilAsserted(() -> assertThat(testRepository.findAll(mainTraceId), hasSize(8)));
 
-      testStateLogger.captureInteractionsFromDatabase(mainTraceId);
+      lsdLogger.captureInteractionsFromDatabase(mainTraceId);
     }
 
     @Test
@@ -223,7 +223,7 @@ public class EndToEndIT {
 
         await().untilAsserted(() -> assertThat(testRepository.findAll(mainTraceId), hasSize(8)));
 
-        testStateLogger.captureInteractionsFromDatabase(Map.of(mainTraceId, Optional.of("[#blue]")));
+        lsdLogger.captureInteractionsFromDatabase(Map.of(mainTraceId, Optional.of("[#blue]")));
 
         assertThat(argumentCaptor.getAllValues(), contains(
                 "GET /api-listener?message=from_test from Client to TestApp [#blue]",
@@ -253,7 +253,7 @@ public class EndToEndIT {
 
         sentRequest("/setup2", setupTraceId, "E2E", "Setup2");
 
-        testStateLogger.captureInteractionsFromDatabase(Map.of(mainTraceId, Optional.of("[#blue]"), setupTraceId, Optional.of("[#green]")));
+        lsdLogger.captureInteractionsFromDatabase(Map.of(mainTraceId, Optional.of("[#blue]"), setupTraceId, Optional.of("[#green]")));
 
         assertThat(argumentCaptor.getAllValues(), contains(
                 "GET /setup1?message=from_test from E2E to Setup1 [#green]",
@@ -285,7 +285,7 @@ public class EndToEndIT {
 
         sentRequest("/setup2", setupTraceId, "E2E", "Setup2");
 
-        testStateLogger.captureInteractionsFromDatabase(Map.of(mainTraceId, Optional.of("[#blue]"), setupTraceId, Optional.of("[#green]")));
+        lsdLogger.captureInteractionsFromDatabase(Map.of(mainTraceId, Optional.of("[#blue]"), setupTraceId, Optional.of("[#green]")));
     }
 
     @Test

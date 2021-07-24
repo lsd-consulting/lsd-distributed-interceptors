@@ -1,11 +1,11 @@
-package io.lsdconsulting.lsd.distributed.teststate.interaction;
+package io.lsdconsulting.lsd.distributed.diagram.interaction;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsd.diagram.ValidComponentName;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.config.mapper.ObjectMapperCreator;
-import io.lsdconsulting.lsd.distributed.teststate.dto.Interaction;
+import io.lsdconsulting.lsd.distributed.diagram.dto.Interaction;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

@@ -5,4 +5,4 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   io.lsdconsulting.lsd.distributed.config.RabbitListenerInterceptorConfig,\
   io.lsdconsulting.lsd.distributed.config.RabbitTemplateInterceptorConfig,\
   io.lsdconsulting.lsd.distributed.config.RestTemplateInterceptorConfig,\
-  io.lsdconsulting.lsd.distributed.config.TestStateCollectorConfig
+  io.lsdconsulting.lsd.distributed.config.LsdLoggerConfig

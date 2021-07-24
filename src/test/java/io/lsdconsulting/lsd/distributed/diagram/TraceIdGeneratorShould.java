@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.teststate;
+package io.lsdconsulting.lsd.distributed.diagram;
 
 import org.junit.jupiter.api.Test;
 
