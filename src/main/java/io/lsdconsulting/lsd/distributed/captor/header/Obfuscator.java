@@ -12,12 +12,13 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 public class Obfuscator {
+    public static final String DELIMINATOR = ",";
 
     private final List<String> sensitiveHeaders;
 
     public Obfuscator(String headers) {
         sensitiveHeaders = ofNullable(headers)
-                .map(h -> stream(h.split(",")).map(String::trim).collect(toList()))
+                .map(h -> stream(h.split(DELIMINATOR)).map(String::trim).collect(toList()))
                 .orElse(emptyList());
     }
 
