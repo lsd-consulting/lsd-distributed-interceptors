@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(name = "lsd.db.connectionstring")
+@ConditionalOnProperty(name = "lsd.dist.db.connectionString")
 public class LsdLoggerConfig {
 
     @Bean

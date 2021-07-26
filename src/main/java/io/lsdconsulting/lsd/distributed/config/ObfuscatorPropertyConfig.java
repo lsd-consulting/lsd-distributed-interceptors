@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 @Configuration
-@ConfigurationProperties(prefix = "lsd.obfuscator")
+@ConfigurationProperties(prefix = "lsd.dist.obfuscator")
 public class ObfuscatorPropertyConfig {
 
     private String sensitiveHeaders;

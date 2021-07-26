@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(name = "lsd.db.connectionstring")
+@ConditionalOnProperty(name = "lsd.dist.db.connectionString")
 @RequiredArgsConstructor
 public class LibraryConfig {
 
@@ -38,7 +38,7 @@ public class LibraryConfig {
     }
 
     @Bean
-    public Obfuscator obfuscator(@Value("${lsd.obfuscator.sensitiveHeaders:#{null}}") final String sensitiveHeaders) {
+    public Obfuscator obfuscator(@Value("${lsd.dist.obfuscator.sensitiveHeaders:#{null}}") final String sensitiveHeaders) {
         return new Obfuscator(sensitiveHeaders);
     }
 
@@ -101,9 +101,9 @@ public class LibraryConfig {
     }
 
     @Bean
-    public InterceptedDocumentRepository interceptedDocumentRepository(@Value("${lsd.db.connectionstring}") final String dbConnectionString,
-                                                                       @Value("${lsd.db.trustStoreLocation:#{null}}") final String trustStoreLocation,
-                                                                       @Value("${lsd.db.trustStorePassword:#{null}}") final String trustStorePassword) {
+    public InterceptedDocumentRepository interceptedDocumentRepository(@Value("${lsd.dist.db.connectionString}") final String dbConnectionString,
+                                                                       @Value("${lsd.dist.db.trustStoreLocation:#{null}}") final String trustStoreLocation,
+                                                                       @Value("${lsd.dist.db.trustStorePassword:#{null}}") final String trustStorePassword) {
         return new InterceptedDocumentMongoRepository(dbConnectionString, trustStoreLocation, trustStorePassword);
     }
 }
