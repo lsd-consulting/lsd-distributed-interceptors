@@ -1,16 +1,24 @@
 package io.lsdconsulting.lsd.distributed.captor.header;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import static java.util.Arrays.stream;
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 public class Obfuscator {
 
-    private final List<String> sensitiveHeaders = new ArrayList<>();
+    private final List<String> sensitiveHeaders;
 
-    public Obfuscator() {
-        sensitiveHeaders.add("Authorization");
-        sensitiveHeaders.add("JWT");
+    public Obfuscator(String headers) {
+        sensitiveHeaders = ofNullable(headers)
+                .map(h -> stream(h.split(",")).map(String::trim).collect(toList()))
+                .orElse(emptyList());
     }
 
     public Map<String, Collection<String>> obfuscate(Map<String, Collection<String>> headers) {

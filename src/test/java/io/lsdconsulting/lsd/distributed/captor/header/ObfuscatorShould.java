@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.hasEntry;
 
 class ObfuscatorShould {
 
-    private final Obfuscator underTest = new Obfuscator();
+    private final Obfuscator underTest = new Obfuscator("Authorization,JWT");
 
     @Test
     void obfuscateAuthorizationHeader() {

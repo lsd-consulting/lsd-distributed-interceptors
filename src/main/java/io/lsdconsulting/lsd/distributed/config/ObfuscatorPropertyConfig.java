@@ -2,7 +2,6 @@ package io.lsdconsulting.lsd.distributed.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,12 +10,9 @@ import org.springframework.context.annotation.Configuration;
 */
 @Getter
 @Setter
-@ConditionalOnProperty(name = {"lsd.db.connectionstring"})
 @Configuration
-@ConfigurationProperties(prefix = "lsd.db")
-public class PropertyConfig {
+@ConfigurationProperties(prefix = "lsd.obfuscator")
+public class ObfuscatorPropertyConfig {
 
-    private String connectionstring;
-    private String trustStoreLocation;
-    private String trustStorePassword;
+    private String sensitiveHeaders;
 }

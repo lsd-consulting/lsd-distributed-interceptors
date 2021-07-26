@@ -1,8 +1,9 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.lsdconsulting.lsd.distributed.config.DbPropertyConfig,\
   io.lsdconsulting.lsd.distributed.config.FeignInterceptorConfig,\
   io.lsdconsulting.lsd.distributed.config.LibraryConfig,\
-  io.lsdconsulting.lsd.distributed.config.PropertyConfig,\
+  io.lsdconsulting.lsd.distributed.config.LsdLoggerConfig,\
+  io.lsdconsulting.lsd.distributed.config.ObfuscatorPropertyConfig,\
   io.lsdconsulting.lsd.distributed.config.RabbitListenerInterceptorConfig,\
   io.lsdconsulting.lsd.distributed.config.RabbitTemplateInterceptorConfig,\
-  io.lsdconsulting.lsd.distributed.config.RestTemplateInterceptorConfig,\
-  io.lsdconsulting.lsd.distributed.config.LsdLoggerConfig
+  io.lsdconsulting.lsd.distributed.config.RestTemplateInterceptorConfig

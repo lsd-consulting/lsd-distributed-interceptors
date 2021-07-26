@@ -38,8 +38,8 @@ public class LibraryConfig {
     }
 
     @Bean
-    public Obfuscator obfuscator() {
-        return new Obfuscator();
+    public Obfuscator obfuscator(@Value("${lsd.obfuscator.sensitiveHeaders:#{null}}") final String sensitiveHeaders) {
+        return new Obfuscator(sensitiveHeaders);
     }
 
     @Bean
