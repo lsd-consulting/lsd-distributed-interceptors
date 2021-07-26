@@ -24,6 +24,15 @@ class ObfuscatorShould {
     }
 
     @Test
+    void obfuscateJWTHeader() {
+        Map<String, Collection<String>> headers = Map.of("JWT", List.of(randomAlphanumeric(30)));
+
+        Map<String, Collection<String>> result = underTest.obfuscate(headers);
+
+        assertThat(result, hasEntry("JWT", List.of("<obfuscated>")));
+    }
+
+    @Test
     void keepOtherHeadersUnchanged() {
         String headerName = randomAlphanumeric(30);
         String headerValue = randomAlphanumeric(30);
