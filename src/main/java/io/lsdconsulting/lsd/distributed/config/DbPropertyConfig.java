@@ -11,12 +11,12 @@ import org.springframework.context.annotation.Configuration;
 */
 @Getter
 @Setter
-@ConditionalOnProperty(name = {"lsd.db.connectionstring"})
+@ConditionalOnProperty(name = {"lsd.dist.db.connectionString"})
 @Configuration
-@ConfigurationProperties(prefix = "lsd.db")
-public class PropertyConfig {
+@ConfigurationProperties(prefix = "lsd.dist.db")
+public class DbPropertyConfig {
 
-    private String connectionstring;
+    private String connectionString;
     private String trustStoreLocation;
     private String trustStorePassword;
 }

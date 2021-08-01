@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @Configuration
-@ConditionalOnProperty(name = "lsd.db.connectionstring")
+@ConditionalOnProperty(name = "lsd.dist.db.connectionString")
 @ConditionalOnClass({FeignClientBuilder.class, Logger.Level.class})
 @RequiredArgsConstructor
 public class FeignInterceptorConfig {

@@ -1,7 +1,7 @@
 package io.lsdconsulting.lsd.distributed.captor.rabbit;
 
+import io.lsdconsulting.lsd.distributed.captor.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.captor.http.derive.PropertyServiceNameDeriver;
-import io.lsdconsulting.lsd.distributed.captor.rabbit.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.captor.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteractionFactory;
@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -27,12 +28,11 @@ class RabbitCaptorShould {
     private final InterceptedDocumentRepository interceptedDocumentRepository = mock(InterceptedDocumentRepository.class);
     private final PropertyServiceNameDeriver propertyServiceNameDeriver = mock(PropertyServiceNameDeriver.class);
     private final TraceIdRetriever traceIdRetriever = mock(TraceIdRetriever.class);
+    private final HeaderRetriever headerRetriever = mock(HeaderRetriever.class);
 
     private final InterceptedInteractionFactory interceptedInteractionFactory = new InterceptedInteractionFactory("profile");
-    private final HeaderRetriever headerRetriever = new HeaderRetriever();
 
-
-    private final RabbitCaptor underTest = new RabbitCaptor(interceptedDocumentRepository, interceptedInteractionFactory, propertyServiceNameDeriver, headerRetriever, traceIdRetriever);
+    private final RabbitCaptor underTest = new RabbitCaptor(interceptedDocumentRepository, interceptedInteractionFactory, propertyServiceNameDeriver, traceIdRetriever, headerRetriever);
 
     private final String exchange = randomAlphabetic(20);
     private final String serviceName = randomAlphabetic(20);
@@ -40,12 +40,13 @@ class RabbitCaptorShould {
     private final String body = randomAlphabetic(20);
     private final MessageProperties messageProperties = new MessageProperties();
     private final Message message = new Message(body.getBytes(), messageProperties);
-    private final Map<String, List<String>> headers = Map.of("name", List.of("value"));
+    private final Map<String, Collection<String>> headers = Map.of("name", List.of("value"));
 
     @Test
     void captureAmqpInteraction() {
         given(propertyServiceNameDeriver.getServiceName()).willReturn(serviceName);
         given(traceIdRetriever.getTraceId(any())).willReturn(traceId);
+        given(headerRetriever.retrieve(any(Message.class))).willReturn(headers);
         messageProperties.setHeader("name", "value");
 
         final InterceptedInteraction result = underTest.captureInteraction(exchange, message, Type.PUBLISH);

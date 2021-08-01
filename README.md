@@ -33,8 +33,16 @@ and configure through app properties:
 
 ```properties
 # the trust store configuration is optional
-lsd.db.trustStorePassword={password}
-lsd.db.trustStoreLocation={location}
+lsd.dist.db.trustStorePassword={password}
+lsd.dist.db.trustStoreLocation={location}
 
-lsd.db.connectionstring={someUrl}
+lsd.dist.db.connectionString={someUrl}
 ```
+
+## Obfuscation
+If there is need to obfuscate sensitive information sent through HTTP headers, it's possible to set the headers to be obfuscated through a property:
+```properties
+lsd.dist.obfuscator.sensitiveHeaders=Authorization, SomeOtherHeaderName
+```
+
+If the value is not set or empty, there will be no obfuscation applied.

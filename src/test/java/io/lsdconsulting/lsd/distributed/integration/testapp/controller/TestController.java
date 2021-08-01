@@ -21,7 +21,10 @@ public class TestController {
     @GetMapping("/api-listener")
     public ResponseEntity<String> getObjectByMessage(@RequestParam final String message) {
         log.info("Received message:{}", message);
-        rabbitTemplate.convertAndSend("exchange-listener", null, getEvent());
+        rabbitTemplate.convertAndSend("exchange-listener", null, getEvent(), m -> {
+            m.getMessageProperties().getHeaders().put("Authorization", "Password");
+            return m;
+        });
         return ResponseEntity.ok("response_from_controller");
     }
 

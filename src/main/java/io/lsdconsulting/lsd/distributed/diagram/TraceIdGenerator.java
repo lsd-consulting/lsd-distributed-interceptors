@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.teststate;
+package io.lsdconsulting.lsd.distributed.diagram;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,9 +1,9 @@
-package io.lsdconsulting.lsd.distributed.teststate;
+package io.lsdconsulting.lsd.distributed.diagram;
 
 import com.lsd.LsdContext;
 import io.lsdconsulting.lsd.distributed.captor.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteraction;
-import io.lsdconsulting.lsd.distributed.teststate.interaction.InteractionGenerator;
+import io.lsdconsulting.lsd.distributed.diagram.interaction.InteractionGenerator;
 import org.junit.jupiter.api.Test;
 
 import static java.util.Collections.singletonList;
@@ -15,7 +15,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class TestStateLoggerShould {
+public class LsdLoggerShould {
 
     private final InterceptedDocumentRepository interceptedDocumentRepository = mock(InterceptedDocumentRepository.class);
     private final InteractionGenerator interactionGenerator = mock(InteractionGenerator.class);
@@ -23,7 +23,7 @@ public class TestStateLoggerShould {
 
     private final String traceId = randomAlphanumeric(8);
 
-    private final TestStateLogger underTest = new TestStateLogger(interceptedDocumentRepository, interactionGenerator, lsdContext);
+    private final LsdLogger underTest = new LsdLogger(interceptedDocumentRepository, interactionGenerator, lsdContext);
 
     @Test
     public void logInteractionName() {

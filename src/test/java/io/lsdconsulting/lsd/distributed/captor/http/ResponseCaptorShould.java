@@ -3,6 +3,7 @@ package io.lsdconsulting.lsd.distributed.captor.http;
 import feign.Request;
 import feign.RequestTemplate;
 import feign.Response;
+import io.lsdconsulting.lsd.distributed.captor.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.captor.http.derive.PathDeriver;
 import io.lsdconsulting.lsd.distributed.captor.http.derive.SourceTargetDeriver;
 import io.lsdconsulting.lsd.distributed.captor.repository.InterceptedDocumentRepository;
@@ -24,6 +25,7 @@ import static java.nio.charset.Charset.defaultCharset;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -37,11 +39,12 @@ class ResponseCaptorShould {
     private final TraceIdRetriever traceIdRetriever = mock(TraceIdRetriever.class);
     private final HttpRequest httpRequest = mock(HttpRequest.class);
     private final ClientHttpResponse clientHttpResponse = mock(ClientHttpResponse.class);
+    private final HeaderRetriever headerRetriever = mock(HeaderRetriever.class);
 
     private final PathDeriver pathDeriver = new PathDeriver();
     private final InterceptedInteractionFactory interceptedInteractionFactory = new InterceptedInteractionFactory("profile");
 
-    private final ResponseCaptor underTest = new ResponseCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver, pathDeriver, traceIdRetriever);
+    private final ResponseCaptor underTest = new ResponseCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver, pathDeriver, traceIdRetriever, headerRetriever);
 
     private final String url = randomAlphanumeric(20);
     private final String body = randomAlphanumeric(20);
@@ -51,12 +54,13 @@ class ResponseCaptorShould {
     private final Map<String, Collection<String>> requestHeaders = Map.of("b3", List.of(traceId), "Target-Name", List.of(target));
 
     private final Response response = Response.builder()
-            .request(Request.create(GET, url, requestHeaders, body.getBytes(), defaultCharset(), new RequestTemplate( )))
+            .request(Request.create(GET, url, requestHeaders, body.getBytes(), defaultCharset(), new RequestTemplate()))
             .build();
 
     @Test
     public void takeTraceIdFromRequestHeaders() {
         given(traceIdRetriever.getTraceId(eq(requestHeaders))).willReturn(traceId);
+        given(headerRetriever.retrieve(any(Request.class))).willReturn(requestHeaders);
 
         final InterceptedInteraction interceptedInteraction = underTest.captureResponseInteraction(response);
 
@@ -65,7 +69,8 @@ class ResponseCaptorShould {
 
     @Test
     public void deriveTargetFromRequestHeaders() {
-       given(sourceTargetDeriver.deriveTarget(eq(requestHeaders), eq(url))).willReturn(target);
+        given(sourceTargetDeriver.deriveTarget(eq(requestHeaders), eq(url))).willReturn(target);
+        given(headerRetriever.retrieve(any(Request.class))).willReturn(requestHeaders);
 
         final InterceptedInteraction interceptedInteraction = underTest.captureResponseInteraction(response);
 

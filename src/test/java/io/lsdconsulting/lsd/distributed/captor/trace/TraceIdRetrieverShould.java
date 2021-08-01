@@ -85,4 +85,15 @@ class TraceIdRetrieverShould {
 
         assertThat(result, is(traceId));
     }
+
+    @Test
+    public void retrieveTraceIdFromTracerNextSpan() {
+        given(tracer.nextSpan()).willReturn(span);
+        given(span.context()).willReturn(context);
+        given(context.traceIdString()).willReturn(traceId);
+
+        final String result = underTest.getTraceId(new HashMap<>());
+
+        assertThat(result, is(traceId));
+    }
 }

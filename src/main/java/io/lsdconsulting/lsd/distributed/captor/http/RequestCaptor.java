@@ -2,6 +2,7 @@ package io.lsdconsulting.lsd.distributed.captor.http;
 
 import feign.Request;
 import io.lsdconsulting.lsd.distributed.captor.convert.TypeConverter;
+import io.lsdconsulting.lsd.distributed.captor.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.captor.http.derive.PathDeriver;
 import io.lsdconsulting.lsd.distributed.captor.http.derive.SourceTargetDeriver;
 import io.lsdconsulting.lsd.distributed.captor.repository.InterceptedDocumentRepository;
@@ -13,10 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 @Slf4j
 @RequiredArgsConstructor
 public class RequestCaptor {
@@ -26,9 +23,10 @@ public class RequestCaptor {
     private final SourceTargetDeriver sourceTargetDeriver;
     private final PathDeriver pathDeriver;
     private final TraceIdRetriever traceIdRetriever;
+    private final HeaderRetriever headerRetriever;
 
     public InterceptedInteraction captureRequestInteraction(final Request request) {
-        final Map<String, Collection<String>> headers = request.headers();
+        final var headers = headerRetriever.retrieve(request);
         final String body = TypeConverter.convert(request.body());
         final String path = pathDeriver.derivePathFrom(request.url());
         final String traceId = traceIdRetriever.getTraceId(headers);
@@ -40,8 +38,7 @@ public class RequestCaptor {
     }
 
     public InterceptedInteraction captureRequestInteraction(final HttpRequest request, final String body) {
-        final var headers = request.getHeaders().entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> (Collection<String>) e.getValue()));
+        final var headers = headerRetriever.retrieve(request);
         final String path = pathDeriver.derivePathFrom(request);
         final String serviceName = sourceTargetDeriver.deriveServiceName(headers);
         final String target = sourceTargetDeriver.deriveTarget(headers, path);
@@ -50,5 +47,4 @@ public class RequestCaptor {
         interceptedDocumentRepository.save(interceptedInteraction);
         return interceptedInteraction;
     }
-
 }

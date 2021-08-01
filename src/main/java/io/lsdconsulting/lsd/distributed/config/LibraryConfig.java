@@ -1,13 +1,14 @@
 package io.lsdconsulting.lsd.distributed.config;
 
 import brave.Tracer;
+import io.lsdconsulting.lsd.distributed.captor.header.HeaderRetriever;
+import io.lsdconsulting.lsd.distributed.captor.header.Obfuscator;
 import io.lsdconsulting.lsd.distributed.captor.http.RequestCaptor;
 import io.lsdconsulting.lsd.distributed.captor.http.ResponseCaptor;
 import io.lsdconsulting.lsd.distributed.captor.http.derive.PathDeriver;
 import io.lsdconsulting.lsd.distributed.captor.http.derive.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.captor.http.derive.SourceTargetDeriver;
 import io.lsdconsulting.lsd.distributed.captor.rabbit.RabbitCaptor;
-import io.lsdconsulting.lsd.distributed.captor.rabbit.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.captor.rabbit.mapper.ExchangeNameDeriver;
 import io.lsdconsulting.lsd.distributed.captor.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteractionFactory;
@@ -20,7 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(name = "lsd.db.connectionstring")
+@ConditionalOnProperty(name = "lsd.dist.db.connectionString")
 @RequiredArgsConstructor
 public class LibraryConfig {
 
@@ -37,8 +38,13 @@ public class LibraryConfig {
     }
 
     @Bean
-    public HeaderRetriever headerRetriever() {
-        return new HeaderRetriever();
+    public Obfuscator obfuscator(@Value("${lsd.dist.obfuscator.sensitiveHeaders:#{null}}") final String sensitiveHeaders) {
+        return new Obfuscator(sensitiveHeaders);
+    }
+
+    @Bean
+    public HeaderRetriever headerRetriever(Obfuscator obfuscator) {
+        return new HeaderRetriever(obfuscator);
     }
 
     @Bean
@@ -61,10 +67,11 @@ public class LibraryConfig {
                                        final InterceptedInteractionFactory interceptedInteractionFactory,
                                        final SourceTargetDeriver sourceTargetDeriver,
                                        final PathDeriver pathDeriver,
-                                       final TraceIdRetriever traceIdRetriever) {
+                                       final TraceIdRetriever traceIdRetriever,
+                                       final HeaderRetriever headerRetriever) {
 
 
-        return new RequestCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver, pathDeriver, traceIdRetriever);
+        return new RequestCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver, pathDeriver, traceIdRetriever, headerRetriever);
     }
 
     @Bean
@@ -72,9 +79,10 @@ public class LibraryConfig {
                                          final InterceptedInteractionFactory interceptedInteractionFactory,
                                          final SourceTargetDeriver sourceTargetDeriver,
                                          final PathDeriver pathDeriver,
-                                         final TraceIdRetriever traceIdRetriever) {
+                                         final TraceIdRetriever traceIdRetriever,
+                                         final HeaderRetriever headerRetriever) {
 
-        return new ResponseCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver, pathDeriver, traceIdRetriever);
+        return new ResponseCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver, pathDeriver, traceIdRetriever, headerRetriever);
     }
 
     @Bean
@@ -85,16 +93,17 @@ public class LibraryConfig {
     @Bean
     public RabbitCaptor publishCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
                                       final InterceptedInteractionFactory interceptedInteractionFactory,
-                                      final HeaderRetriever headerRetriever,
                                       final PropertyServiceNameDeriver propertyServiceNameDeriver,
-                                      final TraceIdRetriever traceIdRetriever) {
-        return new RabbitCaptor(interceptedDocumentRepository, interceptedInteractionFactory, propertyServiceNameDeriver, headerRetriever, traceIdRetriever);
+                                      final TraceIdRetriever traceIdRetriever,
+                                      final HeaderRetriever headerRetriever) {
+
+        return new RabbitCaptor(interceptedDocumentRepository, interceptedInteractionFactory, propertyServiceNameDeriver, traceIdRetriever, headerRetriever);
     }
 
     @Bean
-    public InterceptedDocumentRepository interceptedDocumentRepository(@Value("${lsd.db.connectionstring}") final String dbConnectionString,
-                                                                       @Value("${lsd.db.trustStoreLocation:#{null}}") final String trustStoreLocation,
-                                                                       @Value("${lsd.db.trustStorePassword:#{null}}") final String trustStorePassword) {
+    public InterceptedDocumentRepository interceptedDocumentRepository(@Value("${lsd.dist.db.connectionString}") final String dbConnectionString,
+                                                                       @Value("${lsd.dist.db.trustStoreLocation:#{null}}") final String trustStoreLocation,
+                                                                       @Value("${lsd.dist.db.trustStorePassword:#{null}}") final String trustStorePassword) {
         return new InterceptedDocumentMongoRepository(dbConnectionString, trustStoreLocation, trustStorePassword);
     }
 }

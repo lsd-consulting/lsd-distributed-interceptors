@@ -18,7 +18,7 @@ import static io.lsdconsulting.lsd.distributed.captor.repository.model.Type.PUBL
 
 @Slf4j
 @Configuration
-@ConditionalOnProperty(name = {"lsd.db.connectionstring"})
+@ConditionalOnProperty(name = {"lsd.dist.db.connectionString"})
 @ConditionalOnClass(RabbitTemplate.class)
 @RequiredArgsConstructor
 public class RabbitTemplateInterceptorConfig {
