@@ -91,15 +91,15 @@ public class EndToEndIT extends IntegrationTestBase {
         assertThat(report, containsString("publish event"));
         assertThat(report, containsString("SomethingDoneEvent -&gt; TestApp"));
         assertThat(report, containsString("consume message"));
-        assertThat(report, containsString("TestApp -&gt; Client"));
+        assertThat(report, containsString("TestApp --&gt;&gt; Client"));
         assertThat(report, containsString("200 OK response"));
         assertThat(report, containsString("TestApp -&gt; UNKNOWN_TARGET"));
         assertThat(report, containsString("POST /external-api?message=from_feign"));
-        assertThat(report, containsString("UNKNOWN_TARGET -&gt; TestApp"));
+        assertThat(report, containsString("UNKNOWN_TARGET --&gt;&gt; TestApp"));
         assertThat(report, containsString("200 OK response"));
         assertThat(report, containsString("TestApp -&gt; Downstream"));
         assertThat(report, containsString("POST /external-api?message=from_feign"));
-        assertThat(report, containsString("Downstream -&gt; TestApp"));
+        assertThat(report, containsString("Downstream --&gt;&gt; TestApp"));
         assertThat(report, containsString("200 OK response"));
     }
 
