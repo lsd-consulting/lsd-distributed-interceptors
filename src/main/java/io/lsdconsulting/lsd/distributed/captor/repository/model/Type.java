@@ -10,7 +10,7 @@ import java.util.function.Function;
 public enum Type {
 
     REQUEST(i -> InteractionMessageTemplates.requestOf(i.getHttpMethod(), i.getPath(), i.getSource(), i.getDestination(), i.getColour())),
-    RESPONSE(i -> InteractionMessageTemplates.responseOf(i.getHttpStatus(), i.getDestination(), i.getSource(), i.getColour())),
+    RESPONSE(i -> InteractionMessageTemplates.responseOf(i.getHttpStatus(), i.getDestination(), i.getSource(), i.getElapsedTime(), i.getColour())),
     PUBLISH(i -> InteractionMessageTemplates.publishOf(i.getSource(), i.getDestination(), i.getColour())),
     CONSUME(i -> InteractionMessageTemplates.consumeOf(i.getDestination(), i.getSource(), i.getColour()));
 

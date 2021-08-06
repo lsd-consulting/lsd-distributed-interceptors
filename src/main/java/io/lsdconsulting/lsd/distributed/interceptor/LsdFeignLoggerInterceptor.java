@@ -38,7 +38,7 @@ public class LsdFeignLoggerInterceptor extends Logger.JavaLogger {
 
         InterceptedInteraction data = null;
         try {
-            data = responseCaptor.captureResponseInteraction(response);
+            data = responseCaptor.captureResponseInteraction(response, elapsedTime);
         } catch (final Throwable t) {
             log.error(t.getMessage(), t);
         }

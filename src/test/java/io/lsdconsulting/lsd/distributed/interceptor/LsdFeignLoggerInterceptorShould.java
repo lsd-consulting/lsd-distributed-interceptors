@@ -6,11 +6,13 @@ import feign.Response;
 import io.lsdconsulting.lsd.distributed.captor.http.RequestCaptor;
 import io.lsdconsulting.lsd.distributed.captor.http.ResponseCaptor;
 import io.lsdconsulting.lsd.distributed.captor.repository.model.InterceptedInteraction;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -25,6 +27,7 @@ class LsdFeignLoggerInterceptorShould {
     private final LsdFeignLoggerInterceptor underTest = new LsdFeignLoggerInterceptor(requestCaptor, responseCaptor);
 
     private final Logger.Level level = Logger.Level.BASIC;
+    private final Long elapsedTime = RandomUtils.nextLong();
 
     @Test
     void logsRequest() {
@@ -34,10 +37,10 @@ class LsdFeignLoggerInterceptorShould {
     }
    @Test
     void logAndRebufferResponse() throws IOException {
-        given(responseCaptor.captureResponseInteraction(any())).willReturn(InterceptedInteraction.builder().build());
+        given(responseCaptor.captureResponseInteraction(any(), eq(elapsedTime))).willReturn(InterceptedInteraction.builder().build());
 
-        underTest.logAndRebufferResponse("configKey", level, response, 0);
+        underTest.logAndRebufferResponse("configKey", level, response, elapsedTime);
 
-        verify(responseCaptor).captureResponseInteraction(response);
+        verify(responseCaptor).captureResponseInteraction(response, elapsedTime);
     }
 }

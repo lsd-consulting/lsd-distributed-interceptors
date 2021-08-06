@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static io.lsdconsulting.lsd.distributed.captor.repository.model.Type.*;
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.params.provider.Arguments.of;
@@ -38,10 +39,34 @@ class InteractionGeneratorShould {
     private static Stream<Arguments> provideInterceptedInteractions() {
         return Stream.of(
                 of(InterceptedInteraction.builder().traceId(TRACE_ID).path("/abc/def").target("target").serviceName("service").type(REQUEST).httpMethod("POST").body("key1=value1;key2=value2").build(), "POST /abc/def from Service to Target [#grey]", "{\n  \"body\": \"key1=value1;key2=value2\"\n}"),
-                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("target").serviceName("service").type(RESPONSE).httpStatus("200").body("someValue").build(), "200 response from Target to Service [#grey]", "{\n  \"body\": \"someValue\"\n}"),
+                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("target").serviceName("service").type(RESPONSE).httpStatus("200").body("someValue").elapsedTime(2L).build(), "200 (2 ms) response from Target to Service [#grey]", "{\n  \"body\": \"someValue\"\n}"),
                 of(InterceptedInteraction.builder().traceId(TRACE_ID).target("exchange").serviceName("service").type(PUBLISH).body("{\"key1\":\"value1\",\"key2\":\"value2\"}").build(), "publish event from Service to Exchange [#grey]", "{\n  \"body\": \"{\\\"key1\\\":\\\"value1\\\",\\\"key2\\\":\\\"value2\\\"}\"\n}"),
                 of(InterceptedInteraction.builder().traceId(TRACE_ID).target("exchange").serviceName("service").type(CONSUME).body("").build(), "consume message from Exchange to Service [#grey]", "{\n  \"body\": \"\"\n}")
         );
+    }
+
+    @Test
+    void attachTimingToCorrectSynchronousResponses() {
+        List<InterceptedInteraction> interceptedInteractions = List.of(
+                InterceptedInteraction.builder().traceId(TRACE_ID).path("/abc/def1").target("target1").serviceName("service").type(REQUEST).httpMethod("POST").body("key1=value1;key2=value2").build(),
+                InterceptedInteraction.builder().traceId(TRACE_ID).path("/abc/def2").target("target2").serviceName("service").type(REQUEST).httpMethod("POST").body("key1=value1;key2=value2").build(),
+                InterceptedInteraction.builder().traceId(TRACE_ID).target("exchange").serviceName("service").type(PUBLISH).body("{\"key1\":\"value1\",\"key2\":\"value2\"}").build(),
+                InterceptedInteraction.builder().traceId(TRACE_ID).target("exchange").serviceName("service").type(CONSUME).body("").build(),
+                InterceptedInteraction.builder().traceId(TRACE_ID).target("target").serviceName("service").type(RESPONSE).httpStatus("200").body("someValue").elapsedTime(25L).build(),
+                InterceptedInteraction.builder().traceId(TRACE_ID).target("target").serviceName("service").type(RESPONSE).httpStatus("200").body("someValue").elapsedTime(35L).build()
+        );
+
+        List<Pair<String, String>> result = underTest.generate(interceptedInteractions, Map.of(TRACE_ID, Optional.of("[#grey]")));
+
+        List<String> interactions = result.stream().map(Pair::getLeft).collect(toList());
+        assertThat(interactions, hasSize(6));
+        assertThat(interactions, hasItems(
+                not(containsString("ms)")),
+                not(containsString("ms)")),
+                not(containsString("ms)")),
+                not(containsString("ms)")),
+                containsString("(25 ms)"),
+                containsString("(35 ms)")));
     }
 
     @Test

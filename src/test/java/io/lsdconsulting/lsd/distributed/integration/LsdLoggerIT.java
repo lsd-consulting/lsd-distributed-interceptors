@@ -81,15 +81,16 @@ public class LsdLoggerIT extends IntegrationTestBase {
 
         lsdLogger.captureInteractionsFromDatabase(Map.of(mainTraceId, Optional.of("[#blue]")));
 
-        assertThat(argumentCaptor.getAllValues(), containsInAnyOrder(
-                "GET /api-listener?message=from_test from " + sourceName + " to " + targetName + " [#blue]",
-                "publish event from TestApp to SomethingDoneEvent [#blue]",
-                "200 OK response from " + targetName + " to " + sourceName + " [#blue]",
-                "consume message from SomethingDoneEvent to TestApp [#blue]",
-                "POST /external-api?message=from_feign from TestApp to UNKNOWN_TARGET [#blue]",
-                "200 OK response from UNKNOWN_TARGET to TestApp [#blue]",
-                "POST /external-api?message=from_feign from TestApp to Downstream [#blue]",
-                "200 OK response from Downstream to TestApp [#blue]"));
+        assertThat(argumentCaptor.getAllValues(), hasSize(8));
+        assertThat(argumentCaptor.getAllValues(), hasItems(
+                containsString("GET /api-listener?message=from_test from " + sourceName + " to " + targetName + " [#blue]"),
+                containsString("publish event from TestApp to SomethingDoneEvent [#blue]"),
+                matchesPattern("200 OK \\([0-9]+ ms\\) response from " + targetName + " to " + sourceName + " \\[#blue]"),
+                containsString("consume message from SomethingDoneEvent to TestApp [#blue]"),
+                containsString("POST /external-api?message=from_feign from TestApp to UNKNOWN_TARGET [#blue]"),
+                matchesPattern("200 OK \\([0-9]+ ms\\) response from UNKNOWN_TARGET to TestApp \\[#blue]"),
+                containsString("POST /external-api?message=from_feign from TestApp to Downstream [#blue]"),
+                matchesPattern("200 OK \\([0-9]+ ms\\) response from Downstream to TestApp \\[#blue]")));
     }
 
     @Test
@@ -111,18 +112,19 @@ public class LsdLoggerIT extends IntegrationTestBase {
 
         lsdLogger.captureInteractionsFromDatabase(Map.of(mainTraceId, Optional.of("[#blue]"), setupTraceId, Optional.of("[#green]")));
 
-        assertThat(argumentCaptor.getAllValues(), containsInAnyOrder(
-                "GET /setup1?message=from_test from E2E to Setup1 [#green]",
-                "200 OK response from Setup1 to E2E [#green]",
-                "GET /api-listener?message=from_test from " + sourceName + " to " + targetName + " [#blue]",
-                "publish event from TestApp to SomethingDoneEvent [#blue]",
-                "200 OK response from " + targetName + " to " + sourceName + " [#blue]",
-                "consume message from SomethingDoneEvent to TestApp [#blue]",
-                "POST /external-api?message=from_feign from TestApp to UNKNOWN_TARGET [#blue]",
-                "200 OK response from UNKNOWN_TARGET to TestApp [#blue]",
-                "POST /external-api?message=from_feign from TestApp to Downstream [#blue]",
-                "200 OK response from Downstream to TestApp [#blue]",
-                "GET /setup2?message=from_test from E2E to Setup2 [#green]",
-                "200 OK response from Setup2 to E2E [#green]"));
+        assertThat(argumentCaptor.getAllValues(), hasSize(12));
+        assertThat(argumentCaptor.getAllValues(), hasItems(
+                containsString("GET /setup1?message=from_test from E2E to Setup1 [#green]"),
+                matchesPattern("200 OK \\([0-9]+ ms\\) response from Setup1 to E2E \\[#green]"),
+                containsString("GET /api-listener?message=from_test from " + sourceName + " to " + targetName + " [#blue]"),
+                containsString("publish event from TestApp to SomethingDoneEvent [#blue]"),
+                matchesPattern("200 OK \\([0-9]+ ms\\) response from " + targetName + " to " + sourceName + " \\[#blue]"),
+                containsString("consume message from SomethingDoneEvent to TestApp [#blue]"),
+                containsString("POST /external-api?message=from_feign from TestApp to UNKNOWN_TARGET [#blue]"),
+                matchesPattern("200 OK \\([0-9]+ ms\\) response from UNKNOWN_TARGET to TestApp \\[#blue]"),
+                containsString("POST /external-api?message=from_feign from TestApp to Downstream [#blue]"),
+                matchesPattern("200 OK \\([0-9]+ ms\\) response from Downstream to TestApp \\[#blue]"),
+                containsString("GET /setup2?message=from_test from E2E to Setup2 [#green]"),
+                matchesPattern("200 OK \\([0-9]+ ms\\) response from Setup2 to E2E \\[#green]")));
     }
 }

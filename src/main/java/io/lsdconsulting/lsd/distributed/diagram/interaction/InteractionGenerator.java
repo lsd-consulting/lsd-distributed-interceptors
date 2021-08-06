@@ -28,7 +28,6 @@ public class InteractionGenerator {
 
     public List<Pair<String, String>> generate(final List<InterceptedInteraction> interceptedInteractions, final Map<String, Optional<String>> traceIdToColourMap) {
 
-        int index = 0;
         final List<Pair<String, String>> interactions = new ArrayList<>();
         for (final InterceptedInteraction interceptedInteraction : interceptedInteractions) {
             final String colour = ofNullable(traceIdToColourMap.get(interceptedInteraction.getTraceId())).flatMap(x -> x).orElse("");
@@ -36,13 +35,6 @@ public class InteractionGenerator {
             log.info("Generated an interaction name={}", lsdInteraction);
             final String body = prettyPrintJson(buildInteractionBody(interceptedInteraction));
             interactions.add(Pair.of(lsdInteraction, body));
-
-            if (index > 0) {
-                long interactionTime = interceptedInteractions.get(index).getCreatedAt().toInstant().toEpochMilli()
-                        - interceptedInteractions.get(index - 1).getCreatedAt().toInstant().toEpochMilli();
-                // TODO Pass it onto LsdContext once it knows what to do with it
-            }
-            index ++;
         }
         return interactions;
     }
@@ -81,6 +73,7 @@ public class InteractionGenerator {
                 .path(interceptedInteraction.getPath())
                 .createdAt(objectMapper.writeValueAsString(interceptedInteraction.getCreatedAt()))
                 .colour(colour)
+                .elapsedTime(ofNullable(interceptedInteraction.getElapsedTime()).map(Object::toString).orElse(null))
                 .build();
     }
 
