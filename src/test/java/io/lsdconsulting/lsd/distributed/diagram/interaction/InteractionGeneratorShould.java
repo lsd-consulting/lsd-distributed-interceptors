@@ -38,7 +38,7 @@ class InteractionGeneratorShould {
     private static Stream<Arguments> provideInterceptedInteractions() {
         return Stream.of(
                 of(InterceptedInteraction.builder().traceId(TRACE_ID).path("/abc/def").target("target").serviceName("service").type(REQUEST).httpMethod("POST").body("key1=value1;key2=value2").build(), "POST /abc/def from Service to Target [#grey]", "{\n  \"body\": \"key1=value1;key2=value2\"\n}"),
-                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("target").serviceName("service").type(RESPONSE).httpStatus("200").body("someValue").build(), "200 response from Target to Service [#grey]", "{\n  \"body\": \"someValue\"\n}"),
+                of(InterceptedInteraction.builder().traceId(TRACE_ID).target("target").serviceName("service").type(RESPONSE).httpStatus("200").body("someValue").build(), "sync 200 response from Target to Service [#grey]", "{\n  \"body\": \"someValue\"\n}"),
                 of(InterceptedInteraction.builder().traceId(TRACE_ID).target("exchange").serviceName("service").type(PUBLISH).body("{\"key1\":\"value1\",\"key2\":\"value2\"}").build(), "publish event from Service to Exchange [#grey]", "{\n  \"body\": \"{\\\"key1\\\":\\\"value1\\\",\\\"key2\\\":\\\"value2\\\"}\"\n}"),
                 of(InterceptedInteraction.builder().traceId(TRACE_ID).target("exchange").serviceName("service").type(CONSUME).body("").build(), "consume message from Exchange to Service [#grey]", "{\n  \"body\": \"\"\n}")
         );

@@ -84,12 +84,12 @@ public class LsdLoggerIT extends IntegrationTestBase {
         assertThat(argumentCaptor.getAllValues(), containsInAnyOrder(
                 "GET /api-listener?message=from_test from " + sourceName + " to " + targetName + " [#blue]",
                 "publish event from TestApp to SomethingDoneEvent [#blue]",
-                "200 OK response from " + targetName + " to " + sourceName + " [#blue]",
+                "sync 200 OK response from " + targetName + " to " + sourceName + " [#blue]",
                 "consume message from SomethingDoneEvent to TestApp [#blue]",
                 "POST /external-api?message=from_feign from TestApp to UNKNOWN_TARGET [#blue]",
-                "200 OK response from UNKNOWN_TARGET to TestApp [#blue]",
+                "sync 200 OK response from UNKNOWN_TARGET to TestApp [#blue]",
                 "POST /external-api?message=from_feign from TestApp to Downstream [#blue]",
-                "200 OK response from Downstream to TestApp [#blue]"));
+                "sync 200 OK response from Downstream to TestApp [#blue]"));
     }
 
     @Test
@@ -113,16 +113,16 @@ public class LsdLoggerIT extends IntegrationTestBase {
 
         assertThat(argumentCaptor.getAllValues(), containsInAnyOrder(
                 "GET /setup1?message=from_test from E2E to Setup1 [#green]",
-                "200 OK response from Setup1 to E2E [#green]",
+                "sync 200 OK response from Setup1 to E2E [#green]",
                 "GET /api-listener?message=from_test from " + sourceName + " to " + targetName + " [#blue]",
                 "publish event from TestApp to SomethingDoneEvent [#blue]",
-                "200 OK response from " + targetName + " to " + sourceName + " [#blue]",
+                "sync 200 OK response from " + targetName + " to " + sourceName + " [#blue]",
                 "consume message from SomethingDoneEvent to TestApp [#blue]",
                 "POST /external-api?message=from_feign from TestApp to UNKNOWN_TARGET [#blue]",
-                "200 OK response from UNKNOWN_TARGET to TestApp [#blue]",
+                "sync 200 OK response from UNKNOWN_TARGET to TestApp [#blue]",
                 "POST /external-api?message=from_feign from TestApp to Downstream [#blue]",
-                "200 OK response from Downstream to TestApp [#blue]",
+                "sync 200 OK response from Downstream to TestApp [#blue]",
                 "GET /setup2?message=from_test from E2E to Setup2 [#green]",
-                "200 OK response from Setup2 to E2E [#green]"));
+                "sync 200 OK response from Setup2 to E2E [#green]"));
     }
 }
