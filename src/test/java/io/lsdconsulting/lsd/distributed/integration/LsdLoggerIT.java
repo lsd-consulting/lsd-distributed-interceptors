@@ -85,12 +85,12 @@ public class LsdLoggerIT extends IntegrationTestBase {
         assertThat(argumentCaptor.getAllValues(), hasItems(
                 containsString("GET /api-listener?message=from_test from " + sourceName + " to " + targetName + " [#blue]"),
                 containsString("publish event from TestApp to SomethingDoneEvent [#blue]"),
-                matchesPattern("sync 200 OK \\([0-9]+ ms\\) response from " + targetName + " to " + sourceName + " \\[#blue]"),
+                matchesPattern("sync 200 OK response \\([0-9]+ ms\\) from " + targetName + " to " + sourceName + " \\[#blue]"),
                 containsString("consume message from SomethingDoneEvent to TestApp [#blue]"),
                 containsString("POST /external-api?message=from_feign from TestApp to UNKNOWN_TARGET [#blue]"),
-                matchesPattern("sync 200 OK \\([0-9]+ ms\\) response from UNKNOWN_TARGET to TestApp \\[#blue]"),
+                matchesPattern("sync 200 OK response \\([0-9]+ ms\\) from UNKNOWN_TARGET to TestApp \\[#blue]"),
                 containsString("POST /external-api?message=from_feign from TestApp to Downstream [#blue]"),
-                matchesPattern("sync 200 OK \\([0-9]+ ms\\) response from Downstream to TestApp \\[#blue]")));
+                matchesPattern("sync 200 OK response \\([0-9]+ ms\\) from Downstream to TestApp \\[#blue]")));
     }
 
     @Test
@@ -115,16 +115,16 @@ public class LsdLoggerIT extends IntegrationTestBase {
         assertThat(argumentCaptor.getAllValues(), hasSize(12));
         assertThat(argumentCaptor.getAllValues(), hasItems(
                 containsString("GET /setup1?message=from_test from E2E to Setup1 [#green]"),
-                matchesPattern("sync 200 OK \\([0-9]+ ms\\) response from Setup1 to E2E \\[#green]"),
+                matchesPattern("sync 200 OK response \\([0-9]+ ms\\) from Setup1 to E2E \\[#green]"),
                 containsString("GET /api-listener?message=from_test from " + sourceName + " to " + targetName + " [#blue]"),
                 containsString("publish event from TestApp to SomethingDoneEvent [#blue]"),
-                matchesPattern("sync 200 OK \\([0-9]+ ms\\) response from " + targetName + " to " + sourceName + " \\[#blue]"),
+                matchesPattern("sync 200 OK response \\([0-9]+ ms\\) from " + targetName + " to " + sourceName + " \\[#blue]"),
                 containsString("consume message from SomethingDoneEvent to TestApp [#blue]"),
                 containsString("POST /external-api?message=from_feign from TestApp to UNKNOWN_TARGET [#blue]"),
-                matchesPattern("sync 200 OK \\([0-9]+ ms\\) response from UNKNOWN_TARGET to TestApp \\[#blue]"),
+                matchesPattern("sync 200 OK response \\([0-9]+ ms\\) from UNKNOWN_TARGET to TestApp \\[#blue]"),
                 containsString("POST /external-api?message=from_feign from TestApp to Downstream [#blue]"),
-                matchesPattern("sync 200 OK \\([0-9]+ ms\\) response from Downstream to TestApp \\[#blue]"),
+                matchesPattern("sync 200 OK response \\([0-9]+ ms\\) from Downstream to TestApp \\[#blue]"),
                 containsString("GET /setup2?message=from_test from E2E to Setup2 [#green]"),
-                matchesPattern("sync 200 OK \\([0-9]+ ms\\) response from Setup2 to E2E \\[#green]")));
+                matchesPattern("sync 200 OK response \\([0-9]+ ms\\) from Setup2 to E2E \\[#green]")));
     }
 }
