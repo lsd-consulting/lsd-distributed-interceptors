@@ -25,5 +25,6 @@ public class InterceptedInteraction {
     private String httpMethod;
     private Type type;
     private String profile;
+    private Long elapsedTime;
     private ZonedDateTime createdAt;
 }

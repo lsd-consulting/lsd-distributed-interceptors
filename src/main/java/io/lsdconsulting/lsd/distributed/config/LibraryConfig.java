@@ -5,6 +5,7 @@ import io.lsdconsulting.lsd.distributed.captor.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.captor.header.Obfuscator;
 import io.lsdconsulting.lsd.distributed.captor.http.RequestCaptor;
 import io.lsdconsulting.lsd.distributed.captor.http.ResponseCaptor;
+import io.lsdconsulting.lsd.distributed.captor.http.derive.HttpStatusDeriver;
 import io.lsdconsulting.lsd.distributed.captor.http.derive.PathDeriver;
 import io.lsdconsulting.lsd.distributed.captor.http.derive.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.captor.http.derive.SourceTargetDeriver;
@@ -58,6 +59,12 @@ public class LibraryConfig {
     }
 
     @Bean
+    public HttpStatusDeriver httpStatusDeriver() {
+        return new HttpStatusDeriver();
+    }
+
+
+    @Bean
     public SourceTargetDeriver sourceTargetDeriver(final PropertyServiceNameDeriver propertyServiceNameDeriver) {
         return new SourceTargetDeriver(propertyServiceNameDeriver);
     }
@@ -71,7 +78,8 @@ public class LibraryConfig {
                                        final HeaderRetriever headerRetriever) {
 
 
-        return new RequestCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver, pathDeriver, traceIdRetriever, headerRetriever);
+        return new RequestCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver,
+                pathDeriver, traceIdRetriever, headerRetriever);
     }
 
     @Bean
@@ -80,9 +88,11 @@ public class LibraryConfig {
                                          final SourceTargetDeriver sourceTargetDeriver,
                                          final PathDeriver pathDeriver,
                                          final TraceIdRetriever traceIdRetriever,
-                                         final HeaderRetriever headerRetriever) {
+                                         final HeaderRetriever headerRetriever,
+                                         final HttpStatusDeriver httpStatusDeriver) {
 
-        return new ResponseCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver, pathDeriver, traceIdRetriever, headerRetriever);
+        return new ResponseCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver,
+                pathDeriver, traceIdRetriever, headerRetriever, httpStatusDeriver);
     }
 
     @Bean

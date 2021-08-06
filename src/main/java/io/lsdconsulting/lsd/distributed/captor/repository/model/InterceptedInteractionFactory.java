@@ -25,11 +25,11 @@ public class InterceptedInteractionFactory {
                                             final String serviceName, final String target, final String path, final String httpStatus,
                                             final String httpMethod, final Type type) {
 
-        return buildFrom(body, requestHeaders, emptyMap(), traceId, serviceName, target, path, httpStatus, httpMethod, type);
+        return buildFrom(body, requestHeaders, emptyMap(), traceId, serviceName, target, path, httpStatus, null, httpMethod, type);
     }
 
     public InterceptedInteraction buildFrom(final String body, final Map<String, Collection<String>> requestHeaders, final Map<String, Collection<String>> responseHeaders, final String traceId,
-                                            final String serviceName, final String target, final String path, final String httpStatus,
+                                            final String serviceName, final String target, final String path, final String httpStatus, final Long elapsedTime,
                                             final String httpMethod, final Type type) {
 
         return InterceptedInteraction.builder()
@@ -44,6 +44,7 @@ public class InterceptedInteractionFactory {
                 .httpMethod(httpMethod)
                 .type(type)
                 .profile(profile)
+                .elapsedTime(elapsedTime)
                 .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
                 .build();
     }

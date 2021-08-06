@@ -70,7 +70,7 @@ class LsdRestTemplateInterceptorShould {
     void logResponseInteraction() throws IOException {
         underTest.intercept(httpRequest, body.getBytes(), execution);
 
-        verify(responseCaptor).captureResponseInteraction(eq(httpRequest), eq(httpResponse), eq(target), eq(path), eq(traceId));
+        verify(responseCaptor).captureResponseInteraction(eq(httpRequest), eq(httpResponse), eq(target), eq(path), eq(traceId), any());
     }
 
     @Test

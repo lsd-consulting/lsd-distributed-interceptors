@@ -13,4 +13,5 @@ public class Interaction {
     String httpMethod;
     String createdAt;
     String colour;
+    String elapsedTime;
 }

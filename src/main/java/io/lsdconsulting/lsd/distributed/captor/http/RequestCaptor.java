@@ -40,9 +40,9 @@ public class RequestCaptor {
     public InterceptedInteraction captureRequestInteraction(final HttpRequest request, final String body) {
         final var headers = headerRetriever.retrieve(request);
         final String path = pathDeriver.derivePathFrom(request);
-        final String serviceName = sourceTargetDeriver.deriveServiceName(headers);
-        final String target = sourceTargetDeriver.deriveTarget(headers, path);
         final String traceId = traceIdRetriever.getTraceId(headers);
+        final String target = sourceTargetDeriver.deriveTarget(headers, path);
+        final String serviceName = sourceTargetDeriver.deriveServiceName(headers);
         final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(body, headers, traceId, serviceName, target, path, null, request.getMethodValue(), Type.REQUEST);
         interceptedDocumentRepository.save(interceptedInteraction);
         return interceptedInteraction;

@@ -31,10 +31,10 @@ public class InteractionGenerator {
         final List<Pair<String, String>> interactions = new ArrayList<>();
         for (final InterceptedInteraction interceptedInteraction : interceptedInteractions) {
             final String colour = ofNullable(traceIdToColourMap.get(interceptedInteraction.getTraceId())).flatMap(x -> x).orElse("");
-            final String interactionName = interceptedInteraction.getType().getInteractionName().apply(buildInteraction(interceptedInteraction, colour));
-            log.info("Generated an interaction name={}", interactionName);
+            final String lsdInteraction = interceptedInteraction.getType().getInteractionName().apply(buildInteraction(interceptedInteraction, colour));
+            log.info("Generated an interaction name={}", lsdInteraction);
             final String body = prettyPrintJson(buildInteractionBody(interceptedInteraction));
-            interactions.add(Pair.of(interactionName, body));
+            interactions.add(Pair.of(lsdInteraction, body));
         }
         return interactions;
     }
@@ -73,6 +73,7 @@ public class InteractionGenerator {
                 .path(interceptedInteraction.getPath())
                 .createdAt(objectMapper.writeValueAsString(interceptedInteraction.getCreatedAt()))
                 .colour(colour)
+                .elapsedTime(ofNullable(interceptedInteraction.getElapsedTime()).map(Object::toString).orElse(null))
                 .build();
     }
 
