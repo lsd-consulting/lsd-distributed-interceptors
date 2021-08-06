@@ -11,7 +11,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class InteractionMessageTemplates {
 
     public static final String REQUEST_TEMPLATE = "%s %s from %s to %s %s";
-    public static final String RESPONSE_TEMPLATE = "%s (%s ms) response from %s to %s %s";
+    public static final String RESPONSE_TEMPLATE = "sync %s (%s ms) response from %s to %s %s";
     public static final String PUBLISH_TEMPLATE = "publish event from %s to %s %s";
     public static final String CONSUME_TEMPLATE = "consume message from %s to %s %s";
 
