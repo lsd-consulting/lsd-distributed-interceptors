@@ -1,0 +1,24 @@
+dependencies {
+
+    // Spring
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+
+    // LSD
+    api 'io.github.lsd-consulting:lsd-core:0.1.32'
+    implementation 'io.github.lsd-consulting:lsd-formatting-library:1.0.0'
+    implementation 'io.github.lsd-consulting:lsd-distributed-mongodb-access:0.1.3'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    // JSON & XML pretty formatting
+    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'org.dom4j:dom4j:2.1.3'
+
+    // Other
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+}

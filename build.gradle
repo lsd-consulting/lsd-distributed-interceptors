@@ -1,7 +1,7 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-    id 'org.springframework.boot' version '2.4.2'
+    id 'org.springframework.boot' version '2.5.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java-library'
     id 'maven-publish'
@@ -9,7 +9,7 @@ plugins {
     id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
     id 'pl.allegro.tech.build.axion-release' version '1.13.2'
     id 'jacoco'
-    id 'info.solidsoft.pitest' version '1.5.2'
+    id 'info.solidsoft.pitest' version '1.7.0'
 }
 
 group = 'io.github.lsd-consulting'
@@ -19,178 +19,29 @@ println "Build Version = ${project.version}"
 sourceCompatibility = '11'
 targetCompatibility = '11'
 
-bootJar {
-    enabled = false
-}
-
-jar {
-    enabled = true
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier.set('sources')
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-artifacts {
-    archives jar
-    archives sourcesJar
-    archives javadocJar
-}
-
 repositories {
     mavenLocal()
     mavenCentral()
 }
 
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "skipped", "failed"
-    }
-    systemProperty("lsd.core.report.outputDir", "$buildDir/reports/lsd")
-    finalizedBy jacocoTestReport
-    afterSuite { desc, result ->
-        if (!desc.parent) {
-            println "Unit test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-            boolean skipTests = Boolean.parseBoolean(project.findProperty('SKIP_TESTS') ?: "false" as String)
-            if (result.testCount == 0 && !skipTests) {
-                throw new IllegalStateException("No tests were found. Failing the build")
-            }
-        }
-    }
-}
-
 jacocoTestReport {
     reports {
-        xml.enabled = true
-        html.enabled = true
-        html.setDestination( new File("${project.buildDir}/reports/coverage"))
+        xml.enabled(true)
+        html.enabled(true)
+        html.setDestination(project.provider(() -> new File("${project.buildDir}/reports/coverage")))
     }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = "$group"
-            artifactId = 'lsd-distributed-interceptor-library'
-            version = scmVersion.version
-
-            from components.java
-            artifact sourcesJar
-            artifact javadocJar
-            pom {
-                name = 'lsd-distributed-interceptor-library'
-                description = 'A set of interceptors gathering information from distributed sources for the LSD library.'
-                url = 'https://github.com/lsd-consulting/lsd-distributed-interceptors'
-                licenses {
-                    license {
-                        name = "The Apache Software License, Version 2.0"
-                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                        distribution = "repo"
-                    }
-                }
-                developers {
-                    developer {
-                        name = "Lukasz"
-                        email = "lukasz.gryzbon@gmail.com"
-                        organization = 'Integreety Ltd.'
-                        organizationUrl = 'https://www.integreety.co.uk'
-                    }
-                    developer {
-                        name = "Nick"
-                        email = "nicholas.mcdowall@gmail.com"
-                        organization = 'NKM IT Solutions'
-                        organizationUrl = 'https://github.com/nickmcdowall'
-                    }
-                }
-                scm {
-                    url = "https://github.com/lsd-consulting/lsd-distributed-interceptors.git"
-                }
-            }
-            repositories {
-                maven {
-                    name = 'sonatype'
-                    url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-                    credentials(PasswordCredentials)
-                }
-            }
-        }
-    }
-}
-
-nexusPublishing {
-    repositories {
-        sonatype {  //only for users registered in Sonatype after 24 Feb 2021
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-        }
-    }
-}
-
-signing {
-    sign publishing.publications.mavenJava
 }
 
 apply plugin: 'io.spring.dependency-management'
 dependencyManagement {
     imports {
-        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2020.0.1'
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2020.0.3'
         mavenBom 'io.pivotal.spring.cloud:spring-cloud-services-dependencies:3.2.0.RELEASE'
         mavenBom SpringBootPlugin.BOM_COORDINATES
     }
 }
 
-dependencies {
-
-    // Spring
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-amqp'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-
-    // Database driver for storing interactions
-    implementation 'org.mongodb:mongo-java-driver:3.12.6'
-
-    // LSD
-    implementation 'io.github.lsd-consulting:lsd-core:0.1.30'
-    implementation 'io.github.lsd-consulting:lsd-formatting-library:0.1.5'
-
-    // Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
-
-    // JSON & XML pretty formatting
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'org.dom4j:dom4j:2.1.3'
-
-    // Other
-    implementation 'org.apache.httpcomponents:httpcore:4.4.13' // Needed for DB connection security
-    implementation 'org.apache.commons:commons-lang3:3.11'
-
-    // Tests
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
-    testImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock'
-
-    testCompileOnly 'org.projectlombok:lombok:1.18.10'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.10'
-    testImplementation 'org.junit.platform:junit-platform-commons:1.7.1'
-    testImplementation 'org.mockito:mockito-core:3.6.28'
-    testImplementation 'org.mockito:mockito-junit-jupiter:3.6.28'
-    testImplementation 'org.pitest:pitest-junit5-plugin:0.14'
-    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
-    testImplementation 'com.github.fridujo:rabbitmq-mock:1.0.14'
-    testImplementation 'org.awaitility:awaitility:4.0.3'
-
-    testImplementation 'com.github.tomakehurst:wiremock:2.26.3'
-    testImplementation 'io.github.lsd-consulting:lsd-junit5:0.1.3'
-}
-
+apply from: 'dependencies.gradle'
+apply from: 'publishing.gradle'
+apply from: 'test.gradle'
 apply from: 'pitest.gradle'

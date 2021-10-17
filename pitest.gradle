@@ -4,20 +4,19 @@ build.dependsOn "pitest"
 
 // perform mutation test and enforce coverage
 pitest {
-    pitestVersion = "1.5.2"
+    pitestVersion = "1.7.0"
     testPlugin = "junit5"
     useClasspathFile = true
     timeoutConstInMillis = 20000
-    targetClasses = ['io.lsdconsulting.lsd.distributed.*']
+    targetClasses = ['io.lsdconsulting.lsd.distributed.interceptor.*']
     excludedTestClasses = [
-            'io.lsdconsulting.lsd.distributed.integration.EndToEndIT',
-            'io.lsdconsulting.lsd.distributed.integration.InteractionDbRecordingIT',
-            'io.lsdconsulting.lsd.distributed.integration.InterceptedDocumentMongoRepositoryIT',
-            'io.lsdconsulting.lsd.distributed.integration.LsdLoggerIT'
+            'io.lsdconsulting.lsd.distributed.interceptor.integration.EndToEndIT',
+            'io.lsdconsulting.lsd.distributed.interceptor.integration.InteractionDbRecordingIT'
     ]
-    excludedClasses = [ 'io.lsdconsulting.lsd.distributed.config.*']
+    excludedClasses = [ 'io.lsdconsulting.lsd.distributed.interceptor.config.*']
     threads = 4
     outputFormats = ['HTML']
-    coverageThreshold = 71
-    mutationThreshold = 65
+    coverageThreshold = 77
+    mutationThreshold = 77
+    testStrengthThreshold = 88
 }
