@@ -5,25 +5,12 @@ import com.lsd.OutcomeStatus;
 import io.lsdconsulting.lsd.distributed.generator.diagram.InteractionGenerator;
 import io.lsdconsulting.lsd.distributed.generator.diagram.LsdLogger;
 import io.lsdconsulting.lsd.distributed.interceptor.integration.data.TraceIdGenerator;
-import io.lsdconsulting.lsd.distributed.interceptor.integration.extension.MongodbExtension;
-import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.TestApplication;
-import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RabbitConfig;
-import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RabbitTemplateConfig;
-import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RepositoryConfig;
-import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RestConfig;
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.repository.TestRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -34,15 +21,7 @@ import static com.lsd.ParticipantType.*;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-@Slf4j
-@DirtiesContext
-@ExtendWith(MongodbExtension.class)
-@SpringJUnitConfig(classes = {RepositoryConfig.class, RestConfig.class, RabbitConfig.class, RabbitTemplateConfig.class})
-@SpringBootTest(webEnvironment = RANDOM_PORT, classes = {TestApplication.class})
-@TestPropertySource("classpath:application-test.properties")
-@AutoConfigureWireMock(port = 0)
 public class EndToEndIT extends IntegrationTestBase {
 
     @Autowired
