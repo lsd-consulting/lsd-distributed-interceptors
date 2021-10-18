@@ -4,10 +4,10 @@ import feign.Response;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import wiremock.org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.IOException;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -17,7 +17,7 @@ class TypeConverterShould {
 
     @Test
     public void convertByteArrayToString() {
-        final String body = RandomStringUtils.randomAlphanumeric(20);
+        final String body = randomAlphanumeric(20);
         assertThat(TypeConverter.convert(body.getBytes()), is(body));
     }
 
@@ -28,7 +28,7 @@ class TypeConverterShould {
 
     @Test
     public void convertResponseBodyToString() throws IOException {
-        final String body = RandomStringUtils.randomAlphanumeric(20);
+        final String body = randomAlphanumeric(20);
         final Response.Body responseBody = Mockito.mock(Response.Body.class);
         given(responseBody.asInputStream()).willReturn(IOUtils.toInputStream(body));
 

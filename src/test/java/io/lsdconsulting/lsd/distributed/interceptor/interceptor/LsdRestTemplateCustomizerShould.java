@@ -9,7 +9,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -29,7 +31,7 @@ class LsdRestTemplateCustomizerShould {
     void addsLsdInterceptor() {
         underTest.customize(restTemplate);
 
-        assertThat(restTemplate.getInterceptors()).containsExactly(lsdRestTemplateInterceptor);
+        assertThat(restTemplate.getInterceptors(), contains(lsdRestTemplateInterceptor));
     }
 
     @Test
@@ -38,7 +40,7 @@ class LsdRestTemplateCustomizerShould {
 
         underTest.customize(restTemplate);
 
-        assertThat(restTemplate.getInterceptors()).hasSize(2);
+        assertThat(restTemplate.getInterceptors(), hasSize(2));
     }
 
     @Test
@@ -47,7 +49,7 @@ class LsdRestTemplateCustomizerShould {
 
         underTest.customize(restTemplate);
 
-        assertThat(restTemplate.getInterceptors()).hasSize(1);
+        assertThat(restTemplate.getInterceptors(), hasSize(1));
     }
 
     @Test
@@ -58,6 +60,6 @@ class LsdRestTemplateCustomizerShould {
 
         final String forObject = restTemplate.getForObject("https://httpbin.org/get", String.class);
 
-        assertThat(forObject).isNotEmpty();
+        assertThat(forObject, not(nullValue()));
     }
 }

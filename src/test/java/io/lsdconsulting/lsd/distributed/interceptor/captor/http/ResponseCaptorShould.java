@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static feign.Request.HttpMethod.GET;
 import static java.nio.charset.Charset.defaultCharset;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.is;
@@ -31,7 +32,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static wiremock.org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 
 class ResponseCaptorShould {
 

@@ -10,6 +10,7 @@ public class MongoDbTestListener implements TestExecutionListener {
 
     public void testPlanExecutionStarted(TestPlan testPlan) {
         log.info("MongoDbTestListener.testPlanExecutionStarted");
+        TestRepository.setupDatabase();
     }
 
     public void testPlanExecutionFinished(TestPlan testPlan) {

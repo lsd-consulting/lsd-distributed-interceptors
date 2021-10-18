@@ -11,13 +11,13 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.IOException;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
-import static wiremock.org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
 class LsdRestTemplateInterceptorShould {
 

@@ -1,0 +1,59 @@
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integrationTest/java')
+        }
+    }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+}
+
+dependencies {
+
+    // Spring
+    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-test'
+    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    integrationTestImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock'
+
+    // Lombok
+    integrationTestCompileOnly 'org.projectlombok:lombok:1.18.22'
+    integrationTestAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    // Other
+    integrationTestImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.0.0'
+    integrationTestImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'
+    integrationTestImplementation 'org.awaitility:awaitility:4.1.0'
+    integrationTestImplementation 'com.github.tomakehurst:wiremock:2.27.2'
+
+    // LSD
+    integrationTestImplementation 'io.github.lsd-consulting:lsd-junit5:1.0.0'
+    integrationTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:0.1.3'
+}
+
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+    dependsOn assemble
+
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+    testLogging.showStandardStreams = false
+    mustRunAfter(test)
+}
+
+check.dependsOn(integrationTest)
+
+integrationTest {
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            println "Integration test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+            if (result.testCount == 0) {
+                throw new IllegalStateException("No tests were found. Failing the build")
+            }
+        }
+    }
+}

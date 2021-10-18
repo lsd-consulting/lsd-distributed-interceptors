@@ -44,4 +44,5 @@ dependencyManagement {
 apply from: 'dependencies.gradle'
 apply from: 'publishing.gradle'
 apply from: 'test.gradle'
+apply from: 'integrationTest.gradle'
 apply from: 'pitest.gradle'

@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static wiremock.org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
 class SourceTargetDeriverShould {
 
