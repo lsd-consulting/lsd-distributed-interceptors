@@ -4,6 +4,7 @@ bootJar {
 
 jar {
     enabled = true
+    classifier = ""
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
