@@ -8,14 +8,12 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    testLogging {
-        events "skipped", "failed"
-    }
+    testLogging.events("skipped", "failed")
     systemProperty("lsd.core.report.outputDir", "$buildDir/reports/lsd")
     finalizedBy jacocoTestReport
     afterSuite { desc, result ->
         if (!desc.parent) {
-            println "Unit test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+            logger.lifecycle("Unit test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)")
             if (result.testCount == 0) {
                 throw new IllegalStateException("No tests were found. Failing the build")
             }
