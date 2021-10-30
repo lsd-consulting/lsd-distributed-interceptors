@@ -4,7 +4,6 @@ import feign.Request;
 import feign.RequestTemplate;
 import feign.Response;
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
-import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteractionFactory;
 import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.HttpStatusDeriver;
@@ -44,10 +43,9 @@ class ResponseCaptorShould {
     private final HttpStatusDeriver httpStatusDeriver = mock(HttpStatusDeriver.class);
 
     private final PathDeriver pathDeriver = new PathDeriver();
-    private final InterceptedInteractionFactory interceptedInteractionFactory = new InterceptedInteractionFactory("profile");
 
-    private final ResponseCaptor underTest = new ResponseCaptor(interceptedDocumentRepository, interceptedInteractionFactory,
-            sourceTargetDeriver, pathDeriver, traceIdRetriever, headerRetriever, httpStatusDeriver);
+    private final ResponseCaptor underTest = new ResponseCaptor(interceptedDocumentRepository,
+            sourceTargetDeriver, pathDeriver, traceIdRetriever, headerRetriever, httpStatusDeriver, "profile");
 
     private final String url = randomAlphanumeric(20);
     private final String body = randomAlphanumeric(20);

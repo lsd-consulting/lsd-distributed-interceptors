@@ -1,7 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.config;
 
 import brave.Tracer;
-import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteractionFactory;
 import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator;
@@ -70,37 +69,37 @@ public class LibraryConfig {
 
     @Bean
     public RequestCaptor requestCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                       final InterceptedInteractionFactory interceptedInteractionFactory,
                                        final SourceTargetDeriver sourceTargetDeriver,
                                        final PathDeriver pathDeriver,
                                        final TraceIdRetriever traceIdRetriever,
-                                       final HeaderRetriever headerRetriever) {
+                                       final HeaderRetriever headerRetriever,
+                                       @Value("${spring.profiles.active:#{''}}") final String profile) {
 
 
-        return new RequestCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver,
-                pathDeriver, traceIdRetriever, headerRetriever);
+        return new RequestCaptor(interceptedDocumentRepository, sourceTargetDeriver,
+                pathDeriver, traceIdRetriever, headerRetriever, profile);
     }
 
     @Bean
     public ResponseCaptor responseCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                         final InterceptedInteractionFactory interceptedInteractionFactory,
                                          final SourceTargetDeriver sourceTargetDeriver,
                                          final PathDeriver pathDeriver,
                                          final TraceIdRetriever traceIdRetriever,
                                          final HeaderRetriever headerRetriever,
-                                         final HttpStatusDeriver httpStatusDeriver) {
+                                         final HttpStatusDeriver httpStatusDeriver,
+                                         @Value("${spring.profiles.active:#{''}}") final String profile) {
 
-        return new ResponseCaptor(interceptedDocumentRepository, interceptedInteractionFactory, sourceTargetDeriver,
-                pathDeriver, traceIdRetriever, headerRetriever, httpStatusDeriver);
+        return new ResponseCaptor(interceptedDocumentRepository, sourceTargetDeriver,
+                pathDeriver, traceIdRetriever, headerRetriever, httpStatusDeriver, profile);
     }
 
     @Bean
     public RabbitCaptor publishCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
-                                      final InterceptedInteractionFactory interceptedInteractionFactory,
                                       final PropertyServiceNameDeriver propertyServiceNameDeriver,
                                       final TraceIdRetriever traceIdRetriever,
-                                      final HeaderRetriever headerRetriever) {
+                                      final HeaderRetriever headerRetriever,
+                                      @Value("${spring.profiles.active:#{''}}") final String profile) {
 
-        return new RabbitCaptor(interceptedDocumentRepository, interceptedInteractionFactory, propertyServiceNameDeriver, traceIdRetriever, headerRetriever);
+        return new RabbitCaptor(interceptedDocumentRepository, propertyServiceNameDeriver, traceIdRetriever, headerRetriever, profile);
     }
 }

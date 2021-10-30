@@ -1,7 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit;
 
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
-import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteractionFactory;
 import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PropertyServiceNameDeriver;
@@ -30,9 +29,7 @@ class RabbitCaptorShould {
     private final TraceIdRetriever traceIdRetriever = mock(TraceIdRetriever.class);
     private final HeaderRetriever headerRetriever = mock(HeaderRetriever.class);
 
-    private final InterceptedInteractionFactory interceptedInteractionFactory = new InterceptedInteractionFactory("profile");
-
-    private final RabbitCaptor underTest = new RabbitCaptor(interceptedDocumentRepository, interceptedInteractionFactory, propertyServiceNameDeriver, traceIdRetriever, headerRetriever);
+    private final RabbitCaptor underTest = new RabbitCaptor(interceptedDocumentRepository, propertyServiceNameDeriver, traceIdRetriever, headerRetriever, "profile");
 
     private final String exchange = randomAlphabetic(20);
     private final String serviceName = randomAlphabetic(20);

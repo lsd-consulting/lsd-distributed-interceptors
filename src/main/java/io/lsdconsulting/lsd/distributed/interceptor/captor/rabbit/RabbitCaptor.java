@@ -1,7 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit;
 
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
-import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteractionFactory;
 import io.lsdconsulting.lsd.distributed.access.model.Type;
 import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.TypeConverter;
@@ -11,24 +10,35 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetrieve
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Message;
 
-import java.util.Collection;
-import java.util.Map;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
+import static java.util.Collections.emptyMap;
 
 @RequiredArgsConstructor
 public class RabbitCaptor {
 
     private final InterceptedDocumentRepository interceptedDocumentRepository;
-    private final InterceptedInteractionFactory interceptedInteractionFactory;
     private final PropertyServiceNameDeriver propertyServiceNameDeriver;
     private final TraceIdRetriever traceIdRetriever;
     private final HeaderRetriever headerRetriever;
+    private final String profile;
 
     public InterceptedInteraction captureInteraction(final String exchange, final Message message, final Type type) {
-        final Map<String, Collection<String>> headers = headerRetriever.retrieve(message);
-        final String traceId = traceIdRetriever.getTraceId(headers);
-        final String service = propertyServiceNameDeriver.getServiceName();
-        final String body = TypeConverter.convert(message.getBody());
-        final InterceptedInteraction interceptedInteraction = interceptedInteractionFactory.buildFrom(body, traceId, headers, service, exchange, exchange, type);
+
+        final InterceptedInteraction interceptedInteraction = InterceptedInteraction.builder()
+                .traceId(traceIdRetriever.getTraceId(headerRetriever.retrieve(message)))
+                .body(TypeConverter.convert(message.getBody()))
+                .requestHeaders(headerRetriever.retrieve(message))
+                .responseHeaders(emptyMap())
+                .serviceName(propertyServiceNameDeriver.getServiceName())
+                .target(exchange)
+                .path(exchange)
+                .type(type)
+                .profile(profile)
+                .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
+                .build();
+
         interceptedDocumentRepository.save(interceptedInteraction);
         return interceptedInteraction;
     }
