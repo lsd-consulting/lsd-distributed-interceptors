@@ -31,7 +31,7 @@ dependencies {
 
     // LSD
     integrationTestImplementation 'io.github.lsd-consulting:lsd-junit5:1.0.0'
-    integrationTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:0.1.3'
+    integrationTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:1.0.0'
 }
 
 task integrationTest(type: Test) {
