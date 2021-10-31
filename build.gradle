@@ -30,6 +30,10 @@ jacocoTestReport {
         html.enabled(true)
         html.setDestination(project.provider(() -> new File("${project.buildDir}/reports/coverage")))
     }
+    executionData(
+            file("${project.buildDir}/jacoco/test.exec"),
+            file("${project.buildDir}/jacoco/integrationTest.exec")
+    )
 }
 
 apply plugin: 'io.spring.dependency-management'
