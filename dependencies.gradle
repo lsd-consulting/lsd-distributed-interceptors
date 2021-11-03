@@ -7,7 +7,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
 
     // LSD
-    api 'io.github.lsd-consulting:lsd-core:0.1.32'
+    api 'io.github.lsd-consulting:lsd-core:0.1.33'
     implementation 'io.github.lsd-consulting:lsd-formatting-library:1.0.1'
     implementation 'io.github.lsd-consulting:lsd-distributed-mongodb-access:1.0.0'
 
