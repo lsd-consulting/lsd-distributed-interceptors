@@ -26,7 +26,7 @@ It also generates a component diagram:
 To use the `lsd-distributed-interceptors` library just add it to the production dependencies:
 
 ```groovy
-implementation "io.github.lsd-consulting:lsd-distributed-interceptor:1.0.0"
+implementation "io.github.lsd-consulting:lsd-distributed-interceptor:<version>"
 ```
 
 and configure through app properties:
