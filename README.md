@@ -1,8 +1,11 @@
 # lsd-distributed-interceptor
 ![GitHub](https://img.shields.io/github/license/lsd-consulting/lsd-distributed-interceptors)
-[![Build](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/macos-build.yml/badge.svg)](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/macos-build.yml)
-![Maven Central](https://img.shields.io/maven-central/v/io.github.lsd-consulting/lsd-distributed-interceptor)
+[![CI](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/ci.yml/badge.svg)](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/ci.yml)
 ![Codecov](https://img.shields.io/codecov/c/github/lsd-consulting/lsd-distributed-interceptors)
+[![Publish](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/publish.yml/badge.svg)](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/publish.yml)
+[![Nightly Build](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/nightly.yml/badge.svg)](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/nightly.yml)
+[![GitHub release](https://img.shields.io/github/release/lsd-consulting/lsd-distributed-interceptors)](https://github.com/lsd-consulting/lsd-distributed-interceptors/releases)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.lsd-consulting/lsd-distributed-interceptor)
 
 A set of interceptors gathering information from distributed sources for the LSD library.
 
