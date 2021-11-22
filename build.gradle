@@ -7,14 +7,14 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
-    id 'pl.allegro.tech.build.axion-release' version '1.13.2'
+    id 'com.palantir.git-version' version '0.12.3'
     id 'jacoco'
     id 'info.solidsoft.pitest' version '1.7.0'
 }
 
 group = 'io.github.lsd-consulting'
-project.version = scmVersion.version
-println "Build Version = ${project.version}"
+version = gitVersion().replaceAll("^v", "")
+println "Build Version = ${version}"
 
 sourceCompatibility = '11'
 targetCompatibility = '11'
@@ -50,3 +50,4 @@ apply from: 'publishing.gradle'
 apply from: 'test.gradle'
 apply from: 'integrationTest.gradle'
 apply from: 'pitest.gradle'
+apply from: 'hooks.gradle'

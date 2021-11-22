@@ -28,7 +28,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId = "$group"
             artifactId = 'lsd-distributed-interceptor'
-            version = scmVersion.version
+            version = "$version"
 
             from components.java
             artifact sourcesJar
@@ -83,5 +83,14 @@ nexusPublishing {
 }
 
 signing {
-    sign publishing.publications.mavenJava
+    if (project.findProperty("signingKey")) {
+        // Use in-memory ascii-armored keys
+        def signingKey = findProperty("signingKey")
+        def signingPassword = findProperty("signingPassword")
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign publishing.publications.mavenJava
+    } else {
+        // Use signing properties in ~/.gradle/gradle.properties
+        sign publishing.publications.mavenJava
+    }
 }
