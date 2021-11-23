@@ -43,6 +43,7 @@ task integrationTest(type: Test) {
     outputs.upToDateWhen { false }
     testLogging.showStandardStreams = false
     mustRunAfter(test)
+    finalizedBy jacocoTestReport
 }
 
 check.dependsOn(integrationTest)
