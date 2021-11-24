@@ -39,7 +39,7 @@ and configure through app properties:
 lsd.dist.db.trustStorePassword={password}
 lsd.dist.db.trustStoreLocation={location}
 
-lsd.dist.db.connectionString={someUrl}
+lsd.dist.db.connectionString.millis={someUrl}
 ```
 
 ## Obfuscation
