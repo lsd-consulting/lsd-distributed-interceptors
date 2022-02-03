@@ -40,14 +40,14 @@ and configure through the available properties.
 
 The following properties can be overridden by setting System or Environment properties.
 
-| Property Name        | Default     | Description |
-| ----------- | ----------- |------------ |
-| lsd.dist.db.connectionString | N/A | Connection string to the database, eg. mongodb://localhost:27017 |
-| lsd.dist.db.connectionTimeout.millis | 500 | Database connection timeout. |
-| lsd.dist.db.collectionSizeLimit.megabytes | 10,000 | Capped database collection size ion megabytes. |
-| lsd.dist.db.trustStoreLocation | N/A | The location of the trust store containing the certificate of the signing authority. |
-| lsd.dist.db.trustStorePassword | N/A | The password to the trust store containing the certificate of the signing authority. |
-| lsd.dist.obfuscator.sensitiveHeaders | None | A comma delimited list of header names that will be removed before storing in the database, eg. Authorization,JWT |
+| Property Name        | Default     | Required | Description |
+| ----------- | ----------- | ------------ | ------------ |
+| lsd.dist.db.connectionString | N/A | [x] | Connection string to the database, eg. mongodb://localhost:27017 |
+| lsd.dist.db.connectionTimeout.millis | 500 | [ ] | Database connection timeout. |
+| lsd.dist.db.collectionSizeLimit.megabytes | 10,000 | [ ] | Capped database collection size in megabytes. |
+| lsd.dist.db.trustStoreLocation | N/A | [ ] | The location of the trust store containing the certificate of the signing authority (only required for TLS where the certificate if provided). |
+| lsd.dist.db.trustStorePassword | N/A | [ ] | The password to the trust store containing the certificate of the signing authority. |
+| lsd.dist.obfuscator.sensitiveHeaders | None | [ ] | A comma delimited list of header names that will be removed before storing in the database, eg. Authorization,JWT |
 
 ## Obfuscation
 
