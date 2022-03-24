@@ -30,8 +30,8 @@ dependencies {
     integrationTestImplementation 'com.github.tomakehurst:wiremock:2.27.2'
 
     // LSD
-    integrationTestImplementation 'io.github.lsd-consulting:lsd-junit5:1.0.3'
-    integrationTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:1.0.3'
+    integrationTestImplementation 'io.github.lsd-consulting:lsd-junit5:1.1.5'
+    integrationTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:1.1.0'
 }
 
 task integrationTest(type: Test) {
