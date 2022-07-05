@@ -20,8 +20,8 @@ dependencies {
     integrationTestImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock'
 
     // Lombok
-    integrationTestCompileOnly 'org.projectlombok:lombok:1.18.22'
-    integrationTestAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+    integrationTestCompileOnly 'org.projectlombok:lombok:1.18.24'
+    integrationTestAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
     // Other
     integrationTestImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.0.0'

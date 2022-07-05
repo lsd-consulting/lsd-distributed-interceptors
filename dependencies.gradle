@@ -12,8 +12,8 @@ dependencies {
     implementation 'io.github.lsd-consulting:lsd-distributed-mongodb-access:1.0.9'
 
     // Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
     // JSON & XML pretty formatting
     implementation 'com.google.code.gson:gson:2.8.8'
