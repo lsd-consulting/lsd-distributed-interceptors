@@ -5,6 +5,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    implementation 'org.springframework:spring-messaging'
+    implementation 'org.springframework.integration:spring-integration-core'
 
     // LSD
     api 'io.github.lsd-consulting:lsd-core:1.2.6'

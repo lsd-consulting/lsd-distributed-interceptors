@@ -12,6 +12,8 @@ import org.springframework.amqp.core.Message;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 
@@ -26,10 +28,11 @@ public class RabbitCaptor {
 
     public InterceptedInteraction captureInteraction(final String exchange, final Message message, final Type type) {
 
+        Map<String, Collection<String>> headers = headerRetriever.retrieve(message);
         final InterceptedInteraction interceptedInteraction = InterceptedInteraction.builder()
-                .traceId(traceIdRetriever.getTraceId(headerRetriever.retrieve(message)))
+                .traceId(traceIdRetriever.getTraceId(headers))
                 .body(TypeConverter.convert(message.getBody()))
-                .requestHeaders(headerRetriever.retrieve(message))
+                .requestHeaders(headers)
                 .responseHeaders(emptyMap())
                 .serviceName(propertyServiceNameDeriver.getServiceName())
                 .target(exchange)

@@ -24,6 +24,11 @@ public class HeaderRetriever {
                 .collect(toMap(Map.Entry::getKey, e -> e.getValue() != null ? List.of(e.getValue().toString()) : emptyList())));
     }
 
+    public Map<String, Collection<String>> retrieve(final org.springframework.messaging.Message<?> message) {
+        return obfuscator.obfuscate(message.getHeaders().entrySet().stream()
+                .collect(toMap(Map.Entry::getKey, e -> e.getValue() != null ? List.of(e.getValue().toString()) : emptyList())));
+    }
+
     public Map<String, Collection<String>> retrieve(HttpRequest request) {
         return obfuscator.obfuscate(request.getHeaders().entrySet().stream().collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }

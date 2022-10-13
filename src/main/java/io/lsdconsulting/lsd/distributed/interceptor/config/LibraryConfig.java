@@ -10,6 +10,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.HttpStatu
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver;
+import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessagingCaptor;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.RabbitCaptor;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.mapper.ExchangeNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
@@ -101,5 +102,14 @@ public class LibraryConfig {
                                       @Value("${spring.profiles.active:#{''}}") final String profile) {
 
         return new RabbitCaptor(interceptedDocumentRepository, propertyServiceNameDeriver, traceIdRetriever, headerRetriever, profile);
+    }
+
+    @Bean
+    public MessagingCaptor messagingCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
+                                           final PropertyServiceNameDeriver propertyServiceNameDeriver,
+                                           final TraceIdRetriever traceIdRetriever,
+                                           final HeaderRetriever headerRetriever,
+                                           @Value("${spring.profiles.active:#{''}}") final String profile) {
+        return new MessagingCaptor(interceptedDocumentRepository, propertyServiceNameDeriver, traceIdRetriever, headerRetriever, profile);
     }
 }
