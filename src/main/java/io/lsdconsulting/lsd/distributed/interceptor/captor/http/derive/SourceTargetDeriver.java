@@ -12,8 +12,8 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @RequiredArgsConstructor
 public class SourceTargetDeriver {
-    static final String SOURCE_NAME_KEY = "Source-Name";
-    static final String TARGET_NAME_KEY = "Target-Name";
+    public static final String SOURCE_NAME_KEY = "Source-Name";
+    public static final String TARGET_NAME_KEY = "Target-Name";
     static final String UNKNOWN_TARGET = "UNKNOWN_TARGET";
 
     private final PropertyServiceNameDeriver propertyServiceNameDeriver;
