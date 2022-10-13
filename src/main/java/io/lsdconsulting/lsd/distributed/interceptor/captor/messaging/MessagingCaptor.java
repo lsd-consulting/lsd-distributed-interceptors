@@ -20,6 +20,7 @@ import static io.lsdconsulting.lsd.distributed.access.model.Type.PUBLISH;
 import static io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver.SOURCE_NAME_KEY;
 import static io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver.TARGET_NAME_KEY;
 import static java.util.Collections.emptyMap;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @RequiredArgsConstructor
 public class MessagingCaptor {
@@ -31,9 +32,7 @@ public class MessagingCaptor {
     private final String profile;
 
     public InterceptedInteraction captureConsumeInteraction(final Message<?> message) {
-        String[] sourceTokens = ((String) message.getHeaders().get("__TypeId__")).split("\\.");
-        String source = sourceTokens[sourceTokens.length - 1];
-
+        String typeIdHeader = (String) message.getHeaders().get("__TypeId__");
         Map<String, Collection<String>> headers = headerRetriever.retrieve(message);
         final InterceptedInteraction interceptedInteraction = InterceptedInteraction.builder()
                 .traceId(traceIdRetriever.getTraceId(headers))
@@ -41,7 +40,7 @@ public class MessagingCaptor {
                 .requestHeaders(headers)
                 .responseHeaders(emptyMap())
                 .serviceName(propertyServiceNameDeriver.getServiceName())
-                .target(source)
+                .target(getSource(typeIdHeader))
                 .path(propertyServiceNameDeriver.getServiceName())
                 .type(CONSUME)
                 .profile(profile)
@@ -50,6 +49,15 @@ public class MessagingCaptor {
 
         interceptedDocumentRepository.save(interceptedInteraction);
         return interceptedInteraction;
+    }
+
+    private String getSource(String typeIdHeader) {
+        String source = "UNKNOWN";
+        if (!isBlank(typeIdHeader)) {
+            String[] sourceTokens = typeIdHeader.split("\\.");
+            source = sourceTokens[sourceTokens.length - 1];
+        }
+        return source;
     }
 
     public InterceptedInteraction capturePublishInteraction(final Message<?> message) {
