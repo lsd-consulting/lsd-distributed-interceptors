@@ -7,6 +7,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.header.HeaderRetrieve
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lsd.format.PrettyPrinter;
 import org.springframework.messaging.Message;
 
@@ -23,6 +24,7 @@ import static java.util.Collections.emptyMap;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @RequiredArgsConstructor
+@Slf4j
 public class MessagingCaptor {
 
     private final InterceptedDocumentRepository interceptedDocumentRepository;
@@ -32,15 +34,14 @@ public class MessagingCaptor {
     private final String profile;
 
     public InterceptedInteraction captureConsumeInteraction(final Message<?> message) {
-        String typeIdHeader = (String) message.getHeaders().get("__TypeId__");
         Map<String, Collection<String>> headers = headerRetriever.retrieve(message);
         final InterceptedInteraction interceptedInteraction = InterceptedInteraction.builder()
                 .traceId(traceIdRetriever.getTraceId(headers))
-                .body(PrettyPrinter.prettyPrint(TypeConverter.convert((byte[])message.getPayload())))
+                .body(PrettyPrinter.prettyPrint(TypeConverter.convert((byte[]) message.getPayload())))
                 .requestHeaders(headers)
                 .responseHeaders(emptyMap())
                 .serviceName(propertyServiceNameDeriver.getServiceName())
-                .target(getSource(typeIdHeader))
+                .target(getSource(message))
                 .path(propertyServiceNameDeriver.getServiceName())
                 .type(CONSUME)
                 .profile(profile)
@@ -51,7 +52,17 @@ public class MessagingCaptor {
         return interceptedInteraction;
     }
 
-    private String getSource(String typeIdHeader) {
+    private String getSource(Message<?> message) {
+        String source = (String) message.getHeaders().get(TARGET_NAME_KEY);
+        if (isBlank(source)) {
+            String typeIdHeader = (String) message.getHeaders().get("__TypeId__");
+            source = getSourceFrom(typeIdHeader);
+        }
+        log.debug("found source:{}", source);
+        return source;
+    }
+
+    private String getSourceFrom(String typeIdHeader) {
         String source = "UNKNOWN";
         if (!isBlank(typeIdHeader)) {
             String[] sourceTokens = typeIdHeader.split("\\.");
@@ -67,7 +78,7 @@ public class MessagingCaptor {
         Map<String, Collection<String>> headers = headerRetriever.retrieve(message);
         final InterceptedInteraction interceptedInteraction = InterceptedInteraction.builder()
                 .traceId(traceIdRetriever.getTraceId(headers))
-                .body(TypeConverter.convert((byte[])message.getPayload()))
+                .body(TypeConverter.convert((byte[]) message.getPayload()))
                 .requestHeaders(headers)
                 .responseHeaders(emptyMap())
                 .serviceName(source != null ? source : propertyServiceNameDeriver.getServiceName())

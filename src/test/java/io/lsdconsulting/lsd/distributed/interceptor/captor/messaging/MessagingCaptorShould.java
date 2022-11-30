@@ -38,7 +38,7 @@ class MessagingCaptorShould {
     private final String body = randomAlphabetic(20);
 
     @Test
-    void captureConsumeInteraction() {
+    void captureConsumeInteractionWithSourceFromTypeIdWhenTargetNameNotAvailable() {
         given(propertyServiceNameDeriver.getServiceName()).willReturn(serviceName);
         given(traceIdRetriever.getTraceId(any())).willReturn(traceId);
         given(headerRetriever.retrieve(any(Message.class))).willReturn(Map.of("name", List.of("value"), "__TypeId__", List.of(topic)));
@@ -58,6 +58,32 @@ class MessagingCaptorShould {
         assertThat(result.getHttpStatus(), emptyOrNullString());
         assertThat(result.getProfile(), is("profile"));
         assertThat(result.getRequestHeaders(), is(Map.of("name", List.of("value"), "__TypeId__", List.of(topic))));
+        assertThat(result.getResponseHeaders(), aMapWithSize(0));
+
+        verify(interceptedDocumentRepository).save(result);
+    }
+
+    @Test
+    void captureConsumeInteractionWithSourceFromTargetName() {
+        given(propertyServiceNameDeriver.getServiceName()).willReturn(serviceName);
+        given(traceIdRetriever.getTraceId(any())).willReturn(traceId);
+        given(headerRetriever.retrieve(any(Message.class))).willReturn(Map.of("name", List.of("value"), "Target-Name", List.of(topic), "__TypeId__", List.of("blah")));
+
+        Map<String, Object> headers = Map.of("name", List.of("value"), "__TypeId__", "blah", "Target-Name", topic);
+        Message<?> message = new MutableMessage<>(body.getBytes(), headers);
+
+        final InterceptedInteraction result = underTest.captureConsumeInteraction(message);
+
+        assertThat(result.getTarget(), is(topic));
+        assertThat(result.getPath(), is(serviceName));
+        assertThat(result.getBody(), is(body));
+        assertThat(result.getServiceName(), is(serviceName));
+        assertThat(result.getTraceId(), is(traceId));
+        assertThat(result.getType(), Matchers.is(CONSUME));
+        assertThat(result.getHttpMethod(), emptyOrNullString());
+        assertThat(result.getHttpStatus(), emptyOrNullString());
+        assertThat(result.getProfile(), is("profile"));
+        assertThat(result.getRequestHeaders(), is(Map.of("name", List.of("value"), "__TypeId__", List.of("blah"), "Target-Name", List.of(topic))));
         assertThat(result.getResponseHeaders(), aMapWithSize(0));
 
         verify(interceptedDocumentRepository).save(result);

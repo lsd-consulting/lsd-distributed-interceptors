@@ -18,7 +18,7 @@ public class TraceIdRetriever {
     private final Tracer tracer;
 
     public String getTraceId(final Map<String, Collection<String>> headers) {
-        log.info("headers received={}", headers);
+        log.debug("headers received={}", headers);
         final Collection<String> b3Header = headers.get("b3");
         final Collection<String> xRequestInfo = headers.get("X-Request-Info");
         return retrieveTraceId(b3Header, xRequestInfo);
@@ -29,7 +29,7 @@ public class TraceIdRetriever {
                 .orElseGet(() -> getTraceIdFromXRequestInfo(xRequestInfo)
                         .orElseGet(this::getTraceIdFromTracer));
 
-        log.info("traceId retrieved={}", traceId);
+        log.debug("traceId retrieved={}", traceId);
         return traceId;
 
     }
