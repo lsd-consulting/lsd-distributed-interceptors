@@ -1,12 +1,12 @@
 dependencies {
 
     // Spring
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-amqp'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
-    implementation 'org.springframework:spring-messaging'
-    implementation 'org.springframework.integration:spring-integration-core'
+    compileOnly 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.springframework.boot:spring-boot-starter-amqp'
+    compileOnly 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    compileOnly 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    compileOnly 'org.springframework:spring-messaging'
+    compileOnly 'org.springframework.integration:spring-integration-core'
 
     // LSD
     api 'io.github.lsd-consulting:lsd-core:1.2.6'

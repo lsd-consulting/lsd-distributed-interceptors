@@ -36,6 +36,7 @@ public class LibraryConfig {
     }
 
     @Bean
+    @ConditionalOnClass(name = "org.springframework.amqp.core.MessageProperties")
     public ExchangeNameDeriver exchangeNameDeriver() {
         return new ExchangeNameDeriver();
     }

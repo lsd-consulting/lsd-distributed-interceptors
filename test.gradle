@@ -4,6 +4,13 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:3.12.4'
     testImplementation 'org.pitest:pitest-junit5-plugin:0.15'
     testImplementation 'org.hamcrest:hamcrest-core:2.2'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-amqp'
+    testImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    testImplementation 'org.springframework:spring-messaging'
+    testImplementation 'org.springframework.integration:spring-integration-core'
 }
 
 test {
