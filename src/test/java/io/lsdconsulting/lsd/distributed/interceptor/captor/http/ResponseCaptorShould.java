@@ -5,7 +5,6 @@ import feign.RequestTemplate;
 import feign.Response;
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
-import io.lsdconsulting.lsd.distributed.interceptor.captor.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.HttpStatusDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver;
@@ -39,13 +38,13 @@ class ResponseCaptorShould {
     private final TraceIdRetriever traceIdRetriever = mock(TraceIdRetriever.class);
     private final HttpRequest httpRequest = mock(HttpRequest.class);
     private final ClientHttpResponse clientHttpResponse = mock(ClientHttpResponse.class);
-    private final HeaderRetriever headerRetriever = mock(HeaderRetriever.class);
+    private final HttpHeaderRetriever httpHeaderRetriever = mock(HttpHeaderRetriever.class);
     private final HttpStatusDeriver httpStatusDeriver = mock(HttpStatusDeriver.class);
 
     private final PathDeriver pathDeriver = new PathDeriver();
 
     private final ResponseCaptor underTest = new ResponseCaptor(interceptedDocumentRepository,
-            sourceTargetDeriver, pathDeriver, traceIdRetriever, headerRetriever, httpStatusDeriver, "profile");
+            sourceTargetDeriver, pathDeriver, traceIdRetriever, httpHeaderRetriever, httpStatusDeriver, "profile");
 
     private final String url = randomAlphanumeric(20);
     private final String body = randomAlphanumeric(20);
@@ -62,7 +61,7 @@ class ResponseCaptorShould {
     @Test
     public void takeTraceIdFromRequestHeaders() {
         given(traceIdRetriever.getTraceId(eq(requestHeaders))).willReturn(traceId);
-        given(headerRetriever.retrieve(any(Request.class))).willReturn(requestHeaders);
+        given(httpHeaderRetriever.retrieve(any(Request.class))).willReturn(requestHeaders);
 
         final InterceptedInteraction interceptedInteraction = underTest.captureResponseInteraction(response, 10L);
 
@@ -72,7 +71,7 @@ class ResponseCaptorShould {
     @Test
     public void deriveTargetFromRequestHeaders() {
         given(sourceTargetDeriver.deriveTarget(eq(requestHeaders), eq(url))).willReturn(target);
-        given(headerRetriever.retrieve(any(Request.class))).willReturn(requestHeaders);
+        given(httpHeaderRetriever.retrieve(any(Request.class))).willReturn(requestHeaders);
 
         final InterceptedInteraction interceptedInteraction = underTest.captureResponseInteraction(response, 10L);
 

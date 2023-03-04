@@ -4,7 +4,6 @@ import feign.Response;
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.TypeConverter;
-import io.lsdconsulting.lsd.distributed.interceptor.captor.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.HttpStatusDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver;
@@ -34,14 +33,14 @@ public class ResponseCaptor {
     private final SourceTargetDeriver sourceTargetDeriver;
     private final PathDeriver pathDeriver;
     private final TraceIdRetriever traceIdRetriever;
-    private final HeaderRetriever headerRetriever;
+    private final HttpHeaderRetriever httpHeaderRetriever;
     private final HttpStatusDeriver httpStatusDeriver;
     private final String profile;
 
     @SneakyThrows
     public InterceptedInteraction captureResponseInteraction(final Response response, Long elapsedTime) {
-        final var requestHeaders = headerRetriever.retrieve(response.request());
-        final var responseHeaders = headerRetriever.retrieve(response);
+        final var requestHeaders = httpHeaderRetriever.retrieve(response.request());
+        final var responseHeaders = httpHeaderRetriever.retrieve(response);
         final String path = pathDeriver.derivePathFrom(response.request().url());
         final String target = sourceTargetDeriver.deriveTarget(requestHeaders, path);
         final String serviceName = sourceTargetDeriver.deriveServiceName(requestHeaders);
@@ -54,8 +53,8 @@ public class ResponseCaptor {
     }
 
     public InterceptedInteraction captureResponseInteraction(final HttpRequest request, final ClientHttpResponse response, final String target, final String path, final String traceId, Long elapsedTime) throws IOException {
-        final var requestHeaders = headerRetriever.retrieve(request);
-        final var responseHeaders = headerRetriever.retrieve(response);
+        final var requestHeaders = httpHeaderRetriever.retrieve(request);
+        final var responseHeaders = httpHeaderRetriever.retrieve(response);
         final String serviceName = sourceTargetDeriver.deriveServiceName(requestHeaders);
         final String body = copyBodyToString(response);
         final String httpStatus = response.getStatusCode().toString();

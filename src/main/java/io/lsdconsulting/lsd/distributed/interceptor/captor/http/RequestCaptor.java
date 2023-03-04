@@ -4,7 +4,6 @@ import feign.Request;
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.TypeConverter;
-import io.lsdconsulting.lsd.distributed.interceptor.captor.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
@@ -28,11 +27,11 @@ public class RequestCaptor {
     private final SourceTargetDeriver sourceTargetDeriver;
     private final PathDeriver pathDeriver;
     private final TraceIdRetriever traceIdRetriever;
-    private final HeaderRetriever headerRetriever;
+    private final HttpHeaderRetriever httpHeaderRetriever;
     private final String profile;
 
     public InterceptedInteraction captureRequestInteraction(final Request request) {
-        final var headers = headerRetriever.retrieve(request);
+        final var headers = httpHeaderRetriever.retrieve(request);
         final String body = TypeConverter.convert(request.body());
         final String path = pathDeriver.derivePathFrom(request.url());
         final String traceId = traceIdRetriever.getTraceId(headers);
@@ -44,7 +43,7 @@ public class RequestCaptor {
     }
 
     public InterceptedInteraction captureRequestInteraction(final HttpRequest request, final String body) {
-        final var headers = headerRetriever.retrieve(request);
+        final var headers = httpHeaderRetriever.retrieve(request);
         final String path = pathDeriver.derivePathFrom(request);
         final String traceId = traceIdRetriever.getTraceId(headers);
         final String target = sourceTargetDeriver.deriveTarget(headers, path);

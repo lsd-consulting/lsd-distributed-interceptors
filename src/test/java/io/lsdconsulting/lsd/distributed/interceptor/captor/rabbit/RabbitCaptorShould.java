@@ -2,7 +2,6 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit;
 
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
-import io.lsdconsulting.lsd.distributed.interceptor.captor.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
 import org.hamcrest.Matchers;
@@ -27,9 +26,9 @@ class RabbitCaptorShould {
     private final InterceptedDocumentRepository interceptedDocumentRepository = mock(InterceptedDocumentRepository.class);
     private final PropertyServiceNameDeriver propertyServiceNameDeriver = mock(PropertyServiceNameDeriver.class);
     private final TraceIdRetriever traceIdRetriever = mock(TraceIdRetriever.class);
-    private final HeaderRetriever headerRetriever = mock(HeaderRetriever.class);
+    private final AmqpHeaderRetriever amqpHeaderRetriever = mock(AmqpHeaderRetriever.class);
 
-    private final RabbitCaptor underTest = new RabbitCaptor(interceptedDocumentRepository, propertyServiceNameDeriver, traceIdRetriever, headerRetriever, "profile");
+    private final RabbitCaptor underTest = new RabbitCaptor(interceptedDocumentRepository, propertyServiceNameDeriver, traceIdRetriever, amqpHeaderRetriever, "profile");
 
     private final String exchange = randomAlphabetic(20);
     private final String serviceName = randomAlphabetic(20);
@@ -43,7 +42,7 @@ class RabbitCaptorShould {
     void captureAmqpInteraction() {
         given(propertyServiceNameDeriver.getServiceName()).willReturn(serviceName);
         given(traceIdRetriever.getTraceId(any())).willReturn(traceId);
-        given(headerRetriever.retrieve(any(Message.class))).willReturn(headers);
+        given(amqpHeaderRetriever.retrieve(any(Message.class))).willReturn(headers);
         messageProperties.setHeader("name", "value");
 
         final InterceptedInteraction result = underTest.captureInteraction(exchange, message, PUBLISH);

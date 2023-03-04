@@ -2,7 +2,6 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor.messaging;
 
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
-import io.lsdconsulting.lsd.distributed.interceptor.captor.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
 import org.hamcrest.Matchers;
@@ -28,9 +27,9 @@ class MessagingCaptorShould {
     private final InterceptedDocumentRepository interceptedDocumentRepository = mock(InterceptedDocumentRepository.class);
     private final PropertyServiceNameDeriver propertyServiceNameDeriver = mock(PropertyServiceNameDeriver.class);
     private final TraceIdRetriever traceIdRetriever = mock(TraceIdRetriever.class);
-    private final HeaderRetriever headerRetriever = mock(HeaderRetriever.class);
+    private final MessagingHeaderRetriever messagingHeaderRetriever = mock(MessagingHeaderRetriever.class);
 
-    private final MessagingCaptor underTest = new MessagingCaptor(interceptedDocumentRepository, propertyServiceNameDeriver, traceIdRetriever, headerRetriever, "profile");
+    private final MessagingCaptor underTest = new MessagingCaptor(interceptedDocumentRepository, propertyServiceNameDeriver, traceIdRetriever, messagingHeaderRetriever, "profile");
 
     private final String topic = randomAlphabetic(20);
     private final String serviceName = randomAlphabetic(20);
@@ -41,7 +40,7 @@ class MessagingCaptorShould {
     void captureConsumeInteractionWithSourceFromTypeIdWhenTargetNameNotAvailable() {
         given(propertyServiceNameDeriver.getServiceName()).willReturn(serviceName);
         given(traceIdRetriever.getTraceId(any())).willReturn(traceId);
-        given(headerRetriever.retrieve(any(Message.class))).willReturn(Map.of("name", List.of("value"), "__TypeId__", List.of(topic)));
+        given(messagingHeaderRetriever.retrieve(any(Message.class))).willReturn(Map.of("name", List.of("value"), "__TypeId__", List.of(topic)));
 
         Map<String, Object> headers = Map.of("name", List.of("value"), "__TypeId__", topic);
         Message<?> message = new MutableMessage<>(body.getBytes(), headers);
@@ -67,7 +66,7 @@ class MessagingCaptorShould {
     void captureConsumeInteractionWithSourceFromTargetName() {
         given(propertyServiceNameDeriver.getServiceName()).willReturn(serviceName);
         given(traceIdRetriever.getTraceId(any())).willReturn(traceId);
-        given(headerRetriever.retrieve(any(Message.class))).willReturn(Map.of("name", List.of("value"), "Target-Name", List.of(topic), "__TypeId__", List.of("blah")));
+        given(messagingHeaderRetriever.retrieve(any(Message.class))).willReturn(Map.of("name", List.of("value"), "Target-Name", List.of(topic), "__TypeId__", List.of("blah")));
 
         Map<String, Object> headers = Map.of("name", List.of("value"), "__TypeId__", "blah", "Target-Name", topic);
         Message<?> message = new MutableMessage<>(body.getBytes(), headers);
@@ -92,7 +91,7 @@ class MessagingCaptorShould {
     @Test
     void capturePublishInteractionWithSourceFromHeader() {
         given(traceIdRetriever.getTraceId(any())).willReturn(traceId);
-        given(headerRetriever.retrieve(any(Message.class))).willReturn(Map.of("name", List.of("value")));
+        given(messagingHeaderRetriever.retrieve(any(Message.class))).willReturn(Map.of("name", List.of("value")));
 
         Map<String, Object> headers = Map.of("name", List.of("value"), "Source-Name", serviceName, "Target-Name", topic);
         Message<?> message = new MutableMessage<>(body.getBytes(), headers);
@@ -118,7 +117,7 @@ class MessagingCaptorShould {
     void capturePublishInteractionWithoutSourceFromHeader() {
         given(propertyServiceNameDeriver.getServiceName()).willReturn(serviceName);
         given(traceIdRetriever.getTraceId(any())).willReturn(traceId);
-        given(headerRetriever.retrieve(any(Message.class))).willReturn(Map.of("name", List.of("value")));
+        given(messagingHeaderRetriever.retrieve(any(Message.class))).willReturn(Map.of("name", List.of("value")));
 
         Map<String, Object> headers = Map.of("name", List.of("value"),"Target-Name", topic);
         Message<?> message = new MutableMessage<>(body.getBytes(), headers);

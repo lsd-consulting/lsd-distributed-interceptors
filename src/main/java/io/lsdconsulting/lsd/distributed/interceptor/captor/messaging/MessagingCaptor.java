@@ -3,7 +3,6 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor.messaging;
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.TypeConverter;
-import io.lsdconsulting.lsd.distributed.interceptor.captor.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +29,11 @@ public class MessagingCaptor {
     private final InterceptedDocumentRepository interceptedDocumentRepository;
     private final PropertyServiceNameDeriver propertyServiceNameDeriver;
     private final TraceIdRetriever traceIdRetriever;
-    private final HeaderRetriever headerRetriever;
+    private final MessagingHeaderRetriever messagingHeaderRetriever;
     private final String profile;
 
     public InterceptedInteraction captureConsumeInteraction(final Message<?> message) {
-        Map<String, Collection<String>> headers = headerRetriever.retrieve(message);
+        Map<String, Collection<String>> headers = messagingHeaderRetriever.retrieve(message);
         final InterceptedInteraction interceptedInteraction = InterceptedInteraction.builder()
                 .traceId(traceIdRetriever.getTraceId(headers))
                 .body(PrettyPrinter.prettyPrint(TypeConverter.convert((byte[]) message.getPayload())))
@@ -75,7 +74,7 @@ public class MessagingCaptor {
         String source = (String) message.getHeaders().get(SOURCE_NAME_KEY);
         String target = (String) message.getHeaders().get(TARGET_NAME_KEY);
 
-        Map<String, Collection<String>> headers = headerRetriever.retrieve(message);
+        Map<String, Collection<String>> headers = messagingHeaderRetriever.retrieve(message);
         final InterceptedInteraction interceptedInteraction = InterceptedInteraction.builder()
                 .traceId(traceIdRetriever.getTraceId(headers))
                 .body(TypeConverter.convert((byte[]) message.getPayload()))

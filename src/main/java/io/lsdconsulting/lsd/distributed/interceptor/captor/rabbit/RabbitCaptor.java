@@ -4,7 +4,6 @@ import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.access.model.Type;
 import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.TypeConverter;
-import io.lsdconsulting.lsd.distributed.interceptor.captor.header.HeaderRetriever;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +22,12 @@ public class RabbitCaptor {
     private final InterceptedDocumentRepository interceptedDocumentRepository;
     private final PropertyServiceNameDeriver propertyServiceNameDeriver;
     private final TraceIdRetriever traceIdRetriever;
-    private final HeaderRetriever headerRetriever;
+    private final AmqpHeaderRetriever amqpHeaderRetriever;
     private final String profile;
 
     public InterceptedInteraction captureInteraction(final String exchange, final Message message, final Type type) {
 
-        Map<String, Collection<String>> headers = headerRetriever.retrieve(message);
+        Map<String, Collection<String>> headers = amqpHeaderRetriever.retrieve(message);
         final InterceptedInteraction interceptedInteraction = InterceptedInteraction.builder()
                 .traceId(traceIdRetriever.getTraceId(headers))
                 .body(TypeConverter.convert(message.getBody()))
