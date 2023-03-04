@@ -18,6 +18,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.mapper.Exchang
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,10 +46,12 @@ public class LibraryConfig {
     }
 
     @Bean
+    @ConditionalOnClass(name = "org.springframework.amqp.core.Message")
     public AmqpHeaderRetriever amqpHeaderRetriever(Obfuscator obfuscator) {
         return new AmqpHeaderRetriever(obfuscator);
     }
     @Bean
+    @ConditionalOnClass(name = "org.springframework.messaging.Message")
     public MessagingHeaderRetriever messagingHeaderRetriever(Obfuscator obfuscator) {
         return new MessagingHeaderRetriever(obfuscator);
     }
