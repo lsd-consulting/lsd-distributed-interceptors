@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 
-import static feign.Util.toByteArray;
 import static lombok.AccessLevel.PRIVATE;
+import static org.apache.commons.io.IOUtils.toByteArray;
 
 @NoArgsConstructor(access = PRIVATE)
 public class TypeConverter {

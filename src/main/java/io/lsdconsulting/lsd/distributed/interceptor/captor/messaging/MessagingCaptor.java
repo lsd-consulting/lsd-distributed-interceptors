@@ -2,8 +2,8 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor.messaging;
 
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
+import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.TypeConverter;
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

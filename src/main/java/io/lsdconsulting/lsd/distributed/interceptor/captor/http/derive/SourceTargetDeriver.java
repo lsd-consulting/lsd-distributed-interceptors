@@ -1,5 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive;
 
+import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver;
 import lombok.RequiredArgsConstructor;
 
 import javax.annotation.PostConstruct;

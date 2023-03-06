@@ -1,5 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive;
 
+import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
