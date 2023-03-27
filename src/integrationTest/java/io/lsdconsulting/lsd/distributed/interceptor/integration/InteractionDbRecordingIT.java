@@ -18,7 +18,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.lsdconsulting.lsd.distributed.access.model.Type.*;
+import static io.lsdconsulting.lsd.distributed.access.model.InteractionType.*;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;

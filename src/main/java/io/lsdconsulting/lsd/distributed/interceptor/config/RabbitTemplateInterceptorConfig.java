@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.PostConstruct;
 import java.util.List;
 
-import static io.lsdconsulting.lsd.distributed.access.model.Type.CONSUME;
-import static io.lsdconsulting.lsd.distributed.access.model.Type.PUBLISH;
+import static io.lsdconsulting.lsd.distributed.access.model.InteractionType.CONSUME;
+import static io.lsdconsulting.lsd.distributed.access.model.InteractionType.PUBLISH;
 
 @Slf4j
 @Configuration

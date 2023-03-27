@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 
-import static io.lsdconsulting.lsd.distributed.access.model.Type.CONSUME;
+import static io.lsdconsulting.lsd.distributed.access.model.InteractionType.CONSUME;
 
 /*
     This config adds the interception of messages to RabbitMq listeners

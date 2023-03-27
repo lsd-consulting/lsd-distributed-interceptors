@@ -15,8 +15,8 @@ import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Map;
 
-import static io.lsdconsulting.lsd.distributed.access.model.Type.CONSUME;
-import static io.lsdconsulting.lsd.distributed.access.model.Type.PUBLISH;
+import static io.lsdconsulting.lsd.distributed.access.model.InteractionType.CONSUME;
+import static io.lsdconsulting.lsd.distributed.access.model.InteractionType.PUBLISH;
 import static io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver.SOURCE_NAME_KEY;
 import static io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver.TARGET_NAME_KEY;
 import static java.util.Collections.emptyMap;
@@ -42,7 +42,7 @@ public class MessagingCaptor {
                 .serviceName(propertyServiceNameDeriver.getServiceName())
                 .target(getSource(message))
                 .path(propertyServiceNameDeriver.getServiceName())
-                .type(CONSUME)
+                .interactionType(CONSUME)
                 .profile(profile)
                 .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
                 .build();
@@ -83,7 +83,7 @@ public class MessagingCaptor {
                 .serviceName(source != null ? source : propertyServiceNameDeriver.getServiceName())
                 .target(target)
                 .path(target)
-                .type(PUBLISH)
+                .interactionType(PUBLISH)
                 .profile(profile)
                 .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
                 .build();

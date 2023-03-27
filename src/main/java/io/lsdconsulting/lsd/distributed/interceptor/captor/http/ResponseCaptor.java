@@ -22,7 +22,7 @@ import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Map;
 
-import static io.lsdconsulting.lsd.distributed.access.model.Type.RESPONSE;
+import static io.lsdconsulting.lsd.distributed.access.model.InteractionType.RESPONSE;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @RequiredArgsConstructor
@@ -74,7 +74,7 @@ public class ResponseCaptor {
                 .target(target)
                 .path(path)
                 .httpStatus(httpStatus)
-                .type(RESPONSE)
+                .interactionType(RESPONSE)
                 .profile(profile)
                 .elapsedTime(elapsedTime)
                 .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))

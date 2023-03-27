@@ -16,7 +16,7 @@ import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Map;
 
-import static io.lsdconsulting.lsd.distributed.access.model.Type.REQUEST;
+import static io.lsdconsulting.lsd.distributed.access.model.InteractionType.REQUEST;
 import static java.util.Collections.emptyMap;
 
 @Slf4j
@@ -63,7 +63,7 @@ public class RequestCaptor {
                 .target(target)
                 .path(path)
                 .httpMethod(httpMethod)
-                .type(REQUEST)
+                .interactionType(REQUEST)
                 .profile(profile)
                 .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
                 .build();

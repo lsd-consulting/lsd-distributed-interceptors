@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.lsd.core.domain.Status.SUCCESS;
 import static com.lsd.core.domain.ParticipantType.*;
+import static com.lsd.core.domain.Status.SUCCESS;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -70,15 +70,15 @@ public class EndToEndIT extends IntegrationTestBase {
         assertThat(report, containsString("publish event"));
         assertThat(report, containsString("SomethingDoneEvent -&gt; TestApp"));
         assertThat(report, containsString("consume message"));
-        assertThat(report, containsString("TestApp --&gt;&gt; Client"));
+        assertThat(report, containsString("TestApp --&gt; Client"));
         assertThat(report, matchesPattern("(?s).*\"sync 200 OK response \\([0-9]+ ms\\)\"(?s).*"));
         assertThat(report, containsString("TestApp -&gt; UNKNOWN_TARGET"));
         assertThat(report, containsString("POST /external-api?message=from_feign"));
-        assertThat(report, containsString("UNKNOWN_TARGET --&gt;&gt; TestApp"));
+        assertThat(report, containsString("UNKNOWN_TARGET --&gt; TestApp"));
         assertThat(report, matchesPattern("(?s).*\"sync 200 OK response \\([0-9]+ ms\\)\"(?s).*"));
         assertThat(report, containsString("TestApp -&gt; Downstream"));
         assertThat(report, containsString("POST /external-api?message=from_feign"));
-        assertThat(report, containsString("Downstream --&gt;&gt; TestApp"));
+        assertThat(report, containsString("Downstream --&gt; TestApp"));
         assertThat(report, matchesPattern("(?s).*\"sync 200 OK response \\([0-9]+ ms\\)\"(?s).*"));
     }
 

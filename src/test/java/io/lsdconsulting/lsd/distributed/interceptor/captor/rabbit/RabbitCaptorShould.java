@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static io.lsdconsulting.lsd.distributed.access.model.Type.PUBLISH;
+import static io.lsdconsulting.lsd.distributed.access.model.InteractionType.PUBLISH;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -51,7 +51,7 @@ class RabbitCaptorShould {
         assertThat(result.getBody(), is(body));
         assertThat(result.getServiceName(), is(serviceName));
         assertThat(result.getTraceId(), is(traceId));
-        assertThat(result.getType(), Matchers.is(PUBLISH));
+        assertThat(result.getInteractionType(), Matchers.is(PUBLISH));
         assertThat(result.getHttpMethod(), emptyOrNullString());
         assertThat(result.getHttpStatus(), emptyOrNullString());
         assertThat(result.getProfile(), is("profile"));

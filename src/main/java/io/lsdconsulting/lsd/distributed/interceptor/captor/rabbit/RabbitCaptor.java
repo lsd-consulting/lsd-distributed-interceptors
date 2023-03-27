@@ -1,7 +1,7 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit;
 
+import io.lsdconsulting.lsd.distributed.access.model.InteractionType;
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
-import io.lsdconsulting.lsd.distributed.access.model.Type;
 import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.TypeConverter;
@@ -25,7 +25,7 @@ public class RabbitCaptor {
     private final AmqpHeaderRetriever amqpHeaderRetriever;
     private final String profile;
 
-    public InterceptedInteraction captureInteraction(final String exchange, final Message message, final Type type) {
+    public InterceptedInteraction captureInteraction(final String exchange, final Message message, final InteractionType type) {
 
         Map<String, Collection<String>> headers = amqpHeaderRetriever.retrieve(message);
         final InterceptedInteraction interceptedInteraction = InterceptedInteraction.builder()
@@ -36,7 +36,7 @@ public class RabbitCaptor {
                 .serviceName(propertyServiceNameDeriver.getServiceName())
                 .target(exchange)
                 .path(exchange)
-                .type(type)
+                .interactionType(type)
                 .profile(profile)
                 .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
                 .build();
