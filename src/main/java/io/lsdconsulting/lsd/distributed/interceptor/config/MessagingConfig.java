@@ -1,6 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.config;
 
-import com.lsd.LsdContext;
+import com.lsd.core.LsdContext;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessagingCaptor;
 import io.lsdconsulting.lsd.distributed.interceptor.interceptor.EventConsumerInterceptor;
 import io.lsdconsulting.lsd.distributed.interceptor.interceptor.EventPublisherInterceptor;

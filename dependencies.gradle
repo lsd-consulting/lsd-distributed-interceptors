@@ -9,13 +9,13 @@ dependencies {
     compileOnly 'org.springframework.integration:spring-integration-core'
 
     // LSD
-    api 'io.github.lsd-consulting:lsd-core:1.2.6'
-    implementation 'io.github.lsd-consulting:lsd-formatting-library:1.0.6'
-    implementation 'io.github.lsd-consulting:lsd-distributed-mongodb-access:1.0.9'
+    api 'io.github.lsd-consulting:lsd-core:3.1.1'
+    implementation 'io.github.lsd-consulting:lsd-formatting-library:1.0.7'
+    implementation 'io.github.lsd-consulting:lsd-distributed-mongodb-access:2.0.1'
 
     // Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
     // JSON & XML pretty formatting
     implementation 'com.google.code.gson:gson:2.8.8'

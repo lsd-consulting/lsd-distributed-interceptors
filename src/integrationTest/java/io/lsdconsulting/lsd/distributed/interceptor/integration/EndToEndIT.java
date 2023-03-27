@@ -1,7 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.integration;
 
-import com.lsd.LsdContext;
-import com.lsd.OutcomeStatus;
+import com.lsd.core.LsdContext;
 import io.lsdconsulting.lsd.distributed.generator.diagram.InteractionGenerator;
 import io.lsdconsulting.lsd.distributed.generator.diagram.LsdLogger;
 import io.lsdconsulting.lsd.distributed.interceptor.integration.data.TraceIdGenerator;
@@ -17,7 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.lsd.ParticipantType.*;
+import static com.lsd.core.domain.Status.SUCCESS;
+import static com.lsd.core.domain.ParticipantType.*;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -126,7 +126,7 @@ public class EndToEndIT extends IntegrationTestBase {
     }
 
     private String getReport(String title, String description) {
-        lsdContext.completeScenario(title, description, OutcomeStatus.SUCCESS);
+        lsdContext.completeScenario(title, description, SUCCESS);
         String report = lsdContext.generateReport(title);
         lsdContext.completeReport(title);
         return report;

@@ -20,8 +20,8 @@ dependencies {
     integrationTestImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock'
 
     // Lombok
-    integrationTestCompileOnly 'org.projectlombok:lombok:1.18.24'
-    integrationTestAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+    integrationTestCompileOnly 'org.projectlombok:lombok:1.18.26'
+    integrationTestAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 
     // Other
     integrationTestImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.0.0'
@@ -30,7 +30,7 @@ dependencies {
     integrationTestImplementation 'com.github.tomakehurst:wiremock:2.27.2'
 
     // LSD
-    integrationTestImplementation 'io.github.lsd-consulting:lsd-junit5:1.1.6'
+    integrationTestImplementation 'io.github.lsd-consulting:lsd-junit5:3.0.0'
     integrationTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:1.1.2'
 }
 
