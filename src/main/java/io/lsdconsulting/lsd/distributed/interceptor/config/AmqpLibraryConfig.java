@@ -24,13 +24,13 @@ public class AmqpLibraryConfig {
     private final Tracer tracer;
 
     @Bean
-    @ConditionalOnClass(name = "org.springframework.amqp.core.MessageProperties")
+    @ConditionalOnClass(org.springframework.amqp.core.MessageProperties.class)
     public ExchangeNameDeriver exchangeNameDeriver() {
         return new ExchangeNameDeriver();
     }
 
     @Bean
-    @ConditionalOnClass(name = "org.springframework.amqp.core.Message")
+    @ConditionalOnClass(org.springframework.amqp.core.Message.class)
     public AmqpHeaderRetriever amqpHeaderRetriever(Obfuscator obfuscator) {
         return new AmqpHeaderRetriever(obfuscator);
     }

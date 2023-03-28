@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 public class MessagingLibraryConfig {
 
     @Bean
-    @ConditionalOnClass(name = "org.springframework.messaging.Message")
+    @ConditionalOnClass(org.springframework.messaging.Message.class)
     public MessagingHeaderRetriever messagingHeaderRetriever(Obfuscator obfuscator) {
         return new MessagingHeaderRetriever(obfuscator);
     }
