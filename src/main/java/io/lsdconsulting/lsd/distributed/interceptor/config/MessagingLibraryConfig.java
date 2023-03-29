@@ -15,11 +15,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConditionalOnProperty(name = "lsd.dist.db.connectionString")
+@ConditionalOnClass(org.springframework.messaging.Message.class)
 @RequiredArgsConstructor
 public class MessagingLibraryConfig {
 
     @Bean
-    @ConditionalOnClass(org.springframework.messaging.Message.class)
     public MessagingHeaderRetriever messagingHeaderRetriever(Obfuscator obfuscator) {
         return new MessagingHeaderRetriever(obfuscator);
     }

@@ -10,10 +10,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.config.GlobalChannelInterceptor;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.support.ChannelInterceptor;
 
 @Configuration
-@ConditionalOnClass(value = {LsdContext.class, ChannelInterceptor.class})
+@ConditionalOnClass(value = {LsdContext.class, ChannelInterceptor.class, Message.class})
 @ConditionalOnProperty(name = "lsd.dist.db.connectionString")
 @RequiredArgsConstructor
 public class MessagingConfig {
