@@ -31,12 +31,6 @@ class QueueService(
     }
 
     fun enqueue(interceptedInteraction: InterceptedInteraction) {
-        val sequence = ringBuffer.next()
-        try {
-            val event = ringBuffer.get(sequence)
-            event.interceptedInteraction = interceptedInteraction
-        } finally {
-            ringBuffer.publish(sequence)
-        }
+        ringBuffer.publishEvent { event, _ -> event.interceptedInteraction = interceptedInteraction }
     }
 }
