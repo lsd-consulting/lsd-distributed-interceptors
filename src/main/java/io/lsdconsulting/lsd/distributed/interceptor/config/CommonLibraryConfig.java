@@ -1,9 +1,12 @@
 package io.lsdconsulting.lsd.distributed.interceptor.config;
 
 import brave.Tracer;
+import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
+import io.lsdconsulting.lsd.distributed.interceptor.persistance.EventProcessor;
+import io.lsdconsulting.lsd.distributed.interceptor.persistance.QueueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -30,5 +33,16 @@ public class CommonLibraryConfig {
     @Bean
     public TraceIdRetriever traceIdRetriever() {
         return new TraceIdRetriever(tracer);
+    }
+
+    @Bean
+    public EventProcessor eventProcessor(InterceptedDocumentRepository interceptedDocumentRepository) {
+        return new EventProcessor(interceptedDocumentRepository);
+    }
+
+    @Bean
+    public QueueService queueService(@Value("${lsd.dist.queue.length:1024}") final int queueLength,
+                                     EventProcessor eventProcessor) {
+        return new QueueService(queueLength, eventProcessor);
     }
 }

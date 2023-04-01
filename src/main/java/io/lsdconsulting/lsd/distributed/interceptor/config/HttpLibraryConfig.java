@@ -1,6 +1,5 @@
 package io.lsdconsulting.lsd.distributed.interceptor.config;
 
-import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.HttpHeaderRetriever;
@@ -10,6 +9,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.HttpStatu
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
+import io.lsdconsulting.lsd.distributed.interceptor.persistance.QueueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -43,7 +43,7 @@ public class HttpLibraryConfig {
     }
 
     @Bean
-    public RequestCaptor requestCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
+    public RequestCaptor requestCaptor(final QueueService queueService,
                                        final SourceTargetDeriver sourceTargetDeriver,
                                        final PathDeriver pathDeriver,
                                        final TraceIdRetriever traceIdRetriever,
@@ -51,12 +51,12 @@ public class HttpLibraryConfig {
                                        @Value("${spring.profiles.active:#{''}}") final String profile) {
 
 
-        return new RequestCaptor(interceptedDocumentRepository, sourceTargetDeriver,
+        return new RequestCaptor(queueService, sourceTargetDeriver,
                 pathDeriver, traceIdRetriever, httpHeaderRetriever, profile);
     }
 
     @Bean
-    public ResponseCaptor responseCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
+    public ResponseCaptor responseCaptor(final QueueService queueService,
                                          final SourceTargetDeriver sourceTargetDeriver,
                                          final PathDeriver pathDeriver,
                                          final TraceIdRetriever traceIdRetriever,
@@ -64,7 +64,7 @@ public class HttpLibraryConfig {
                                          final HttpStatusDeriver httpStatusDeriver,
                                          @Value("${spring.profiles.active:#{''}}") final String profile) {
 
-        return new ResponseCaptor(interceptedDocumentRepository, sourceTargetDeriver,
+        return new ResponseCaptor(queueService, sourceTargetDeriver,
                 pathDeriver, traceIdRetriever, httpHeaderRetriever, httpStatusDeriver, profile);
     }
 }

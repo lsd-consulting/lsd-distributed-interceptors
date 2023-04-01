@@ -1,11 +1,11 @@
 package io.lsdconsulting.lsd.distributed.interceptor.config;
 
-import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessagingCaptor;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessagingHeaderRetriever;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
+import io.lsdconsulting.lsd.distributed.interceptor.persistance.QueueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -25,11 +25,11 @@ public class MessagingLibraryConfig {
     }
 
     @Bean
-    public MessagingCaptor messagingCaptor(final InterceptedDocumentRepository interceptedDocumentRepository,
+    public MessagingCaptor messagingCaptor(final QueueService queueService,
                                            final PropertyServiceNameDeriver propertyServiceNameDeriver,
                                            final TraceIdRetriever traceIdRetriever,
                                            final MessagingHeaderRetriever messagingHeaderRetriever,
                                            @Value("${spring.profiles.active:#{''}}") final String profile) {
-        return new MessagingCaptor(interceptedDocumentRepository, propertyServiceNameDeriver, traceIdRetriever, messagingHeaderRetriever, profile);
+        return new MessagingCaptor(queueService, propertyServiceNameDeriver, traceIdRetriever, messagingHeaderRetriever, profile);
     }
 }

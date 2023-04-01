@@ -3,6 +3,11 @@
     {
       "name": "lsd.dist.obfuscator.sensitiveHeaders",
       "type": "java.lang.String"
+    },
+    {
+      "name": "lsd.dist.queue.length",
+      "type": "java.lang.String",
+      "description" : "Must be a power of 2"
     }
   ]
 }

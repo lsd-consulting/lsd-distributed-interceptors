@@ -1,9 +1,9 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit;
 
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
-import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
+import io.lsdconsulting.lsd.distributed.interceptor.persistance.QueueService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.Message;
@@ -23,12 +23,12 @@ import static org.mockito.Mockito.mock;
 
 class RabbitCaptorShould {
 
-    private final InterceptedDocumentRepository interceptedDocumentRepository = mock(InterceptedDocumentRepository.class);
+    private final QueueService queueService = mock(QueueService.class);
     private final PropertyServiceNameDeriver propertyServiceNameDeriver = mock(PropertyServiceNameDeriver.class);
     private final TraceIdRetriever traceIdRetriever = mock(TraceIdRetriever.class);
     private final AmqpHeaderRetriever amqpHeaderRetriever = mock(AmqpHeaderRetriever.class);
 
-    private final RabbitCaptor underTest = new RabbitCaptor(interceptedDocumentRepository, propertyServiceNameDeriver, traceIdRetriever, amqpHeaderRetriever, "profile");
+    private final RabbitCaptor underTest = new RabbitCaptor(queueService, propertyServiceNameDeriver, traceIdRetriever, amqpHeaderRetriever, "profile");
 
     private final String exchange = randomAlphabetic(20);
     private final String serviceName = randomAlphabetic(20);

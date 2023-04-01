@@ -4,11 +4,11 @@ import feign.Request;
 import feign.RequestTemplate;
 import feign.Response;
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
-import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.HttpStatusDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
+import io.lsdconsulting.lsd.distributed.interceptor.persistance.QueueService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
@@ -33,7 +33,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 class ResponseCaptorShould {
 
-    private final InterceptedDocumentRepository interceptedDocumentRepository = mock(InterceptedDocumentRepository.class);
+    private final QueueService queueService = mock(QueueService.class);
     private final SourceTargetDeriver sourceTargetDeriver = mock(SourceTargetDeriver.class);
     private final TraceIdRetriever traceIdRetriever = mock(TraceIdRetriever.class);
     private final HttpRequest httpRequest = mock(HttpRequest.class);
@@ -43,7 +43,7 @@ class ResponseCaptorShould {
 
     private final PathDeriver pathDeriver = new PathDeriver();
 
-    private final ResponseCaptor underTest = new ResponseCaptor(interceptedDocumentRepository,
+    private final ResponseCaptor underTest = new ResponseCaptor(queueService,
             sourceTargetDeriver, pathDeriver, traceIdRetriever, httpHeaderRetriever, httpStatusDeriver, "profile");
 
     private final String url = randomAlphanumeric(20);
