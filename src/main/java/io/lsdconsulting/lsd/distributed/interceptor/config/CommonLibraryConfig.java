@@ -5,7 +5,6 @@ import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRep
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
-import io.lsdconsulting.lsd.distributed.interceptor.persistance.EventProcessor;
 import io.lsdconsulting.lsd.distributed.interceptor.persistance.QueueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,13 +35,8 @@ public class CommonLibraryConfig {
     }
 
     @Bean
-    public EventProcessor eventProcessor(InterceptedDocumentRepository interceptedDocumentRepository) {
-        return new EventProcessor(interceptedDocumentRepository);
-    }
-
-    @Bean
-    public QueueService queueService(@Value("${lsd.dist.queue.length:1024}") final int queueLength,
-                                     EventProcessor eventProcessor) {
-        return new QueueService(queueLength, eventProcessor);
+    public QueueService queueService(@Value("${lsd.dist.queue.length:16}") final int queueLength,
+                                     InterceptedDocumentRepository interceptedDocumentRepository) {
+        return new QueueService(queueLength, interceptedDocumentRepository);
     }
 }

@@ -1,36 +1,29 @@
 package io.lsdconsulting.lsd.distributed.interceptor.persistance
 
-import com.lmax.disruptor.EventFactory
-import com.lmax.disruptor.RingBuffer
-import com.lmax.disruptor.dsl.Disruptor
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
+import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
 class QueueService(
-    private val bufferSize: Int,
-    private val eventProcessor: EventProcessor
+    private val threadPoolSize: Int,
+    private val interceptedDocumentRepository: InterceptedDocumentRepository
 ) {
-    private lateinit var disruptor: Disruptor<Event>
-    private lateinit var ringBuffer: RingBuffer<Event>
+    private lateinit var executorService: ExecutorService
 
     @PostConstruct
     fun start() {
-        val eventFactory: EventFactory<Event> = EventFactory { Event() }
-
-        disruptor = Disruptor(eventFactory, bufferSize, Executors.newSingleThreadExecutor())
-        disruptor.handleEventsWith(eventProcessor)
-
-        ringBuffer = disruptor.start()
+        executorService = Executors.newFixedThreadPool(threadPoolSize)
     }
 
     @PreDestroy
     fun stop() {
-        disruptor.shutdown()
+        executorService.shutdown()
     }
 
     fun enqueue(interceptedInteraction: InterceptedInteraction) {
-        ringBuffer.publishEvent { event, _ -> event.interceptedInteraction = interceptedInteraction }
+        executorService.submit { interceptedDocumentRepository.save(interceptedInteraction) }
     }
 }
