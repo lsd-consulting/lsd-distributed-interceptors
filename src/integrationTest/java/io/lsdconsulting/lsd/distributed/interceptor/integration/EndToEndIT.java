@@ -109,9 +109,9 @@ public class EndToEndIT extends IntegrationTestBase {
         await().untilAsserted(() -> assertThat(testRepository.findAll(setupTraceId2), hasSize(2)));
 
         lsdLogger.captureInteractionsFromDatabase(Map.of(
-                mainTraceId, Optional.of("[#blue]"),
-                setupTraceId1, Optional.of("[#green]"),
-                setupTraceId2, Optional.of("[#red]"))
+                mainTraceId, Optional.of("blue"),
+                setupTraceId1, Optional.of("green"),
+                setupTraceId2, Optional.of("red"))
         );
 
         String report = getReport("shouldGenerateDiagramWithSuppliedNamesAndColoursForMultipleTraceIds", "Should generate LSD with supplied names and colours for multiple traceIds");
