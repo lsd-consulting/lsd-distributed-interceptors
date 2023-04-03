@@ -19,7 +19,7 @@ class QueueService(
     fun start() {
         val eventFactory: EventFactory<Event> = EventFactory { Event() }
 
-        disruptor = Disruptor(eventFactory, bufferSize, Executors.defaultThreadFactory())
+        disruptor = Disruptor(eventFactory, bufferSize, Executors.newSingleThreadExecutor())
         disruptor.handleEventsWith(eventProcessor)
 
         ringBuffer = disruptor.start()
