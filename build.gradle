@@ -19,6 +19,7 @@ println "Build Version = ${version}"
 
 sourceCompatibility = '11'
 targetCompatibility = '11'
+compileKotlin.kotlinOptions.jvmTarget = '11'
 
 repositories {
     mavenLocal()
