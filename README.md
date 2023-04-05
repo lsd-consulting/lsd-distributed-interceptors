@@ -40,14 +40,15 @@ and configure through the available properties.
 
 The following properties can be overridden by setting System or Environment properties.
 
-| Property Name        | Default     | Required | Description |
-| ----------- | ----------- | ------------ | ------------ |
-| lsd.dist.db.connectionString | N/A | YES | Connection string to the database, eg. mongodb://localhost:27017 |
-| lsd.dist.db.connectionTimeout.millis | 500 | NO | Database connection timeout. |
-| lsd.dist.db.collectionSizeLimit.megabytes | 10,000 | NO | Capped database collection size in megabytes. |
-| lsd.dist.db.trustStoreLocation | N/A | NO | The location of the trust store containing the certificate of the signing authority (only required for TLS where the certificate if provided). |
-| lsd.dist.db.trustStorePassword | N/A | NO | The password to the trust store containing the certificate of the signing authority. |
-| lsd.dist.obfuscator.sensitiveHeaders | None | NO | A comma delimited list of header names that will be removed before storing in the database, eg. Authorization,JWT |
+| Property Name        | Default | Required | Description                                                                                                                                    |
+| ----------- |---------| ------------ |------------------------------------------------------------------------------------------------------------------------------------------------|
+| lsd.dist.db.connectionString | N/A     | YES | Connection string to the database, eg. mongodb://localhost:27017                                                                               |
+| lsd.dist.db.connectionTimeout.millis | 500     | NO | Database connection timeout.                                                                                                                   |
+| lsd.dist.db.collectionSizeLimit.megabytes | 10,000  | NO | Capped database collection size in megabytes.                                                                                                  |
+| lsd.dist.db.trustStoreLocation | N/A     | NO | The location of the trust store containing the certificate of the signing authority (only required for TLS where the certificate if provided). |
+| lsd.dist.db.trustStorePassword | N/A     | NO | The password to the trust store containing the certificate of the signing authority.                                                           |
+| lsd.dist.obfuscator.sensitiveHeaders | None    | NO | A comma delimited list of header names that will be removed before storing in the database, eg. Authorization, JWT                             |
+| lsd.dist.threadPool.size | 16      | NO | `corePoolSize` of the `ThreadPoolExecutor` for enqueueuing intercepted interactions. `maximumPoolSize` is set as `corePoolSize` * 10           |
 
 ## Obfuscation
 

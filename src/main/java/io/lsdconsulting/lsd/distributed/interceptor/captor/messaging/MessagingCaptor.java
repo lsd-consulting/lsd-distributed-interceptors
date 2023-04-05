@@ -1,10 +1,10 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.messaging;
 
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
-import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.TypeConverter;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
+import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lsd.format.PrettyPrinter;
@@ -26,7 +26,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Slf4j
 public class MessagingCaptor {
 
-    private final InterceptedDocumentRepository interceptedDocumentRepository;
+    private final RepositoryService repositoryService;
     private final PropertyServiceNameDeriver propertyServiceNameDeriver;
     private final TraceIdRetriever traceIdRetriever;
     private final MessagingHeaderRetriever messagingHeaderRetriever;
@@ -47,7 +47,7 @@ public class MessagingCaptor {
                 .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
                 .build();
 
-        interceptedDocumentRepository.save(interceptedInteraction);
+        repositoryService.enqueue(interceptedInteraction);
         return interceptedInteraction;
     }
 
@@ -88,7 +88,7 @@ public class MessagingCaptor {
                 .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
                 .build();
 
-        interceptedDocumentRepository.save(interceptedInteraction);
+        repositoryService.enqueue(interceptedInteraction);
         return interceptedInteraction;
     }
 }

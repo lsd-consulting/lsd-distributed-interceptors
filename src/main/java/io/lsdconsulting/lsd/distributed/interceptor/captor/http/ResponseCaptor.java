@@ -2,12 +2,12 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor.http;
 
 import feign.Response;
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
-import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.TypeConverter;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.HttpStatusDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
+import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 @Slf4j
 public class ResponseCaptor {
 
-    private final InterceptedDocumentRepository interceptedDocumentRepository;
+    private final RepositoryService repositoryService;
     private final SourceTargetDeriver sourceTargetDeriver;
     private final PathDeriver pathDeriver;
     private final TraceIdRetriever traceIdRetriever;
@@ -48,7 +48,7 @@ public class ResponseCaptor {
         final String httpStatus = httpStatusDeriver.derive(response.status());
 
         final InterceptedInteraction interceptedInteraction = buildInterceptedInteraction(target, path, traceId, elapsedTime, requestHeaders, responseHeaders, serviceName, TypeConverter.convert(response.body()), httpStatus);
-        interceptedDocumentRepository.save(interceptedInteraction);
+        repositoryService.enqueue(interceptedInteraction);
         return interceptedInteraction;
     }
 
@@ -60,7 +60,7 @@ public class ResponseCaptor {
         final String httpStatus = response.getStatusCode().toString();
 
         final InterceptedInteraction interceptedInteraction = buildInterceptedInteraction(target, path, traceId, elapsedTime, requestHeaders, responseHeaders, serviceName, body, httpStatus);
-        interceptedDocumentRepository.save(interceptedInteraction);
+        repositoryService.enqueue(interceptedInteraction);
         return interceptedInteraction;
     }
 

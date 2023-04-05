@@ -1,9 +1,9 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.messaging;
 
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
-import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
+import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.integration.support.MutableMessage;
@@ -24,12 +24,12 @@ import static org.mockito.Mockito.verify;
 
 class MessagingCaptorShould {
 
-    private final InterceptedDocumentRepository interceptedDocumentRepository = mock(InterceptedDocumentRepository.class);
+    private final RepositoryService repositoryService = mock(RepositoryService.class);
     private final PropertyServiceNameDeriver propertyServiceNameDeriver = mock(PropertyServiceNameDeriver.class);
     private final TraceIdRetriever traceIdRetriever = mock(TraceIdRetriever.class);
     private final MessagingHeaderRetriever messagingHeaderRetriever = mock(MessagingHeaderRetriever.class);
 
-    private final MessagingCaptor underTest = new MessagingCaptor(interceptedDocumentRepository, propertyServiceNameDeriver, traceIdRetriever, messagingHeaderRetriever, "profile");
+    private final MessagingCaptor underTest = new MessagingCaptor(repositoryService, propertyServiceNameDeriver, traceIdRetriever, messagingHeaderRetriever, "profile");
 
     private final String topic = randomAlphabetic(20);
     private final String serviceName = randomAlphabetic(20);
@@ -59,7 +59,7 @@ class MessagingCaptorShould {
         assertThat(result.getRequestHeaders(), is(Map.of("name", List.of("value"), "__TypeId__", List.of(topic))));
         assertThat(result.getResponseHeaders(), aMapWithSize(0));
 
-        verify(interceptedDocumentRepository).save(result);
+        verify(repositoryService).enqueue(result);
     }
 
     @Test
@@ -85,7 +85,7 @@ class MessagingCaptorShould {
         assertThat(result.getRequestHeaders(), is(Map.of("name", List.of("value"), "__TypeId__", List.of("blah"), "Target-Name", List.of(topic))));
         assertThat(result.getResponseHeaders(), aMapWithSize(0));
 
-        verify(interceptedDocumentRepository).save(result);
+        verify(repositoryService).enqueue(result);
     }
 
     @Test
@@ -110,7 +110,7 @@ class MessagingCaptorShould {
         assertThat(result.getRequestHeaders(), is(Map.of("name", List.of("value"))));
         assertThat(result.getResponseHeaders(), aMapWithSize(0));
 
-        verify(interceptedDocumentRepository).save(result);
+        verify(repositoryService).enqueue(result);
     }
 
     @Test
@@ -136,6 +136,6 @@ class MessagingCaptorShould {
         assertThat(result.getRequestHeaders(), is(Map.of("name", List.of("value"))));
         assertThat(result.getResponseHeaders(), aMapWithSize(0));
 
-        verify(interceptedDocumentRepository).save(result);
+        verify(repositoryService).enqueue(result);
     }
 }
