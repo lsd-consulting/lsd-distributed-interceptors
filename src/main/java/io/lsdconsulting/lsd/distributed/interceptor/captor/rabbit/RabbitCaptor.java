@@ -5,7 +5,7 @@ import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.TypeConverter;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
-import io.lsdconsulting.lsd.distributed.interceptor.persistance.QueueService;
+import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Message;
 
@@ -19,7 +19,7 @@ import static java.util.Collections.emptyMap;
 @RequiredArgsConstructor
 public class RabbitCaptor {
 
-    private final QueueService queueService;
+    private final RepositoryService repositoryService;
     private final PropertyServiceNameDeriver propertyServiceNameDeriver;
     private final TraceIdRetriever traceIdRetriever;
     private final AmqpHeaderRetriever amqpHeaderRetriever;
@@ -41,7 +41,7 @@ public class RabbitCaptor {
                 .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
                 .build();
 
-        queueService.enqueue(interceptedInteraction);
+        repositoryService.enqueue(interceptedInteraction);
         return interceptedInteraction;
     }
 }

@@ -6,7 +6,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.AmqpHeaderRetr
 import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.RabbitCaptor;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.mapper.ExchangeNameDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
-import io.lsdconsulting.lsd.distributed.interceptor.persistance.QueueService;
+import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -34,12 +34,12 @@ public class AmqpLibraryConfig {
 
     @Bean
     @ConditionalOnBean(name = "amqpHeaderRetriever")
-    public RabbitCaptor publishCaptor(final QueueService queueService,
+    public RabbitCaptor publishCaptor(final RepositoryService repositoryService,
                                       final PropertyServiceNameDeriver propertyServiceNameDeriver,
                                       final TraceIdRetriever traceIdRetriever,
                                       final AmqpHeaderRetriever amqpHeaderRetriever,
                                       @Value("${spring.profiles.active:#{''}}") final String profile) {
 
-        return new RabbitCaptor(queueService, propertyServiceNameDeriver, traceIdRetriever, amqpHeaderRetriever, profile);
+        return new RabbitCaptor(repositoryService, propertyServiceNameDeriver, traceIdRetriever, amqpHeaderRetriever, profile);
     }
 }

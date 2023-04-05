@@ -9,7 +9,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.HttpStatu
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
-import io.lsdconsulting.lsd.distributed.interceptor.persistance.QueueService;
+import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -43,7 +43,7 @@ public class HttpLibraryConfig {
     }
 
     @Bean
-    public RequestCaptor requestCaptor(final QueueService queueService,
+    public RequestCaptor requestCaptor(final RepositoryService repositoryService,
                                        final SourceTargetDeriver sourceTargetDeriver,
                                        final PathDeriver pathDeriver,
                                        final TraceIdRetriever traceIdRetriever,
@@ -51,12 +51,12 @@ public class HttpLibraryConfig {
                                        @Value("${spring.profiles.active:#{''}}") final String profile) {
 
 
-        return new RequestCaptor(queueService, sourceTargetDeriver,
+        return new RequestCaptor(repositoryService, sourceTargetDeriver,
                 pathDeriver, traceIdRetriever, httpHeaderRetriever, profile);
     }
 
     @Bean
-    public ResponseCaptor responseCaptor(final QueueService queueService,
+    public ResponseCaptor responseCaptor(final RepositoryService repositoryService,
                                          final SourceTargetDeriver sourceTargetDeriver,
                                          final PathDeriver pathDeriver,
                                          final TraceIdRetriever traceIdRetriever,
@@ -64,7 +64,7 @@ public class HttpLibraryConfig {
                                          final HttpStatusDeriver httpStatusDeriver,
                                          @Value("${spring.profiles.active:#{''}}") final String profile) {
 
-        return new ResponseCaptor(queueService, sourceTargetDeriver,
+        return new ResponseCaptor(repositoryService, sourceTargetDeriver,
                 pathDeriver, traceIdRetriever, httpHeaderRetriever, httpStatusDeriver, profile);
     }
 }

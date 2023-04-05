@@ -7,7 +7,7 @@ import java.util.concurrent.*
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
-class QueueService(
+class RepositoryService(
     private val threadPoolSize: Int,
     private val interceptedDocumentRepository: InterceptedDocumentRepository
 ) {

@@ -6,7 +6,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.TypeConverter
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever;
-import io.lsdconsulting.lsd.distributed.interceptor.persistance.QueueService;
+import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
@@ -23,7 +23,7 @@ import static java.util.Collections.emptyMap;
 @RequiredArgsConstructor
 public class RequestCaptor {
 
-    private final QueueService queueService;
+    private final RepositoryService repositoryService;
     private final SourceTargetDeriver sourceTargetDeriver;
     private final PathDeriver pathDeriver;
     private final TraceIdRetriever traceIdRetriever;
@@ -38,7 +38,7 @@ public class RequestCaptor {
         final String target = sourceTargetDeriver.deriveTarget(headers, path);
         final String serviceName = sourceTargetDeriver.deriveServiceName(headers);
         final InterceptedInteraction interceptedInteraction = buildInterceptedInteraction(headers, body, path, traceId, target, serviceName, request.httpMethod().name());
-        queueService.enqueue(interceptedInteraction);
+        repositoryService.enqueue(interceptedInteraction);
         return interceptedInteraction;
     }
 
@@ -49,7 +49,7 @@ public class RequestCaptor {
         final String target = sourceTargetDeriver.deriveTarget(headers, path);
         final String serviceName = sourceTargetDeriver.deriveServiceName(headers);
         final InterceptedInteraction interceptedInteraction = buildInterceptedInteraction(headers, body, path, traceId, target, serviceName, request.getMethodValue());
-        queueService.enqueue(interceptedInteraction);
+        repositoryService.enqueue(interceptedInteraction);
         return interceptedInteraction;
     }
 
