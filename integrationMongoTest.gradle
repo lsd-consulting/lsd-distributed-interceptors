@@ -1,15 +1,15 @@
 sourceSets {
     integrationMongoTest {
         java {
-            compileClasspath += main.output + test.output
-            runtimeClasspath += main.output + test.output
+            compileClasspath += main.output
+            runtimeClasspath += main.output
             srcDir file('src/integrationMongoTest/java')
         }
     }
 }
 
 configurations {
-    integrationMongoTestImplementation.extendsFrom testImplementation
+    integrationMongoTestImplementation.extendsFrom implementation
 }
 
 dependencies {
@@ -18,6 +18,9 @@ dependencies {
     integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-test'
     integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock'
+    integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-amqp'
+    integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
 
     // Lombok
     integrationMongoTestCompileOnly 'org.projectlombok:lombok:1.18.26'
@@ -28,6 +31,7 @@ dependencies {
     integrationMongoTestImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'
     integrationMongoTestImplementation 'org.awaitility:awaitility:4.1.0'
     integrationMongoTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
+    integrationMongoTestImplementation 'org.junit.platform:junit-platform-launcher:1.9.2'
 
     // LSD
     integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-junit5:3.0.3'

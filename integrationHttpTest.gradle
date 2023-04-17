@@ -1,8 +1,8 @@
 sourceSets {
     integrationHttpTest {
         java {
-            compileClasspath += main.output + test.output
-            runtimeClasspath += main.output + test.output
+            compileClasspath += main.output
+            runtimeClasspath += main.output
             srcDir file('src/integrationHttpTest/java')
         }
     }
