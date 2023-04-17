@@ -17,7 +17,6 @@ dependencies {
     // Spring
     integrationHttpTestImplementation 'org.springframework.boot:spring-boot-starter-test'
     integrationHttpTestImplementation 'org.springframework.boot:spring-boot-starter-amqp'
-    integrationHttpTestImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     integrationHttpTestImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock'
     integrationHttpTestImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     integrationHttpTestImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
@@ -27,21 +26,18 @@ dependencies {
     integrationHttpTestAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 
     // Other
-    integrationHttpTestImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.0.0'
     integrationHttpTestImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'
     integrationHttpTestImplementation 'org.awaitility:awaitility:4.1.0'
     integrationHttpTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
 
     // LSD
-    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-junit5:3.0.3'
+    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-junit5:3.1.0'
     integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:1.1.9'
-    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui:3.1.1-2-ge498aff.dirty:wiremock-stubs'){
+    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui:3.1.2:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
 
-//    integrationHttpTestImplementation(platform("com.fasterxml.jackson:jackson-bom:2.12.5"))
-//    integrationHttpTestImplementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.12.5'
-    integrationHttpTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.5'
+    integrationHttpTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
 }
 
 task integrationHttpTest(type: Test) {
