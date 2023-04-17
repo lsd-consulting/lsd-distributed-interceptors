@@ -65,20 +65,20 @@ public class ResponseCaptor {
     }
 
     private InterceptedInteraction buildInterceptedInteraction(String target, String path, String traceId, Long elapsedTime, Map<String, Collection<String>> requestHeaders, Map<String, Collection<String>> responseHeaders, String serviceName, String body, String httpStatus) {
-        return InterceptedInteraction.builder()
-                .traceId(traceId)
-                .body(body)
-                .requestHeaders(requestHeaders)
-                .responseHeaders(responseHeaders)
-                .serviceName(serviceName)
-                .target(target)
-                .path(path)
-                .httpStatus(httpStatus)
-                .interactionType(RESPONSE)
-                .profile(profile)
-                .elapsedTime(elapsedTime)
-                .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
-                .build();
+        return new InterceptedInteraction(
+                traceId,
+                body,
+                requestHeaders,
+                responseHeaders,
+                serviceName,
+                target,
+                path,
+                httpStatus,
+                null,
+                RESPONSE,
+                profile,
+                elapsedTime,
+                ZonedDateTime.now(ZoneId.of("UTC")));
     }
 
     private String copyBodyToString(final ClientHttpResponse response) throws IOException {

@@ -28,18 +28,20 @@ public class RabbitCaptor {
     public InterceptedInteraction captureInteraction(final String exchange, final Message message, final InteractionType type) {
 
         Map<String, Collection<String>> headers = amqpHeaderRetriever.retrieve(message);
-        final InterceptedInteraction interceptedInteraction = InterceptedInteraction.builder()
-                .traceId(traceIdRetriever.getTraceId(headers))
-                .body(TypeConverter.convert(message.getBody()))
-                .requestHeaders(headers)
-                .responseHeaders(emptyMap())
-                .serviceName(propertyServiceNameDeriver.getServiceName())
-                .target(exchange)
-                .path(exchange)
-                .interactionType(type)
-                .profile(profile)
-                .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
-                .build();
+        final InterceptedInteraction interceptedInteraction = new InterceptedInteraction(
+                traceIdRetriever.getTraceId(headers),
+                TypeConverter.convert(message.getBody()),
+                headers,
+                emptyMap(),
+                propertyServiceNameDeriver.getServiceName(),
+                exchange,
+                exchange,
+                null,
+                null,
+                type,
+                profile,
+                0L,
+                ZonedDateTime.now(ZoneId.of("UTC")));
 
         repositoryService.enqueue(interceptedInteraction);
         return interceptedInteraction;

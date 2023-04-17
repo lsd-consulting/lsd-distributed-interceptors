@@ -34,18 +34,20 @@ public class MessagingCaptor {
 
     public InterceptedInteraction captureConsumeInteraction(final Message<?> message) {
         Map<String, Collection<String>> headers = messagingHeaderRetriever.retrieve(message);
-        final InterceptedInteraction interceptedInteraction = InterceptedInteraction.builder()
-                .traceId(traceIdRetriever.getTraceId(headers))
-                .body(PrettyPrinter.prettyPrint(TypeConverter.convert((byte[]) message.getPayload())))
-                .requestHeaders(headers)
-                .responseHeaders(emptyMap())
-                .serviceName(propertyServiceNameDeriver.getServiceName())
-                .target(getSource(message))
-                .path(propertyServiceNameDeriver.getServiceName())
-                .interactionType(CONSUME)
-                .profile(profile)
-                .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
-                .build();
+        final InterceptedInteraction interceptedInteraction = new InterceptedInteraction(
+                traceIdRetriever.getTraceId(headers),
+                PrettyPrinter.prettyPrint(TypeConverter.convert((byte[]) message.getPayload())),
+                headers,
+                emptyMap(),
+                propertyServiceNameDeriver.getServiceName(),
+                getSource(message),
+                propertyServiceNameDeriver.getServiceName(),
+                null,
+                null,
+                CONSUME,
+                profile,
+                0L,
+                ZonedDateTime.now(ZoneId.of("UTC")));
 
         repositoryService.enqueue(interceptedInteraction);
         return interceptedInteraction;
@@ -75,18 +77,20 @@ public class MessagingCaptor {
         String target = (String) message.getHeaders().get(TARGET_NAME_KEY);
 
         Map<String, Collection<String>> headers = messagingHeaderRetriever.retrieve(message);
-        final InterceptedInteraction interceptedInteraction = InterceptedInteraction.builder()
-                .traceId(traceIdRetriever.getTraceId(headers))
-                .body(TypeConverter.convert((byte[]) message.getPayload()))
-                .requestHeaders(headers)
-                .responseHeaders(emptyMap())
-                .serviceName(source != null ? source : propertyServiceNameDeriver.getServiceName())
-                .target(target)
-                .path(target)
-                .interactionType(PUBLISH)
-                .profile(profile)
-                .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
-                .build();
+        final InterceptedInteraction interceptedInteraction = new InterceptedInteraction(
+                traceIdRetriever.getTraceId(headers),
+                TypeConverter.convert((byte[]) message.getPayload()),
+                headers,
+                emptyMap(),
+                source != null ? source : propertyServiceNameDeriver.getServiceName(),
+                target,
+                target,
+                null,
+                null,
+                PUBLISH,
+                profile,
+                0L,
+                ZonedDateTime.now(ZoneId.of("UTC")));
 
         repositoryService.enqueue(interceptedInteraction);
         return interceptedInteraction;

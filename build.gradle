@@ -17,9 +17,9 @@ group = 'io.github.lsd-consulting'
 version = gitVersion().replaceAll("^v", "")
 println "Build Version = ${version}"
 
-sourceCompatibility = '11'
-targetCompatibility = '11'
-compileKotlin.kotlinOptions.jvmTarget = '11'
+sourceCompatibility = '17'
+targetCompatibility = '17'
+compileKotlin.kotlinOptions.jvmTarget = '17'
 
 repositories {
     mavenLocal()
@@ -34,7 +34,8 @@ jacocoTestReport {
     }
     executionData(
             file("${project.buildDir}/jacoco/test.exec"),
-            file("${project.buildDir}/jacoco/integrationTest.exec")
+            file("${project.buildDir}/jacoco/integrationTest.exec"),
+            file("${project.buildDir}/jacoco/integrationHttpTest.exec")
     )
 }
 
@@ -51,5 +52,6 @@ apply from: 'dependencies.gradle'
 apply from: 'publishing.gradle'
 apply from: 'test.gradle'
 apply from: 'integrationTest.gradle'
+apply from: 'integrationHttpTest.gradle'
 apply from: 'pitest.gradle'
 apply from: 'hooks.gradle'

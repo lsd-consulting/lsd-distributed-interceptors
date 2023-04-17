@@ -27,11 +27,11 @@ dependencies {
     integrationTestImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.0.0'
     integrationTestImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'
     integrationTestImplementation 'org.awaitility:awaitility:4.1.0'
-    integrationTestImplementation 'com.github.tomakehurst:wiremock:2.27.2'
+    integrationTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
 
     // LSD
     integrationTestImplementation 'io.github.lsd-consulting:lsd-junit5:3.1.0'
-    integrationTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:1.1.7'
+    integrationTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:1.1.9'
 }
 
 task integrationTest(type: Test) {
@@ -51,7 +51,7 @@ check.dependsOn(integrationTest)
 integrationTest {
     afterSuite { desc, result ->
         if (!desc.parent) {
-            println "Integration test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+            println "Mongo integration test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
             if (result.testCount == 0) {
                 throw new IllegalStateException("No tests were found. Failing the build")
             }

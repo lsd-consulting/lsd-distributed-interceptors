@@ -54,18 +54,19 @@ public class RequestCaptor {
     }
 
     private InterceptedInteraction buildInterceptedInteraction(Map<String, Collection<String>> headers, String body, String path, String traceId, String target, String serviceName, String httpMethod) {
-        return InterceptedInteraction.builder()
-                .traceId(traceId)
-                .body(body)
-                .requestHeaders(headers)
-                .responseHeaders(emptyMap())
-                .serviceName(serviceName)
-                .target(target)
-                .path(path)
-                .httpMethod(httpMethod)
-                .interactionType(REQUEST)
-                .profile(profile)
-                .createdAt(ZonedDateTime.now(ZoneId.of("UTC")))
-                .build();
+        return new InterceptedInteraction(
+                traceId,
+                body,
+                headers,
+                emptyMap(),
+                serviceName,
+                target,
+                path,
+                null,
+                httpMethod,
+                REQUEST,
+                profile,
+                0L,
+                ZonedDateTime.now(ZoneId.of("UTC")));
     }
 }

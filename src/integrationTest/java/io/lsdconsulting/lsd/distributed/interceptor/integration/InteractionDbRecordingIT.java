@@ -108,9 +108,8 @@ public class InteractionDbRecordingIT extends IntegrationTestBase {
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), is("response_from_controller"));
 
+        final ParameterizedTypeReference<SomethingDoneEvent> type = new ParameterizedTypeReference<>() {};
         await().untilAsserted(() -> {
-            final ParameterizedTypeReference<SomethingDoneEvent> type = new ParameterizedTypeReference<>() {
-            };
             final SomethingDoneEvent message = rabbitTemplate.receiveAndConvert("queue-rabbit-template", 2000, type);
             assertThat(message, is(notNullValue()));
             assertThat(message.getMessage(), is("from_controller"));
