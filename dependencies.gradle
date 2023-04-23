@@ -9,7 +9,7 @@ dependencies {
     compileOnly 'org.springframework.integration:spring-integration-core'
 
     // LSD
-    api 'io.github.lsd-consulting:lsd-core:3.5.0'
+    api 'io.github.lsd-consulting:lsd-core:4.1.0'
     implementation 'io.github.lsd-consulting:lsd-formatting-library:1.0.8'
     implementation 'io.github.lsd-consulting:lsd-distributed-data-access:0.1.7'
     implementation 'io.github.lsd-consulting:lsd-distributed-mongodb-access:2.0.5'
