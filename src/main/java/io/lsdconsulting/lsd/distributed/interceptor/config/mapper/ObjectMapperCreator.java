@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
+import static com.fasterxml.jackson.module.kotlin.ExtensionsKt.jacksonObjectMapper;
 
 public class ObjectMapperCreator {
     private final ObjectMapper objectMapper;
@@ -14,7 +15,7 @@ public class ObjectMapperCreator {
     }
 
     private ObjectMapper objectMapper() {
-        final ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = jacksonObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(WRITE_DATES_AS_TIMESTAMPS, false);
         mapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);

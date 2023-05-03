@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.lsd.core.domain.ParticipantType.*;
 import static com.lsd.core.domain.Status.SUCCESS;
@@ -39,7 +38,7 @@ public class EndToEndIT extends IntegrationTestBase {
 
     @BeforeEach
     void setup() {
-        lsdLogger = new LsdLogger(interactionGenerator, lsdContext);
+        lsdLogger = new LsdLogger(interactionGenerator);
     }
 
     @Test
@@ -60,7 +59,7 @@ public class EndToEndIT extends IntegrationTestBase {
 
         await().untilAsserted(() -> assertThat(testRepository.findAll(mainTraceId), hasSize(8)));
 
-        lsdLogger.captureInteractionsFromDatabase(mainTraceId);
+        lsdLogger.captureInteractionsFromDatabase(lsdContext, mainTraceId);
         String report = getReport("shouldRecordHeaderSuppliedNames", "Should record header supplied names - Client and TestApp");
 
         // Assert diagram content
@@ -108,10 +107,10 @@ public class EndToEndIT extends IntegrationTestBase {
         assertThat(setup2Response.getStatusCode(), is(HttpStatus.OK));
         await().untilAsserted(() -> assertThat(testRepository.findAll(setupTraceId2), hasSize(2)));
 
-        lsdLogger.captureInteractionsFromDatabase(Map.of(
-                mainTraceId, Optional.of("blue"),
-                setupTraceId1, Optional.of("green"),
-                setupTraceId2, Optional.of("red"))
+        lsdLogger.captureInteractionsFromDatabase(lsdContext, Map.of(
+                mainTraceId, "blue",
+                setupTraceId1, "green",
+                setupTraceId2, "red")
         );
 
         String report = getReport("shouldGenerateDiagramWithSuppliedNamesAndColoursForMultipleTraceIds", "Should generate LSD with supplied names and colours for multiple traceIds");
@@ -127,7 +126,7 @@ public class EndToEndIT extends IntegrationTestBase {
 
     private String getReport(String title, String description) {
         lsdContext.completeScenario(title, description, SUCCESS);
-        String report = lsdContext.generateReport(title);
+        String report = lsdContext.renderReport(title);
         lsdContext.completeReport(title);
         return report;
     }

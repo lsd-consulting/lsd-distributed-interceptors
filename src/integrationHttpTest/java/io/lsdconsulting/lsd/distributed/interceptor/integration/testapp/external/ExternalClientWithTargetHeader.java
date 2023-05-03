@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import static io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.external.ExternalClientWithTargetHeader.ClientConfig;
 
-@FeignClient(name = "externalClientTargetHeader", url = "http://localhost:${wiremock.server.port}", configuration = ClientConfig.class)
+@FeignClient(name = "externalClientTargetHeader", url = "http://localhost:${server.wiremock.port}", configuration = ClientConfig.class)
 public interface ExternalClientWithTargetHeader {
 
     @PostMapping("/external-api?message=from_feign")

@@ -7,6 +7,7 @@ import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodStarter;
 import de.flapdoodle.embed.mongo.config.MongodConfig;
 import de.flapdoodle.embed.mongo.config.Net;
+import io.lsdconsulting.lsd.distributed.access.model.InteractionType;
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.mongo.repository.codec.ZonedDateTimeCodec;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +16,14 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
 
 import static com.mongodb.MongoClientSettings.builder;
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static com.mongodb.client.model.Filters.eq;
-import static de.flapdoodle.embed.mongo.distribution.Version.Main.PRODUCTION;
+import static de.flapdoodle.embed.mongo.distribution.Version.Main.V5_0;
 import static de.flapdoodle.embed.process.runtime.Network.localhostIsIPv6;
 import static org.bson.codecs.configuration.CodecRegistries.*;
 
@@ -44,7 +46,7 @@ public class TestRepository {
     public static void setupDatabase() {
         try {
             final MongodConfig mongodConfig = MongodConfig.builder()
-                    .version(PRODUCTION)
+                    .version(V5_0)
                     .net(new Net(MONGODB_HOST, MONGODB_PORT, localhostIsIPv6()))
                     .build();
 
@@ -78,10 +80,29 @@ public class TestRepository {
         final MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME).withCodecRegistry(pojoCodecRegistry);
 
         final List<InterceptedInteraction> result = new ArrayList<>();
-        try (final MongoCursor<InterceptedInteraction> cursor = collection.find(eq("traceId", traceId), InterceptedInteraction.class).iterator()) {
+        try (final MongoCursor<Document> cursor = collection.find(eq("traceId", traceId), Document.class).iterator()) {
             while (cursor.hasNext()) {
-                final InterceptedInteraction interceptedInteraction = cursor.next();
-                log.info("Retrieved interceptedInteraction:{}", interceptedInteraction);
+                final Document document = cursor.next();
+                log.info("Retrieved interceptedInteraction:{}", document);
+                var requestHeaders = new LinkedHashMap<String, Collection<String>>();
+                var responseHeaders = new LinkedHashMap<String, Collection<String>>();
+                document.get("requestHeaders", Document.class).forEach((key, value) -> requestHeaders.put(key, (Collection<String>) value));
+                document.get("responseHeaders", Document.class).forEach((key, value) -> responseHeaders.put(key, (Collection<String>) value));
+                var interceptedInteraction = new InterceptedInteraction(
+                        document.getString("traceId"),
+                        document.getString("body"),
+                        requestHeaders,
+                        responseHeaders,
+                        document.getString("serviceName"),
+                        document.getString("target"),
+                        document.getString("path"),
+                        document.getString("httpStatus"),
+                        document.getString("httpMethod"),
+                        InteractionType.valueOf(document.getString("interactionType")),
+                        document.getString("profile"),
+                        document.getLong("elapsedTime"),
+                        ZonedDateTime.ofInstant(document.get("createdAt", Date.class).toInstant(), ZoneId.of("UTC"))
+                );
                 result.add(interceptedInteraction);
             }
         } catch (final MongoException e) {

@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(name = "lsd.dist.db.connectionString")
+@ConditionalOnProperty(name = "lsd.dist.connectionString")
 @RequiredArgsConstructor
 public class AmqpLibraryConfig {
 

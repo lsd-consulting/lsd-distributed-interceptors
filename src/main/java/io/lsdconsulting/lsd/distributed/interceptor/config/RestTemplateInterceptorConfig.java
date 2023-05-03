@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @Configuration
-@ConditionalOnProperty(name = "lsd.dist.db.connectionString")
+@ConditionalOnProperty(name = "lsd.dist.connectionString")
 @ConditionalOnClass(RestTemplate.class)
 @RequiredArgsConstructor
 public class RestTemplateInterceptorConfig {

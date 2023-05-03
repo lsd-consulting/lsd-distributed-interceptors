@@ -21,7 +21,8 @@ class PathDeriverShould {
     @CsvSource(value = {
             "http://www.bbc.co.uk/somePage.html?abc=def, /somePage.html?abc=def",
             "http://www.bbc.co.uk/somePage.html, /somePage.html",
-            "https://www.bbc.co.uk/customer/1/address, /customer/1/address"
+            "https://www.bbc.co.uk/customer/1/address, /customer/1/address",
+            "https://www.bbc.co.uk/, /",
     })
     void derivePathFrom(final String url, final String expectedPath) {
         final String path = underTest.derivePathFrom(url);
@@ -29,12 +30,35 @@ class PathDeriverShould {
     }
 
     @Test
-    void derivePathFromHttpRequest() {
+    void derivePathFromEmptyResource() {
+        final String path = underTest.derivePathFrom("https://www.bbc.co.uk");
+        assertThat(path, is(""));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "http://www.bbc.co.uk/somePage.html?abc=def, /somePage.html?abc=def",
+            "http://www.bbc.co.uk/somePage.html, /somePage.html",
+            "https://www.bbc.co.uk/customer/1/address, /customer/1/address",
+            "https://www.bbc.co.uk/, /",
+            "https://www.bbc.co.uk/resource/childResource?param=value, /resource/childResource?param=value"
+    })
+    void derivePathFromHttpRequest(final String url, final String expectedPath) {
         HttpRequest httpRequest = mock(HttpRequest.class);
-        given(httpRequest.getURI()).willReturn(URI.create("https://localhost.com/resource/childResource?param=value"));
+        given(httpRequest.getURI()).willReturn(URI.create(url));
 
         final String path = underTest.derivePathFrom(httpRequest);
 
-        assertThat(path, is("/resource/childResource?param=value"));
+        assertThat(path, is(expectedPath));
+    }
+
+    @Test
+    void derivePathFromHttpRequestEmptyResource() {
+        HttpRequest httpRequest = mock(HttpRequest.class);
+        given(httpRequest.getURI()).willReturn(URI.create("https://www.bbc.co.uk"));
+
+        final String path = underTest.derivePathFrom(httpRequest);
+
+        assertThat(path, is(""));
     }
 }

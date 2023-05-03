@@ -47,7 +47,7 @@ public class TestController {
     }
 
     private SomethingDoneEvent getEvent() {
-        return SomethingDoneEvent.builder().message("from_controller").build();
+        return new SomethingDoneEvent("from_controller");
     }
 }
 

@@ -4,6 +4,8 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:3.12.4'
     testImplementation 'org.pitest:pitest-junit5-plugin:0.15'
     testImplementation 'org.hamcrest:hamcrest-core:2.2'
+    testImplementation 'org.jeasy:easy-random-core:5.0.0'
+    testImplementation 'io.mockk:mockk:1.13.5'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-amqp'
@@ -26,3 +28,5 @@ test {
         }
     }
 }
+
+compileTestKotlin.kotlinOptions.jvmTarget = "17"

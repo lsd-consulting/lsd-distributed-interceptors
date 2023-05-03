@@ -3,6 +3,8 @@ package io.lsdconsulting.lsd.distributed.interceptor.interceptor;
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.RequestCaptor;
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.ResponseCaptor;
+import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
@@ -18,6 +20,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 class LsdRestTemplateCustomizerShould {
+    private final EasyRandom easyRandom = new EasyRandom(new EasyRandomParameters().seed(System.currentTimeMillis()));
 
     private final RequestCaptor requestCaptor = mock(RequestCaptor.class);
     private final ResponseCaptor responseCaptor = mock(ResponseCaptor.class);
@@ -54,7 +57,7 @@ class LsdRestTemplateCustomizerShould {
 
     @Test
     void responseIsNotEmptyAfterInterception() {
-        given(requestCaptor.captureRequestInteraction(any(), anyString())).willReturn(InterceptedInteraction.builder().build());
+        given(requestCaptor.captureRequestInteraction(any(), anyString())).willReturn(easyRandom.nextObject(InterceptedInteraction.class));
 
         underTest.customize(restTemplate);
 

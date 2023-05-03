@@ -18,7 +18,7 @@ import static io.lsdconsulting.lsd.distributed.access.model.InteractionType.CONS
 /*
     This config adds the interception of messages to RabbitMq listeners
 */
-@ConditionalOnProperty(name = {"lsd.dist.db.connectionString"})
+@ConditionalOnProperty(name = {"lsd.dist.connectionString"})
 @ConditionalOnBean(SimpleRabbitListenerContainerFactory.class) // TODO What if there is no bean of this type?
 @Configuration
 @Slf4j

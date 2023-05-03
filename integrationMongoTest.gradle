@@ -17,7 +17,7 @@ dependencies {
     // Spring
     integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-test'
     integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-    integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock'
+    integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock' // TODO Remove!
     integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-amqp'
     integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
@@ -32,10 +32,11 @@ dependencies {
     integrationMongoTestImplementation 'org.awaitility:awaitility:4.1.0'
     integrationMongoTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
     integrationMongoTestImplementation 'org.junit.platform:junit-platform-launcher:1.9.2'
+    integrationMongoTestImplementation 'org.jeasy:easy-random-core:5.0.0'
 
     // LSD
-    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-junit5:3.1.0'
-    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:2.0.0'
+    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-junit5:4.0.0'
+    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:4.0.0'
 }
 
 task integrationMongoTest(type: Test) {

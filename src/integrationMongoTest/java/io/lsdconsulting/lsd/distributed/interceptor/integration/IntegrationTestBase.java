@@ -9,12 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,7 +27,7 @@ import static org.springframework.http.RequestEntity.get;
 @Slf4j
 @Import({RepositoryConfig.class, RestConfig.class, RabbitConfig.class, RabbitTemplateConfig.class})
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = {TestApplication.class})
-@TestPropertySource("classpath:application-test.properties")
+@ActiveProfiles("test")
 @AutoConfigureWireMock(port = 0)
 public class IntegrationTestBase {
 

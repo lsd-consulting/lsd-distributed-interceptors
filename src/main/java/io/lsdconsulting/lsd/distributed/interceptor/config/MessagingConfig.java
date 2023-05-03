@@ -15,7 +15,7 @@ import org.springframework.messaging.support.ChannelInterceptor;
 
 @Configuration
 @ConditionalOnClass(value = {LsdContext.class, ChannelInterceptor.class, Message.class})
-@ConditionalOnProperty(name = "lsd.dist.db.connectionString")
+@ConditionalOnProperty(name = "lsd.dist.connectionString")
 @RequiredArgsConstructor
 public class MessagingConfig {
 

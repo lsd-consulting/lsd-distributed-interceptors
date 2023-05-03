@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -30,7 +31,7 @@ class TypeConverterShould {
     public void convertResponseBodyToString() throws IOException {
         final String body = randomAlphanumeric(20);
         final Response.Body responseBody = Mockito.mock(Response.Body.class);
-        given(responseBody.asInputStream()).willReturn(IOUtils.toInputStream(body));
+        given(responseBody.asInputStream()).willReturn(IOUtils.toInputStream(body, UTF_8));
 
         assertThat(TypeConverter.convert(body.getBytes()), is(body));
     }

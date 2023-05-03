@@ -11,9 +11,7 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.IOException;
-
-import static java.time.ZonedDateTime.now;
-import static java.time.temporal.ChronoUnit.MILLIS;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created to intercept rest template calls for LSD interactions.
@@ -30,7 +28,7 @@ public class LsdRestTemplateInterceptor implements ClientHttpRequestInterceptor 
     public ClientHttpResponse intercept(final HttpRequest request, final byte[] body, final ClientHttpRequestExecution execution) throws IOException {
         final InterceptedInteraction interceptedInteraction;
 
-        var startDateTime = now();
+        var startDateTime = TimeHelper.INSTANCE.getNow();
 
         try {
             interceptedInteraction = requestCaptor.captureRequestInteraction(request, new String(body));
@@ -41,7 +39,7 @@ public class LsdRestTemplateInterceptor implements ClientHttpRequestInterceptor 
 
         final ClientHttpResponse response = execution.execute(request, body);
 
-        var elapsedTime = MILLIS.between(startDateTime, now());
+        var elapsedTime = TimeUnit.NANOSECONDS.toMillis(TimeHelper.INSTANCE.getNow() - startDateTime);
         try {
             responseCaptor.captureResponseInteraction(request, response, interceptedInteraction.getTarget(), interceptedInteraction.getPath(), interceptedInteraction.getTraceId(), elapsedTime);
         } catch (final Throwable t) {

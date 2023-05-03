@@ -37,7 +37,7 @@ class MessagingCaptorShould {
     private final String body = randomAlphabetic(20);
 
     @Test
-    void captureConsumeInteractionWithSourceFromTypeIdWhenTargetNameNotAvailable() {
+    void captureConsumeInteractionWithSourceFromTypeIdWhenTargetNameNotNoInHeader() {
         given(propertyServiceNameDeriver.getServiceName()).willReturn(serviceName);
         given(traceIdRetriever.getTraceId(any())).willReturn(traceId);
         given(messagingHeaderRetriever.retrieve(any(Message.class))).willReturn(Map.of("name", List.of("value"), "__TypeId__", List.of(topic)));
@@ -57,6 +57,32 @@ class MessagingCaptorShould {
         assertThat(result.getHttpStatus(), emptyOrNullString());
         assertThat(result.getProfile(), is("profile"));
         assertThat(result.getRequestHeaders(), is(Map.of("name", List.of("value"), "__TypeId__", List.of(topic))));
+        assertThat(result.getResponseHeaders(), aMapWithSize(0));
+
+        verify(repositoryService).enqueue(result);
+    }
+
+    @Test
+    void captureConsumeInteractionWithDefaultSourceWhenTargetNotAvailable() {
+        given(propertyServiceNameDeriver.getServiceName()).willReturn(serviceName);
+        given(traceIdRetriever.getTraceId(any())).willReturn(traceId);
+        given(messagingHeaderRetriever.retrieve(any(Message.class))).willReturn(Map.of("name", List.of("value")));
+
+        Map<String, Object> headers = Map.of("name", List.of("value"));
+        Message<?> message = new MutableMessage<>(body.getBytes(), headers);
+
+        final InterceptedInteraction result = underTest.captureConsumeInteraction(message);
+
+        assertThat(result.getTarget(), is("UNKNOWN"));
+        assertThat(result.getPath(), is(serviceName));
+        assertThat(result.getBody(), is(body));
+        assertThat(result.getServiceName(), is(serviceName));
+        assertThat(result.getTraceId(), is(traceId));
+        assertThat(result.getInteractionType(), Matchers.is(CONSUME));
+        assertThat(result.getHttpMethod(), emptyOrNullString());
+        assertThat(result.getHttpStatus(), emptyOrNullString());
+        assertThat(result.getProfile(), is("profile"));
+        assertThat(result.getRequestHeaders(), is(Map.of("name", List.of("value"))));
         assertThat(result.getResponseHeaders(), aMapWithSize(0));
 
         verify(repositoryService).enqueue(result);
