@@ -51,7 +51,7 @@ class ResponseCaptor(
 
     @Throws(IOException::class)
     fun captureResponseInteraction(
-        request: HttpRequest?,
+        request: HttpRequest,
         response: ClientHttpResponse,
         target: String,
         path: String,
@@ -83,7 +83,7 @@ class ResponseCaptor(
         path: String,
         traceId: String,
         elapsedTime: Long,
-        requestHeaders: MutableMap<String, Collection<String>>,
+        requestHeaders: Map<String, Collection<String>>,
         responseHeaders: Map<String, Collection<String>>,
         serviceName: String,
         body: String?,

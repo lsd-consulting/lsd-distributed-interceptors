@@ -32,9 +32,9 @@ dependencies {
 
     // LSD
     integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-junit5:4.0.0'
-    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:4.0.0'
-    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:4.0.1')
-    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:4.0.1:wiremock-stubs'){
+    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:4.0.1'
+    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:4.0.2')
+    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:4.0.2:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
 

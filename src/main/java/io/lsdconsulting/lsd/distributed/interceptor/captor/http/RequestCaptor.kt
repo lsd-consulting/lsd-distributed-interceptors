@@ -46,7 +46,7 @@ class RequestCaptor(
     }
 
     private fun buildInterceptedInteraction(
-        headers: MutableMap<String, Collection<String>>,
+        headers: Map<String, Collection<String>>,
         body: String?,
         path: String,
         traceId: String,
