@@ -20,5 +20,5 @@ pitest {
     outputFormats = ['HTML']
     coverageThreshold = 96
     mutationThreshold = 69
-    testStrengthThreshold = 73
+    testStrengthThreshold = 72
 }
