@@ -1,10 +1,8 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.mapper
 
-import lombok.extern.slf4j.Slf4j
 import org.apache.commons.lang3.StringUtils
 import org.springframework.amqp.core.MessageProperties
 
-@Slf4j
 class ExchangeNameDeriver {
     fun derive(messageProperties: MessageProperties, alternativeExchangeName: String?): String =
         getDefaultExchangeName(alternativeExchangeName).let { defaultExchangeName ->

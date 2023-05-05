@@ -1,10 +1,8 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit
 
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
-import lombok.RequiredArgsConstructor
 import org.springframework.amqp.core.Message
 
-@RequiredArgsConstructor
 class AmqpHeaderRetriever(
     private val obfuscator: Obfuscator
 ) {

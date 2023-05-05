@@ -1,10 +1,8 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.messaging
 
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
-import lombok.RequiredArgsConstructor
 import org.springframework.messaging.Message
 
-@RequiredArgsConstructor
 class MessagingHeaderRetriever(
     private val obfuscator: Obfuscator
 ) {
