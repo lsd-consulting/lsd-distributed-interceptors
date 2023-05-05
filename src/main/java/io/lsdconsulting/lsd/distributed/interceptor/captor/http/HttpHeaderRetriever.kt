@@ -15,11 +15,9 @@ class HttpHeaderRetriever(
     fun retrieve(response: ClientHttpResponse): Map<String, Collection<String>> =
         obfuscator.obfuscate(response.headers.entries.associate { it.key to it.value })
 
-    fun retrieve(request: Request): Map<String, Collection<String>> {
-        return obfuscator.obfuscate(request.headers())
-    }
+    fun retrieve(request: Request): Map<String, Collection<String>> =
+        obfuscator.obfuscate(request.headers())
 
-    fun retrieve(response: Response): Map<String, Collection<String>> {
-        return obfuscator.obfuscate(response.headers())
-    }
+    fun retrieve(response: Response): Map<String, Collection<String>> =
+        obfuscator.obfuscate(response.headers())
 }
