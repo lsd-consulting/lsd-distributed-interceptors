@@ -63,3 +63,5 @@ integrationMongoTest {
         }
     }
 }
+
+compileIntegrationMongoTestKotlin.kotlinOptions.jvmTarget = '17'

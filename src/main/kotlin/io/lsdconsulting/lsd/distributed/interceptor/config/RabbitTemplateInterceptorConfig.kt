@@ -23,7 +23,7 @@ open class RabbitTemplateInterceptorConfig(
 ) {
     @PostConstruct
     fun configureRabbitTemplatePublishInterceptor() {
-        rabbitTemplates.forEach(Consumer<RabbitTemplate> { rabbitTemplate: RabbitTemplate ->
+        rabbitTemplates.forEach(Consumer { rabbitTemplate: RabbitTemplate ->
             rabbitTemplate.addBeforePublishPostProcessors(MessagePostProcessor { message: Message ->
                 log().info(
                     "Rabbit message properties before publishing:{}",
