@@ -2,7 +2,7 @@ package io.lsdconsulting.lsd.distributed.interceptor.config
 
 import io.lsdconsulting.lsd.distributed.access.model.InteractionType
 import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.RabbitCaptor
-import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.mapper.ExchangeNameDeriver
+import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.mapper.deriveExchangeName
 import org.springframework.amqp.core.Message
 import org.springframework.amqp.core.MessageBuilder
 import org.springframework.amqp.core.MessagePostProcessor
@@ -21,7 +21,6 @@ import javax.annotation.PostConstruct
 open class RabbitListenerInterceptorConfig(
     private val simpleRabbitListenerContainerFactory: SimpleRabbitListenerContainerFactory,
     private val rabbitCaptor: RabbitCaptor,
-    private val exchangeNameDeriver: ExchangeNameDeriver,
 ) {
 
     @PostConstruct
@@ -36,7 +35,7 @@ open class RabbitListenerInterceptorConfig(
     private fun postProcessMessage(message: Message): Message {
         try {
             val exchangeName =
-                exchangeNameDeriver.derive(message.messageProperties, message.messageProperties.receivedExchange)
+                deriveExchangeName(message.messageProperties, message.messageProperties.receivedExchange)
             rabbitCaptor.captureInteraction(
                 exchangeName,
                 MessageBuilder.fromMessage(message).build(),

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.amqp.core.MessageProperties
 
 internal class ExchangeNameDeriverShould {
-    private val underTest = ExchangeNameDeriver()
 
     @Test
     fun `return target name header`() {
@@ -14,7 +13,7 @@ internal class ExchangeNameDeriverShould {
         messageProperties.setHeader("Target-Name", "target")
         messageProperties.setHeader("__TypeId__", "typeId")
 
-        val result = underTest.derive(messageProperties, "alternative")
+        val result = deriveExchangeName(messageProperties, "alternative")
         assertThat(result, `is`("target"))
     }
 
@@ -23,7 +22,7 @@ internal class ExchangeNameDeriverShould {
         val messageProperties = MessageProperties()
         messageProperties.setHeader("__TypeId__", "ExchangeNameDeriver")
 
-        val result = underTest.derive(messageProperties, "alternative")
+        val result = deriveExchangeName(messageProperties, "alternative")
 
         assertThat(result, `is`("ExchangeNameDeriver"))
     }
@@ -33,7 +32,7 @@ internal class ExchangeNameDeriverShould {
         val messageProperties = MessageProperties()
         messageProperties.setHeader("__TypeId__", "io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.mapper.ExchangeNameDeriver")
 
-        val result = underTest.derive(messageProperties, "alternative")
+        val result = deriveExchangeName(messageProperties, "alternative")
 
         assertThat(result, `is`("ExchangeNameDeriver"))
     }
@@ -42,7 +41,7 @@ internal class ExchangeNameDeriverShould {
     fun `return alternative value`() {
         val messageProperties = MessageProperties()
 
-        val result = underTest.derive(messageProperties, "alternative")
+        val result = deriveExchangeName(messageProperties, "alternative")
 
         assertThat(result, `is`("alternative"))
     }
@@ -51,7 +50,7 @@ internal class ExchangeNameDeriverShould {
     fun `return unknown event`() {
         val messageProperties = MessageProperties()
 
-        val result = underTest.derive(messageProperties, "")
+        val result = deriveExchangeName(messageProperties, "")
 
         assertThat(result, `is`("UNKNOWN_EVENT"))
     }
@@ -60,7 +59,7 @@ internal class ExchangeNameDeriverShould {
     fun `handle null alternative exchange name`() {
         val messageProperties = MessageProperties()
 
-        val result = underTest.derive(messageProperties, null)
+        val result = deriveExchangeName(messageProperties, null)
 
         assertThat(result, `is`("UNKNOWN_EVENT"))
     }
@@ -70,7 +69,7 @@ internal class ExchangeNameDeriverShould {
         val messageProperties = MessageProperties()
         messageProperties.setHeader("__TypeId__", "")
 
-        val result = underTest.derive(messageProperties, "alternative")
+        val result = deriveExchangeName(messageProperties, "alternative")
 
         assertThat(result, `is`("alternative"))
     }
@@ -80,7 +79,7 @@ internal class ExchangeNameDeriverShould {
         val messageProperties = MessageProperties()
         messageProperties.setHeader("__TypeId__", "  ")
 
-        val result = underTest.derive(messageProperties, "alternative")
+        val result = deriveExchangeName(messageProperties, "alternative")
 
         assertThat(result, `is`("alternative"))
     }
@@ -90,7 +89,7 @@ internal class ExchangeNameDeriverShould {
         val messageProperties = MessageProperties()
         messageProperties.setHeader("__TypeId__", null)
 
-        val result = underTest.derive(messageProperties, "alternative")
+        val result = deriveExchangeName(messageProperties, "alternative")
 
         assertThat(result, `is`("alternative"))
     }
