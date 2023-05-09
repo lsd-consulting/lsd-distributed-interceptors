@@ -4,7 +4,6 @@ import feign.Request
 import feign.Request.HttpMethod.GET
 import feign.RequestTemplate
 import feign.Response
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.HttpStatusDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
@@ -30,10 +29,9 @@ internal class ResponseCaptorShould {
     private val httpRequest = mockk<HttpRequest>()
     private val clientHttpResponse = mockk<ClientHttpResponse>()
     private val httpHeaderRetriever = mockk<HttpHeaderRetriever>()
-    private val httpStatusDeriver = mockk<HttpStatusDeriver>()
     private val pathDeriver = PathDeriver()
 
-    private val underTest = ResponseCaptor(repositoryService, sourceTargetDeriver, pathDeriver, traceIdRetriever, httpHeaderRetriever, httpStatusDeriver, "profile")
+    private val underTest = ResponseCaptor(repositoryService, sourceTargetDeriver, pathDeriver, traceIdRetriever, httpHeaderRetriever, "profile")
 
     private val resource = randomAlphanumeric(20)
     private val url = "http://localhost/$resource"
@@ -53,7 +51,6 @@ internal class ResponseCaptorShould {
         every { sourceTargetDeriver.deriveServiceName(requestHeaders) } returns serviceName
         every { httpHeaderRetriever.retrieve(any<Request>()) } returns requestHeaders
         every { httpHeaderRetriever.retrieve(any<Response>()) } returns responseHeaders
-        every { httpStatusDeriver.derive(response.status()) } returns "GET"
 
         val (traceId) = underTest.captureResponseInteraction(response, 10L)
 
@@ -67,7 +64,6 @@ internal class ResponseCaptorShould {
         every { sourceTargetDeriver.deriveServiceName(eq(requestHeaders)) } returns serviceName
         every { httpHeaderRetriever.retrieve(any<Request>()) } returns requestHeaders
         every { httpHeaderRetriever.retrieve(any<Response>()) } returns responseHeaders
-        every { httpStatusDeriver.derive(response.status()) } returns "GET"
 
         val (_, _, _, _, _, target1) = underTest.captureResponseInteraction(response, 10L)
 
@@ -81,7 +77,6 @@ internal class ResponseCaptorShould {
         every { sourceTargetDeriver.deriveServiceName(eq(requestHeaders)) } returns serviceName
         every { httpHeaderRetriever.retrieve(any<Request>()) } returns requestHeaders
         every { httpHeaderRetriever.retrieve(any<Response>()) } returns responseHeaders
-        every { httpStatusDeriver.derive(response.status()) } returns "GET"
 
         val interceptedInteraction = underTest.captureResponseInteraction(response, 10L)
 

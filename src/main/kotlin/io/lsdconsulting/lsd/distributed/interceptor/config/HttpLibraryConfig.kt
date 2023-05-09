@@ -5,7 +5,6 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.HttpHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.RequestCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.ResponseCaptor
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.HttpStatusDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
@@ -23,9 +22,6 @@ open class HttpLibraryConfig {
 
     @Bean
     open fun pathDeriver() = PathDeriver()
-
-    @Bean
-    open fun httpStatusDeriver() = HttpStatusDeriver()
 
     @Bean
     open fun sourceTargetDeriver(propertyServiceNameDeriver: PropertyServiceNameDeriver) =
@@ -51,10 +47,9 @@ open class HttpLibraryConfig {
         pathDeriver: PathDeriver,
         traceIdRetriever: TraceIdRetriever,
         httpHeaderRetriever: HttpHeaderRetriever,
-        httpStatusDeriver: HttpStatusDeriver,
         @Value("\${spring.profiles.active:#{''}}") profile: String
     ) = ResponseCaptor(
         repositoryService, sourceTargetDeriver,
-        pathDeriver, traceIdRetriever, httpHeaderRetriever, httpStatusDeriver, profile
+        pathDeriver, traceIdRetriever, httpHeaderRetriever, profile
     )
 }

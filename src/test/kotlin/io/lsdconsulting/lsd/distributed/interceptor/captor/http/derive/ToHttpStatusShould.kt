@@ -6,16 +6,16 @@ import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.startsWith
 import org.junit.jupiter.api.Test
 
-internal class HttpStatusDeriverShould {
+internal class ToHttpStatusShould {
     @Test
     fun handleUnknownStatusCode() {
-        val result = HttpStatusDeriver().derive(RandomUtils.nextInt(1000, 10000))
+        val result = RandomUtils.nextInt(1000, 10000).toHttpStatus()
         assertThat(result, startsWith("<unresolved status:"))
     }
 
     @Test
     fun handleKnownStatusCode() {
-        val result = HttpStatusDeriver().derive(200)
+        val result = 200.toHttpStatus()
         assertThat(result, `is`("200 OK"))
     }
 }
