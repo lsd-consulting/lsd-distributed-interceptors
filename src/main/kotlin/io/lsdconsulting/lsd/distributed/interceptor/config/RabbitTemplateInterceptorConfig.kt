@@ -15,9 +15,7 @@ import javax.annotation.PostConstruct
 
 @Configuration
 @ConditionalOnProperty(name = ["lsd.dist.connectionString"])
-@ConditionalOnClass(
-    RabbitTemplate::class
-)
+@ConditionalOnClass(RabbitTemplate::class)
 open class RabbitTemplateInterceptorConfig(
     private val rabbitTemplates: List<RabbitTemplate>,
     private val rabbitCaptor: RabbitCaptor,
