@@ -6,8 +6,7 @@
     },
     {
       "name": "lsd.dist.threadPool.size",
-      "type": "java.lang.String",
-      "description" : "Must be a power of 2"
+      "type": "java.lang.String"
     }
   ]
 }
