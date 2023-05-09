@@ -3,7 +3,7 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor.http
 import feign.Response
 import io.lsdconsulting.lsd.distributed.access.model.InteractionType
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
-import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.TypeConverter.convert
+import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.convert
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.HttpStatusDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver
@@ -42,7 +42,7 @@ class ResponseCaptor(
             requestHeaders,
             responseHeaders,
             serviceName,
-            convert(response.body()),
+            response.body()?.convert(),
             httpStatus
         )
         repositoryService.enqueue(interceptedInteraction)

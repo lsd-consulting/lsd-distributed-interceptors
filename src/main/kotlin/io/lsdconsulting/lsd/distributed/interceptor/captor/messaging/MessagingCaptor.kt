@@ -4,7 +4,7 @@ import io.lsdconsulting.lsd.distributed.access.model.InteractionType
 import io.lsdconsulting.lsd.distributed.access.model.InteractionType.PUBLISH
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
-import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.TypeConverter
+import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.convert
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver.Companion.SOURCE_NAME_KEY
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver.Companion.TARGET_NAME_KEY
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
@@ -26,7 +26,7 @@ class MessagingCaptor(
         val headers = messagingHeaderRetriever.retrieve(message)
         val interceptedInteraction = InterceptedInteraction(
             traceId = traceIdRetriever.getTraceId(headers),
-            body = PrettyPrinter.prettyPrint(TypeConverter.convert(message.payload as ByteArray)),
+            body = PrettyPrinter.prettyPrint((message.payload as ByteArray).convert()),
             requestHeaders = headers,
             responseHeaders = emptyMap(),
             serviceName = propertyServiceNameDeriver.serviceName,
@@ -69,7 +69,7 @@ class MessagingCaptor(
         val headers = messagingHeaderRetriever.retrieve(message)
         val interceptedInteraction = InterceptedInteraction(
             traceId = traceIdRetriever.getTraceId(headers),
-            body = TypeConverter.convert(message.payload as ByteArray),
+            body = (message.payload as ByteArray).convert(),
             requestHeaders = headers,
             responseHeaders = emptyMap(),
             serviceName = source ?: propertyServiceNameDeriver.serviceName,
