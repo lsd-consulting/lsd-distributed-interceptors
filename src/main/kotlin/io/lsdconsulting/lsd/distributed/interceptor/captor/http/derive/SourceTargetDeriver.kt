@@ -1,8 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive
 
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
-import org.apache.commons.lang3.ObjectUtils
-import java.util.*
 import javax.annotation.PostConstruct
 
 class SourceTargetDeriver(
@@ -28,10 +26,10 @@ class SourceTargetDeriver(
         else UNKNOWN_TARGET
 
     private fun findHeader(headers: Map<String, Collection<String?>>, targetNameKey: String): String? =
-        headers[targetNameKey]?.firstOrNull() { obj: String? -> Objects.nonNull(obj) }
+        headers[targetNameKey]?.firstOrNull { !it.isNullOrBlank() }
 
     private fun headerExists(headers: Map<String, Collection<String?>>, targetNameKey: String): Boolean =
-        ObjectUtils.isNotEmpty(headers) && headers.containsKey(targetNameKey)
+        headers.isNotEmpty() && headers.containsKey(targetNameKey)
 
     companion object {
         const val SOURCE_NAME_KEY = "Source-Name"
