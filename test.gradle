@@ -11,6 +11,8 @@ dependencies {
     testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
     testImplementation 'org.springframework:spring-messaging'
     testImplementation 'org.springframework.integration:spring-integration-core'
+
+    testImplementation 'io.github.lsd-consulting:lsd-distributed-data-access:1.0.4'
 }
 
 test {

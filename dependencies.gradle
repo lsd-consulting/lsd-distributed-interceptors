@@ -11,8 +11,7 @@ dependencies {
     // LSD
     api 'io.github.lsd-consulting:lsd-core:5.0.2'
     implementation 'io.github.lsd-consulting:lsd-formatting-library:1.0.8'
-    implementation 'io.github.lsd-consulting:lsd-distributed-mongodb-access:4.0.2'
-    implementation 'io.github.lsd-consulting:lsd-distributed-http-access:2.0.1'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-data-access:1.0.4'
 
     // JSON & XML pretty formatting
     implementation 'com.google.code.gson:gson:2.8.8'

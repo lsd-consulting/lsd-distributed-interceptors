@@ -8,6 +8,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetrieve
 import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -26,8 +27,9 @@ open class CommonLibraryConfig {
     @Bean
     open fun traceIdRetriever(tracer: Tracer) = TraceIdRetriever(tracer)
 
-    // TODO Add test for this
+    // TODO Add test for these conditions
     @Bean
+    @ConditionalOnMissingClass("io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository")
     @ConditionalOnExpression("#{!'\${lsd.dist.connectionString:}'.startsWith('mongodb://') and !'\${lsd.dist.connectionString:}'.startsWith('http')}")
     open fun interceptedDocumentRepository(@Value("\${lsd.dist.connectionString}") connectionString: String): InterceptedDocumentRepository {
         throw IllegalArgumentException("Wrong connection string: $connectionString. Make sure it start with http(s):// or mongodb://")

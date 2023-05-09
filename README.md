@@ -34,7 +34,16 @@ To use the `lsd-distributed-interceptors` library just add it to the production 
 implementation "io.github.lsd-consulting:lsd-distributed-interceptor:<version>"
 ```
 
-and configure through the available properties.
+and one of the storage dependencies:
+```groovy
+implementation "io.github.lsd-consulting:lsd-distributed-http-access:<version>"
+```
+or
+```groovy
+implementation "io.github.lsd-consulting:lsd-distributed-mongodb-access:<version>"
+```
+
+and then configure through the available properties.
 
 ## Properties
 
