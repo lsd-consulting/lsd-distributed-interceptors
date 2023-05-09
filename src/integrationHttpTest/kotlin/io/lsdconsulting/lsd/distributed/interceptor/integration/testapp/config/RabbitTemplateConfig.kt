@@ -18,8 +18,7 @@ open class RabbitTemplateConfig {
     @Bean
     open fun rabbitTemplate(): RabbitTemplate {
         val rabbitTemplate = RabbitTemplate(connectionFactory())
-        rabbitTemplate.messageConverter =
-            Jackson2JsonMessageConverter(ObjectMapperCreator().objectMapper)
+        rabbitTemplate.messageConverter = Jackson2JsonMessageConverter(ObjectMapperCreator().objectMapper)
         return rabbitTemplate
     }
 }
