@@ -3,7 +3,7 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor.http
 import feign.Request
 import io.lsdconsulting.lsd.distributed.access.model.InteractionType
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
-import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.convert
+import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.stringify
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.toPath
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
@@ -21,7 +21,7 @@ class RequestCaptor(
 ){
     fun captureRequestInteraction(request: Request): InterceptedInteraction {
         val headers = httpHeaderRetriever.retrieve(request)
-        val body = request.body()?.convert()
+        val body = request.body()?.stringify()
         val path = request.url().toPath()
         val traceId = traceIdRetriever.getTraceId(headers)
         val target = sourceTargetDeriver.deriveTarget(headers, path)

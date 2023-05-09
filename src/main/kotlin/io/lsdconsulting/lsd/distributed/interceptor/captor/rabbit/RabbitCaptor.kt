@@ -3,7 +3,7 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit
 import io.lsdconsulting.lsd.distributed.access.model.InteractionType
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
-import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.convert
+import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.stringify
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
 import org.springframework.amqp.core.Message
@@ -21,7 +21,7 @@ class RabbitCaptor(
         val headers = amqpHeaderRetriever.retrieve(message)
         val interceptedInteraction = InterceptedInteraction(
             traceId = traceIdRetriever.getTraceId(headers),
-            body = message.body?.convert(),
+            body = message.body?.stringify(),
             requestHeaders = headers,
             responseHeaders = emptyMap(),
             serviceName = propertyServiceNameDeriver.serviceName,

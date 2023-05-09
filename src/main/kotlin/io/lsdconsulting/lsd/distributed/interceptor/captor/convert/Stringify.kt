@@ -4,7 +4,7 @@ import feign.Response
 import org.apache.commons.io.IOUtils
 import java.io.IOException
 
-fun ByteArray.convert() = String(this)
+fun ByteArray.stringify() = String(this)
 
 @Throws(IOException::class)
-fun Response.Body.convert() = String(IOUtils.toByteArray(this.asInputStream()))
+fun Response.Body.stringify() = String(IOUtils.toByteArray(this.asInputStream()))

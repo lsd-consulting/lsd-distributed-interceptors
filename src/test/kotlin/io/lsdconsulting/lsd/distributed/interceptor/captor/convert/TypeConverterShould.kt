@@ -15,7 +15,7 @@ internal class TypeConverterShould {
     @Test
     fun `convert byte array to string`() {
         val body = randomAlphanumeric(20)
-        assertThat(body.toByteArray().convert(), `is`(body))
+        assertThat(body.toByteArray().stringify(), `is`(body))
     }
 
     @Test
@@ -24,6 +24,6 @@ internal class TypeConverterShould {
         val body = randomAlphanumeric(20)
         val responseBody = mockk<Response.Body>()
         every { responseBody.asInputStream() } returns IOUtils.toInputStream(body, StandardCharsets.UTF_8)
-        assertThat((body.toByteArray()).convert(), `is`(body))
+        assertThat((body.toByteArray()).stringify(), `is`(body))
     }
 }
