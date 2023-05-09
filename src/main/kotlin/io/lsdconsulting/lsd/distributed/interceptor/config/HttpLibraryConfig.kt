@@ -5,7 +5,6 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.HttpHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.RequestCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.ResponseCaptor
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
@@ -21,9 +20,6 @@ open class HttpLibraryConfig {
     open fun httpHeaderRetriever(obfuscator: Obfuscator) = HttpHeaderRetriever(obfuscator)
 
     @Bean
-    open fun pathDeriver() = PathDeriver()
-
-    @Bean
     open fun sourceTargetDeriver(propertyServiceNameDeriver: PropertyServiceNameDeriver) =
         SourceTargetDeriver(propertyServiceNameDeriver)
 
@@ -31,25 +27,21 @@ open class HttpLibraryConfig {
     open fun requestCaptor(
         repositoryService: RepositoryService,
         sourceTargetDeriver: SourceTargetDeriver,
-        pathDeriver: PathDeriver,
         traceIdRetriever: TraceIdRetriever,
         httpHeaderRetriever: HttpHeaderRetriever,
         @Value("\${spring.profiles.active:#{''}}") profile: String
     ) = RequestCaptor(
-        repositoryService, sourceTargetDeriver,
-        pathDeriver, traceIdRetriever, httpHeaderRetriever, profile
+        repositoryService, sourceTargetDeriver, traceIdRetriever, httpHeaderRetriever, profile
     )
 
     @Bean
     open fun responseCaptor(
         repositoryService: RepositoryService,
         sourceTargetDeriver: SourceTargetDeriver,
-        pathDeriver: PathDeriver,
         traceIdRetriever: TraceIdRetriever,
         httpHeaderRetriever: HttpHeaderRetriever,
         @Value("\${spring.profiles.active:#{''}}") profile: String
     ) = ResponseCaptor(
-        repositoryService, sourceTargetDeriver,
-        pathDeriver, traceIdRetriever, httpHeaderRetriever, profile
+        repositoryService, sourceTargetDeriver, traceIdRetriever, httpHeaderRetriever, profile
     )
 }

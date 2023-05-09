@@ -3,7 +3,6 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor.http
 import feign.Request
 import feign.Request.HttpMethod.GET
 import feign.RequestTemplate
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
@@ -29,9 +28,8 @@ internal class RequestCaptorShould {
     private val httpRequest = mockk<HttpRequest>()
     private val clientHttpResponse = mockk<ClientHttpResponse>()
     private val httpHeaderRetriever = mockk<HttpHeaderRetriever>()
-    private val pathDeriver = PathDeriver()
 
-    private val underTest = RequestCaptor(repositoryService, sourceTargetDeriver, pathDeriver, traceIdRetriever, httpHeaderRetriever, "profile")
+    private val underTest = RequestCaptor(repositoryService, sourceTargetDeriver, traceIdRetriever, httpHeaderRetriever, "profile")
 
     private val resource = randomAlphanumeric(20)
     private val url = "http://localhost/$resource"

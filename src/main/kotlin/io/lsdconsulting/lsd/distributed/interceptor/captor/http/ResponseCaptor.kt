@@ -4,9 +4,9 @@ import feign.Response
 import io.lsdconsulting.lsd.distributed.access.model.InteractionType
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.convert
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.PathDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.toHttpStatus
+import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.toPath
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
 import org.apache.commons.lang3.StringUtils
@@ -20,7 +20,6 @@ import java.time.ZonedDateTime
 class ResponseCaptor(
     private val repositoryService: RepositoryService,
     private val sourceTargetDeriver: SourceTargetDeriver,
-    private val pathDeriver: PathDeriver,
     private val traceIdRetriever: TraceIdRetriever,
     private val httpHeaderRetriever: HttpHeaderRetriever,
     private val profile: String,
@@ -28,7 +27,7 @@ class ResponseCaptor(
     fun captureResponseInteraction(response: Response, elapsedTime: Long): InterceptedInteraction {
         val requestHeaders = httpHeaderRetriever.retrieve(response.request())
         val responseHeaders = httpHeaderRetriever.retrieve(response)
-        val path = pathDeriver.derivePathFrom(response.request().url())
+        val path = response.request().url().toPath()
         val target = sourceTargetDeriver.deriveTarget(requestHeaders, path)
         val serviceName = sourceTargetDeriver.deriveServiceName(requestHeaders)
         val traceId = traceIdRetriever.getTraceId(requestHeaders)

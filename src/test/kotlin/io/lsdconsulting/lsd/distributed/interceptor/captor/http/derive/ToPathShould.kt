@@ -10,9 +10,7 @@ import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.http.HttpRequest
 import java.net.URI
 
-internal class PathDeriverShould {
-
-    private val underTest: PathDeriver = object : PathDeriver() {}
+internal class ToPathShould {
 
     @ParameterizedTest
     @CsvSource(value = [
@@ -22,13 +20,13 @@ internal class PathDeriverShould {
         "https://www.bbc.co.uk/, /"
     ])
     fun derivePathFrom(url: String, expectedPath: String) {
-        val result = underTest.derivePathFrom(url)
+        val result = url.toPath()
         assertThat(result, `is`(expectedPath))
     }
 
     @Test
     fun derivePathFromEmptyResource() {
-        val result = underTest.derivePathFrom("https://www.bbc.co.uk")
+        val result = "https://www.bbc.co.uk".toPath()
         assertThat(result, `is`(""))
     }
 
@@ -44,7 +42,7 @@ internal class PathDeriverShould {
         val httpRequest = mockk<HttpRequest>()
         every { httpRequest.uri } returns URI.create(url)
 
-        val result = underTest.derivePathFrom(httpRequest)
+        val result = httpRequest.toPath()
 
         assertThat(result, `is`(expectedPath))
     }
@@ -54,7 +52,7 @@ internal class PathDeriverShould {
         val httpRequest = mockk<HttpRequest>()
         every { httpRequest.uri } returns URI.create("https://www.bbc.co.uk")
 
-        val result = underTest.derivePathFrom(httpRequest)
+        val result = httpRequest.toPath()
 
         assertThat(result, `is`(""))
     }
