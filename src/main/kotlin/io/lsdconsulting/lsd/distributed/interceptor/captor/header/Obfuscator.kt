@@ -4,7 +4,7 @@ class Obfuscator(headers: String?) {
     private val sensitiveHeaders =  headers?.split(DELIMINATOR)?.map { it.trim() } ?: emptyList()
 
     fun obfuscate(headers: Map<String, Collection<String>>): Map<String, Collection<String>> {
-        val obfuscatedHeaders = headers.entries
+        val obfuscatedHeaders = headers
             .filter { sensitiveHeaders.contains(it.key) }
             .map { it.key to listOf("<obfuscated>") }
 

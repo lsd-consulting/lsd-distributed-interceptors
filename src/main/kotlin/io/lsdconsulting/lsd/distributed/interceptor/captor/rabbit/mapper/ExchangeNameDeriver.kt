@@ -8,7 +8,7 @@ fun deriveExchangeName(messageProperties: MessageProperties, alternativeExchange
         if (!StringUtils.isBlank(messageProperties.getHeader(TARGET_NAME_KEY))) {
             messageProperties.getHeader(TARGET_NAME_KEY)
         } else if (!StringUtils.isBlank(messageProperties.getHeader(TYPE_ID_HEADER))) {
-            deriveFromTypeIdHeader(messageProperties.getHeader(TYPE_ID_HEADER))// ?: defaultExchangeName
+            deriveFromTypeIdHeader(messageProperties.getHeader(TYPE_ID_HEADER))
         } else defaultExchangeName
     }
 
