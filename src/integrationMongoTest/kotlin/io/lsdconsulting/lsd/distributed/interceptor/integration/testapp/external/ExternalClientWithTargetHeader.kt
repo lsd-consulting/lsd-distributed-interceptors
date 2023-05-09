@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping
 
 @FeignClient(
     name = "externalClientTargetHeader",
-    url = "http://localhost:\${wiremock.server.port}",
+    url = "http://localhost:\${server.wiremock.port}",
     configuration = [ExternalClientWithTargetHeader.ClientConfig::class]
 )
 interface ExternalClientWithTargetHeader {

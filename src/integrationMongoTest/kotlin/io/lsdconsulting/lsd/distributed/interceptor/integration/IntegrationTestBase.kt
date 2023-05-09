@@ -1,5 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.integration
 
+import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.TestApplication
@@ -7,12 +8,13 @@ import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.R
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RabbitTemplateConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RepositoryConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RestConfig
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.server.LocalServerPort
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.http.RequestEntity
@@ -24,7 +26,6 @@ import java.net.URISyntaxException
 @Import(RepositoryConfig::class, RestConfig::class, RabbitConfig::class, RabbitTemplateConfig::class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = [TestApplication::class])
 @ActiveProfiles("test")
-@AutoConfigureWireMock(port = 0)
 open class IntegrationTestBase {
     @LocalServerPort
     private val serverPort = 0
@@ -59,5 +60,22 @@ open class IntegrationTestBase {
                 .header("Authorization", "Basic password")
                 .build()
         return testRestTemplate!!.exchange(requestEntity, String::class.java)
+    }
+
+    companion object {
+        private val wireMockServer = WireMockServer(8070)
+
+        @BeforeAll
+        @JvmStatic
+        internal fun beforeAll() {
+            WireMock.configureFor(8070)
+            wireMockServer.start()
+        }
+
+        @AfterAll
+        @JvmStatic
+        internal fun afterAll() {
+            wireMockServer.stop()
+        }
     }
 }

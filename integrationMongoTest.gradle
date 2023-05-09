@@ -17,7 +17,6 @@ dependencies {
     // Spring
     integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-test'
     integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-    integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock' // TODO Remove!
     integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-amqp'
     integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
