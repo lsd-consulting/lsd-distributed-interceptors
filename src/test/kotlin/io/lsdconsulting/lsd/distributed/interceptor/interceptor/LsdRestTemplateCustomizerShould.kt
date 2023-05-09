@@ -31,7 +31,7 @@ internal class LsdRestTemplateCustomizerShould {
     }
 
     @Test
-    fun preservesExistingCustomizers() {
+    fun `preserves existing customizers`() {
         restTemplate.interceptors = listOf(mockk())
 
         underTest.customize(restTemplate)
@@ -40,7 +40,7 @@ internal class LsdRestTemplateCustomizerShould {
     }
 
     @Test
-    fun doesntAddDuplicateInterceptor() {
+    fun `doesnt add duplicate interceptor`() {
         restTemplate.interceptors = listOf<ClientHttpRequestInterceptor>(lsdRestTemplateInterceptor)
 
         underTest.customize(restTemplate)
@@ -49,7 +49,7 @@ internal class LsdRestTemplateCustomizerShould {
     }
 
     @Test
-    fun responseIsNotEmptyAfterInterception() {
+    fun `response is not empty after interception`() {
         every { requestCaptor.captureRequestInteraction(any(), any()) } returns easyRandom.nextObject(InterceptedInteraction::class.java)
 
         underTest.customize(restTemplate)

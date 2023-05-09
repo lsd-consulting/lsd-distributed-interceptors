@@ -8,14 +8,14 @@ import org.junit.jupiter.api.Test
 
 internal class TraceIdGeneratorShould {
     @Test
-    fun generateTraceIdOfCorrectLength() {
+    fun `generate trace id of correct length`() {
         for (count in 0 until RandomUtils.nextInt(1000, 2000)) {
             MatcherAssert.assertThat(generate().length, CoreMatchers.`is`(16))
         }
     }
 
     @Test
-    fun generateHexadecimalValue() {
+    fun `generate hexadecimal value`() {
         for (count in 0 until RandomUtils.nextInt(1000, 2000)) {
             generate().toLong(16)
         }

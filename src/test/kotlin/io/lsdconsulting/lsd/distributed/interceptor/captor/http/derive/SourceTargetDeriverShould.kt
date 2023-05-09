@@ -26,43 +26,43 @@ internal class SourceTargetDeriverShould {
     }
 
     @Test
-    fun useHeaderForSourceName() {
+    fun `use header for source name`() {
         val result = underTest.deriveServiceName(mapOf("Source-Name" to listOf(sourceName)))
         assertThat(result, `is`(sourceName))
     }
 
     @Test
-    fun fallbackToPropertyServiceNameIfSourceHeaderMissingValue() {
+    fun `fallback to property service name if source header missing value`() {
         val result = underTest.deriveServiceName(mapOf<String, List<String?>>("Source-Name" to listOf<String>()))
         assertThat(result, `is`(appName))
     }
 
     @Test
-    fun fallbackToPropertyServiceNameWhenNoSourceHeader() {
+    fun `fallback to property service name when no source header`() {
         val result = underTest.deriveServiceName(mapOf())
         assertThat(result, `is`(appName))
     }
 
     @Test
-    fun useHeaderForTargetName() {
+    fun `use header for target name`() {
         val result = underTest.deriveTarget(mapOf("Target-Name" to listOf(targetName)), path)
         assertThat(result, `is`(targetName))
     }
 
     @Test
-    fun fallbackToPathTargetHeaderMissingValue() {
+    fun `fallback to path target header missing value`() {
         val result = underTest.deriveTarget(mapOf<String, List<String?>>("Target-Name" to listOf<String>()), path)
         assertThat(result, `is`(path))
     }
 
     @Test
-    fun fallbackToPathTargetIfTargetHeaderMissingValueAndNoPath() {
+    fun `fallback to path target if target header missing value and no path`() {
         val result = underTest.deriveTarget(mapOf<String, List<String?>>("Target-Name" to listOf<String>()), null)
         assertThat(result, `is`("UNKNOWN_TARGET"))
     }
 
     @Test
-    fun fallbackToUnknownWhenNoTargetHeader() {
+    fun `fallback to unknown when no target header`() {
         val result = underTest.deriveTarget(mapOf(), null)
         assertThat(result, `is`("UNKNOWN_TARGET"))
     }

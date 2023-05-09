@@ -33,7 +33,7 @@ internal class LsdFeignLoggerInterceptorShould {
 
     @Test
     @Throws(IOException::class)
-    fun logAndRebufferResponse() {
+    fun `log and rebuffer response`() {
         every { responseCaptor.captureResponseInteraction(any(), eq<Long>(elapsedTime)) } returns
             easyRandom.nextObject(InterceptedInteraction::class.java).copy(body = null)
 

@@ -19,13 +19,13 @@ internal class ToPathShould {
         "https://www.bbc.co.uk/customer/1/address, /customer/1/address",
         "https://www.bbc.co.uk/, /"
     ])
-    fun derivePathFrom(url: String, expectedPath: String) {
+    fun `derive path from`(url: String, expectedPath: String) {
         val result = url.toPath()
         assertThat(result, `is`(expectedPath))
     }
 
     @Test
-    fun derivePathFromEmptyResource() {
+    fun `derive path from empty resource`() {
         val result = "https://www.bbc.co.uk".toPath()
         assertThat(result, `is`(""))
     }
@@ -38,7 +38,7 @@ internal class ToPathShould {
         "https://www.bbc.co.uk/, /",
         "https://www.bbc.co.uk/resource/childResource?param=value, /resource/childResource?param=value"
     ])
-    fun derivePathFromHttpRequest(url: String, expectedPath: String) {
+    fun `derive path from http request`(url: String, expectedPath: String) {
         val httpRequest = mockk<HttpRequest>()
         every { httpRequest.uri } returns URI.create(url)
 
@@ -48,7 +48,7 @@ internal class ToPathShould {
     }
 
     @Test
-    fun derivePathFromHttpRequestEmptyResource() {
+    fun `derive path from http request empty resource`() {
         val httpRequest = mockk<HttpRequest>()
         every { httpRequest.uri } returns URI.create("https://www.bbc.co.uk")
 

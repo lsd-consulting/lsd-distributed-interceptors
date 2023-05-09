@@ -29,7 +29,7 @@ internal class MessagingCaptorShould {
     private val body = randomAlphabetic(20)
 
     @Test
-    fun captureConsumeInteractionWithSourceFromTypeIdWhenTargetNameNotNoInHeader() {
+    fun `capture consume interaction with source from type id when target name not no in header`() {
         every { propertyServiceNameDeriver.serviceName } returns serviceName
         every { traceIdRetriever.getTraceId(any()) } returns traceId
         every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"), "__TypeId__" to listOf(topic))
@@ -53,7 +53,7 @@ internal class MessagingCaptorShould {
     }
 
     @Test
-    fun captureConsumeInteractionWithDefaultSourceWhenTargetNotAvailable() {
+    fun `capture consume interaction with default source when target not available`() {
         every { propertyServiceNameDeriver.serviceName } returns serviceName
         every { traceIdRetriever.getTraceId(any()) } returns traceId
         every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"))
@@ -77,7 +77,7 @@ internal class MessagingCaptorShould {
     }
 
     @Test
-    fun captureConsumeInteractionWithSourceFromTargetName() {
+    fun `capture consume interaction with source from target name`() {
         every { propertyServiceNameDeriver.serviceName } returns serviceName
         every { traceIdRetriever.getTraceId(any()) } returns traceId
         every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"), "Target-Name" to listOf(topic), "__TypeId__" to listOf("blah"))
@@ -101,7 +101,7 @@ internal class MessagingCaptorShould {
     }
 
     @Test
-    fun capturePublishInteractionWithSourceFromHeader() {
+    fun `capture publish interaction with source from header`() {
         every { traceIdRetriever.getTraceId(any()) } returns traceId
         every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"))
         val headers = mapOf("name" to listOf("value"), "Source-Name" to serviceName, "Target-Name" to topic)
@@ -124,7 +124,7 @@ internal class MessagingCaptorShould {
     }
 
     @Test
-    fun capturePublishInteractionWithoutSourceFromHeader() {
+    fun `capture publish interaction without source from header`() {
         every { propertyServiceNameDeriver.serviceName } returns serviceName
         every { traceIdRetriever.getTraceId(any()) } returns traceId
         every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"))

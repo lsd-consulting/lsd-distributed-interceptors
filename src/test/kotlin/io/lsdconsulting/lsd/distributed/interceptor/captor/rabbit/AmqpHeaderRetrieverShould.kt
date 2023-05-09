@@ -25,7 +25,7 @@ internal class AmqpHeaderRetrieverShould {
 
     @ParameterizedTest
     @MethodSource("provideMessageProperties")
-    fun retrieveHeadersFromMessages(messageProperties: MessageProperties, expectedSize: Int) {
+    fun `retrieve headers from messages`(messageProperties: MessageProperties, expectedSize: Int) {
         val message = mockk<Message>()
         every { message.messageProperties } returns messageProperties
 
@@ -39,7 +39,7 @@ internal class AmqpHeaderRetrieverShould {
     }
 
     @Test
-    fun handleHeadersWithNoValuesFromMessage() {
+    fun `handle headers with no values from message`() {
         val messageProperties = MessageProperties()
         messageProperties.setHeader("name", null)
         val message = mockk<Message>()

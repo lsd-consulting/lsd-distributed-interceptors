@@ -10,21 +10,21 @@ internal class ObfuscatorShould {
     private val underTest = Obfuscator("Authorization,JWT")
 
     @Test
-    fun obfuscateAuthorizationHeader() {
+    fun `obfuscate authorization header`() {
         val headers = mapOf<String, Collection<String>>("Authorization" to listOf(randomAlphanumeric(30)))
         val result = underTest.obfuscate(headers)
         assertThat(result, hasEntry("Authorization", listOf("<obfuscated>")))
     }
 
     @Test
-    fun obfuscateJWTHeader() {
+    fun `obfuscate jwtheader`() {
         val headers = mapOf<String, Collection<String>>("JWT" to listOf(randomAlphanumeric(30)))
         val result = underTest.obfuscate(headers)
         assertThat(result, hasEntry("JWT", listOf("<obfuscated>")))
     }
 
     @Test
-    fun keepOtherHeadersUnchanged() {
+    fun `keep other headers unchanged`() {
         val headerName = randomAlphanumeric(30)
         val headerValue = randomAlphanumeric(30)
         val headers = mapOf<String, Collection<String>>(headerName to listOf(headerValue))

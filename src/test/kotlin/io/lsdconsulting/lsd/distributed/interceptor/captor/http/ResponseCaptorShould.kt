@@ -43,7 +43,7 @@ internal class ResponseCaptorShould {
     private val response = Response.builder().request(Request.create(GET, url, requestHeaders, body.toByteArray(), Charset.defaultCharset(), RequestTemplate())).build()
 
     @Test
-    fun takeTraceIdFromRequestHeaders() {
+    fun `take trace id from request headers`() {
         every { traceIdRetriever.getTraceId(eq(requestHeaders)) } returns traceId
         every { sourceTargetDeriver.deriveTarget(eq(requestHeaders), eq("/$resource")) } returns target
         every { sourceTargetDeriver.deriveServiceName(requestHeaders) } returns serviceName
@@ -56,7 +56,7 @@ internal class ResponseCaptorShould {
     }
 
     @Test
-    fun deriveTargetFromRequestHeaders() {
+    fun `derive target from request headers`() {
         every { traceIdRetriever.getTraceId(eq(requestHeaders)) } returns traceId
         every { sourceTargetDeriver.deriveTarget(eq(requestHeaders), eq("/$resource")) } returns target
         every { sourceTargetDeriver.deriveServiceName(eq(requestHeaders)) } returns serviceName
@@ -69,7 +69,7 @@ internal class ResponseCaptorShould {
     }
 
     @Test
-    fun enqueueInterceptedInteractionOnFeignResponse() {
+    fun `enqueue intercepted interaction on feign response`() {
         every { traceIdRetriever.getTraceId(eq(requestHeaders)) } returns traceId
         every { sourceTargetDeriver.deriveTarget(eq(requestHeaders), eq("/$resource")) } returns target
         every { sourceTargetDeriver.deriveServiceName(eq(requestHeaders)) } returns serviceName
@@ -83,7 +83,7 @@ internal class ResponseCaptorShould {
 
     @Test
     @Throws(IOException::class)
-    fun handleEmptyResponseBodyFromDeleteRequest() {
+    fun `handle empty response body from delete request`() {
         val httpHeaders = mockk<HttpHeaders>()
         every { httpHeaders.contentLength } returns 10
         every { httpRequest.headers } returns httpHeaders
@@ -101,7 +101,7 @@ internal class ResponseCaptorShould {
 
     @Test
     @Throws(IOException::class)
-    fun enqueueInterceptedInteractionOnSpringResponse() {
+    fun `enqueue intercepted interaction on spring response`() {
         val httpHeaders = mockk<HttpHeaders>()
         every { httpHeaders.contentLength } returns 10
         every { httpRequest.headers } returns httpHeaders

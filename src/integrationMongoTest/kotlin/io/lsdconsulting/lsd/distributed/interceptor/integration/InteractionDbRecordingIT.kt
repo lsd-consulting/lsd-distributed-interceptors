@@ -33,7 +33,7 @@ class InteractionDbRecordingIT: IntegrationTestBase() {
     @Test
     @DisplayName("Should record interactions from RestTemplate, FeignClient and RabbitListener")
     @Throws(URISyntaxException::class)
-    fun shouldRecordRestTemplateFeignClientAndListenerInteractions() {
+    fun `should record rest template feign client and listener interactions`() {
         givenExternalApi()
         val response = sentRequest("/api-listener", mainTraceId, null, null)
         assertThat(response.statusCode, `is`(HttpStatus.OK))
@@ -155,7 +155,7 @@ class InteractionDbRecordingIT: IntegrationTestBase() {
     @Test
     @DisplayName("Should record interactions with supplied names through headers")
     @Throws(URISyntaxException::class)
-    fun shouldRecordHeaderSuppliedNames() {
+    fun `should record header supplied names`() {
         givenExternalApi()
         val response = sentRequest("/api-listener", mainTraceId, sourceName, targetName)
         assertThat(response.statusCode, `is`(HttpStatus.OK))
@@ -276,7 +276,7 @@ class InteractionDbRecordingIT: IntegrationTestBase() {
 
     @Test
     @Throws(URISyntaxException::class)
-    fun shouldRecordReceivingMessagesWithRabbitTemplate() {
+    fun `should record receiving messages with rabbit template`() {
         val response = sentRequest("/api-rabbit-template", mainTraceId, sourceName, targetName)
         assertThat(response.statusCode, `is`(HttpStatus.OK))
         assertThat(response.body, `is`("response_from_controller"))
@@ -348,7 +348,7 @@ class InteractionDbRecordingIT: IntegrationTestBase() {
 
     @Test
     @Throws(URISyntaxException::class)
-    fun shouldRecordObfuscatedHeaders() {
+    fun `should record obfuscated headers`() {
         givenExternalApi()
         val response = sentRequest("/api-listener", mainTraceId, null, null)
         assertThat(response.statusCode, `is`(HttpStatus.OK))

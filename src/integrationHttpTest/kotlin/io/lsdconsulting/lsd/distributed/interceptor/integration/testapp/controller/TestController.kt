@@ -39,8 +39,6 @@ class TestController(private val rabbitTemplate: RabbitTemplate) {
     }
 
     private fun event() = SomethingDoneEvent("from_controller")
-
-    companion object {
-        private val NO_ROUTING_KEY: String? = null
-    }
 }
+
+private const val NO_ROUTING_KEY: String = ""

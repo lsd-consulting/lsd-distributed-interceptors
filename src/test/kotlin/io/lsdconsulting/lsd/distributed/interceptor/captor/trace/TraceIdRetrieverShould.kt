@@ -22,7 +22,7 @@ internal class TraceIdRetrieverShould {
     private val traceId = randomAlphabetic(10)
 
     @Test
-    fun retrieveTraceIdFromB3Header() {
+    fun `retrieve trace id from b 3 header`() {
         val xRequestInfoValue = listOf("$traceId-$traceId-1")
         val headers = mapOf<String, Collection<String>>("b3" to xRequestInfoValue)
 
@@ -32,7 +32,7 @@ internal class TraceIdRetrieverShould {
     }
 
     @Test
-    fun retrieveTraceIdFromXRequestInfoHeader() {
+    fun `retrieve trace id from xrequest info header`() {
         val xRequestInfoValue = listOf("referenceId=$traceId;")
         val headers = mapOf<String, Collection<String>>("X-Request-Info" to xRequestInfoValue)
 
@@ -43,7 +43,7 @@ internal class TraceIdRetrieverShould {
 
     @ParameterizedTest
     @CsvSource(value = ["referenceId=123456", "something=654321;referenceId=123456"])
-    fun allowFlexibleFormattingOfXRequestInfoHeaderValue(headerValue: String) {
+    fun `allow flexible formatting of xrequest info header value`(headerValue: String) {
         val headers = mapOf<String, Collection<String>>("X-Request-Info" to listOf(headerValue))
 
         val result = underTest.getTraceId(headers)
@@ -53,7 +53,7 @@ internal class TraceIdRetrieverShould {
 
     @ParameterizedTest
     @CsvSource(value = ["reference=123456;", "reference:123456;"])
-    fun fallBackToTracerForWrongXRequestInfoHeaderValue(headerValue: String) {
+    fun `fall back to tracer for wrong xrequest info header value`(headerValue: String) {
         every { tracer.currentSpan() } returns span
         every { span.context() } returns context
         every { context.traceIdString() } returns "123456"
@@ -65,7 +65,7 @@ internal class TraceIdRetrieverShould {
     }
 
     @Test
-    fun retrieveTraceIdFromTracerCurrentSpan() {
+    fun `retrieve trace id from tracer current span`() {
         every { tracer.currentSpan() } returns span
         every { span.context() } returns context
         every { context.traceIdString() } returns traceId
@@ -76,7 +76,7 @@ internal class TraceIdRetrieverShould {
     }
 
     @Test
-    fun retrieveTraceIdFromTracerNextSpan() {
+    fun `retrieve trace id from tracer next span`() {
         every { tracer.nextSpan() } returns span
         every { tracer.currentSpan() } returns span
         every { span.context() } returns context

@@ -32,7 +32,7 @@ internal class RabbitCaptorShould {
     private val headers = mapOf<String, Collection<String>>("name" to listOf("value"))
 
     @Test
-    fun captureAmqpInteraction() {
+    fun `capture amqp interaction`() {
         every { propertyServiceNameDeriver.serviceName } returns serviceName
         every { traceIdRetriever.getTraceId(any()) } returns traceId
         every { amqpHeaderRetriever.retrieve(any()) } returns headers

@@ -13,9 +13,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @ConditionalOnProperty(name = ["lsd.dist.connectionString"])
-open class CommonLibraryConfig(
-    private val tracer: Tracer
-) {
+open class CommonLibraryConfig {
     @Bean
     open fun propertyServiceNameDeriver(@Value("\${info.app.name}") appName: String) =
         PropertyServiceNameDeriver(appName)
@@ -25,7 +23,7 @@ open class CommonLibraryConfig(
         Obfuscator(sensitiveHeaders)
 
     @Bean
-    open fun traceIdRetriever() = TraceIdRetriever(tracer)
+    open fun traceIdRetriever(tracer: Tracer) = TraceIdRetriever(tracer)
 
     @Bean
     open fun queueService(

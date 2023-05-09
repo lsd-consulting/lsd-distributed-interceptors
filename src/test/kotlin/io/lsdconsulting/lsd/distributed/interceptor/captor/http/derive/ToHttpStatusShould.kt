@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test
 
 internal class ToHttpStatusShould {
     @Test
-    fun handleUnknownStatusCode() {
+    fun `handle unknown status code`() {
         val result = RandomUtils.nextInt(1000, 10000).toHttpStatus()
         assertThat(result, startsWith("<unresolved status:"))
     }
 
     @Test
-    fun handleKnownStatusCode() {
+    fun `handle known status code`() {
         val result = 200.toHttpStatus()
         assertThat(result, `is`("200 OK"))
     }

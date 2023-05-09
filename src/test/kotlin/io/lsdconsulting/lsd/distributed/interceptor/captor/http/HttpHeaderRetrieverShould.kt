@@ -31,7 +31,7 @@ internal class HttpHeaderRetrieverShould {
 
     @ParameterizedTest
     @MethodSource("provideHttpHeaders")
-    fun retrieveHeadersFromHttpRequest(headers: HttpHeaders, expectedSize: Int) {
+    fun `retrieve headers from http request`(headers: HttpHeaders, expectedSize: Int) {
         val httpRequest = mockk<HttpRequest>()
         every { httpRequest.headers } returns headers
 
@@ -46,7 +46,7 @@ internal class HttpHeaderRetrieverShould {
 
     @ParameterizedTest
     @MethodSource("provideHttpHeaders")
-    fun retrieveHeadersFromHttpResponse(headers: HttpHeaders, expectedSize: Int) {
+    fun `retrieve headers from http response`(headers: HttpHeaders, expectedSize: Int) {
         val httpResponse = mockk<ClientHttpResponse>()
         every { httpResponse.headers } returns headers
 
@@ -60,7 +60,7 @@ internal class HttpHeaderRetrieverShould {
 
     @ParameterizedTest
     @MethodSource("provideHeaders")
-    fun retrieveHeadersFromRequest(headers: Map<String, Collection<String>>, expectedSize: Int) {
+    fun `retrieve headers from request`(headers: Map<String, Collection<String>>, expectedSize: Int) {
         val request = mockk<Request>()
         every { request.headers() } returns headers
 
@@ -74,7 +74,7 @@ internal class HttpHeaderRetrieverShould {
 
     @ParameterizedTest
     @MethodSource("provideHeaders")
-    fun retrieveHeadersFromResponse(headers: Map<String, Collection<String>>, expectedSize: Int) {
+    fun `retrieve headers from response`(headers: Map<String, Collection<String>>, expectedSize: Int) {
         val response = mockk<Response>()
         every { response.headers() } returns headers
 
@@ -87,7 +87,7 @@ internal class HttpHeaderRetrieverShould {
     }
 
     @Test
-    fun handleHeadersWithNoValuesFromHttpRequest() {
+    fun `handle headers with no values from http request`() {
         val headers = HttpHeaders(MultiValueMapAdapter(mapOf("name" to listOf())))
         val httpRequest = mockk<HttpRequest>()
         every { httpRequest.headers } returns headers
@@ -99,7 +99,7 @@ internal class HttpHeaderRetrieverShould {
     }
 
     @Test
-    fun handleHeadersWithNoValuesFromHttpResponse() {
+    fun `handle headers with no values from http response`() {
         val headers = HttpHeaders(MultiValueMapAdapter(mapOf("name" to listOf())))
         val httpResponse = mockk<ClientHttpResponse>()
         every { httpResponse.headers } returns headers

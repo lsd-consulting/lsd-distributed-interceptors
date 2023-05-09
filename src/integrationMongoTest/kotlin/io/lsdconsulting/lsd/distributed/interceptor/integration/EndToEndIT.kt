@@ -34,7 +34,7 @@ class EndToEndIT : IntegrationTestBase() {
 
     @Test
     @Throws(URISyntaxException::class)
-    fun shouldGenerateLsdWithSuppliedNames() {
+    fun `should generate lsd with supplied names`() {
         lsdContext.addParticipants(
             listOf(
                 ParticipantType.ACTOR.called("Client"),
@@ -78,7 +78,7 @@ class EndToEndIT : IntegrationTestBase() {
 
     @Test
     @Throws(URISyntaxException::class)
-    fun shouldGenerateDiagramWithSuppliedNamesAndColoursForMultipleTraceIds() {
+    fun `should generate diagram with supplied names and colours for multiple trace ids`() {
         lsdContext.addParticipants(
             listOf(
                 ParticipantType.ACTOR.called("E2E"),

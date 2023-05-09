@@ -26,7 +26,7 @@ internal class MessagingHeaderRetrieverShould {
 
     @ParameterizedTest
     @MethodSource("provideMessageHeaders")
-    fun retrieveMessageHeadersFromMessages(messageHeaders: MessageHeaders, expectedSize: Int) {
+    fun `retrieve message headers from messages`(messageHeaders: MessageHeaders, expectedSize: Int) {
         val message = mockk<Message<String>>()
         every { message.headers } returns messageHeaders
 

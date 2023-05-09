@@ -41,7 +41,7 @@ internal class RequestCaptorShould {
     private val request = Request.create(GET, url, requestHeaders, body.toByteArray(), Charset.defaultCharset(), RequestTemplate())
 
     @Test
-    fun takeTraceIdFromRequestHeaders() {
+    fun `take trace id from request headers`() {
         every { traceIdRetriever.getTraceId(eq(requestHeaders))} returns traceId
         every { httpHeaderRetriever.retrieve(any<Request>()) } returns requestHeaders
         every { sourceTargetDeriver.deriveTarget(eq(requestHeaders), eq("/$resource"))} returns target
@@ -53,7 +53,7 @@ internal class RequestCaptorShould {
     }
 
     @Test
-    fun deriveTargetFromRequestHeaders() {
+    fun `derive target from request headers`() {
         every { traceIdRetriever.getTraceId(eq(requestHeaders))} returns traceId
         every { sourceTargetDeriver.deriveTarget(eq(requestHeaders), eq("/$resource"))} returns target
         every { sourceTargetDeriver.deriveServiceName(eq(requestHeaders))} returns serviceName
@@ -65,7 +65,7 @@ internal class RequestCaptorShould {
     }
 
     @Test
-    fun enqueueInterceptedInteractionOnFeignResponse() {
+    fun `enqueue intercepted interaction on feign response`() {
         every { traceIdRetriever.getTraceId(eq(requestHeaders))} returns traceId
         every { sourceTargetDeriver.deriveTarget(eq(requestHeaders), eq("/$resource"))} returns target
         every { sourceTargetDeriver.deriveServiceName(eq(requestHeaders))} returns serviceName
@@ -78,7 +78,7 @@ internal class RequestCaptorShould {
 
     @Test
     @Throws(IOException::class)
-    fun handleEmptyResponseBodyFromDeleteRequest() {
+    fun `handle empty response body from delete request`() {
         val httpHeaders = mockk<HttpHeaders>()
         every { httpRequest.headers} returns httpHeaders
         every { httpRequest.methodValue} returns "GET"
@@ -97,7 +97,7 @@ internal class RequestCaptorShould {
 
     @Test
     @Throws(IOException::class)
-    fun enqueueInterceptedInteractionOnSpringResponse() {
+    fun `enqueue intercepted interaction on spring response`() {
         val httpHeaders = mockk<HttpHeaders>()
         every { httpRequest.headers} returns httpHeaders
         every { httpRequest.methodValue} returns "GET"

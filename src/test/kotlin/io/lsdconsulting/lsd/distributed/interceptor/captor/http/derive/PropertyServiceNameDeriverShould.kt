@@ -10,7 +10,7 @@ class PropertyServiceNameDeriverShould {
 
     @ParameterizedTest
     @CsvSource(value = ["Global User Service, GlobalUser", "User Address, UserAddress"])
-    fun deriveServiceName(appName: String, expectedServiceName: String) {
+    fun `derive service name`(appName: String, expectedServiceName: String) {
         val underTest = PropertyServiceNameDeriver(appName)
         assertThat(underTest.serviceName, `is`(expectedServiceName))
     }
