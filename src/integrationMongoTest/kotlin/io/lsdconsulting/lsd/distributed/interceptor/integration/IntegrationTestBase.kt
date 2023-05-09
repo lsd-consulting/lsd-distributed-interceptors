@@ -7,7 +7,6 @@ import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.R
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RabbitTemplateConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RepositoryConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RestConfig
-import lombok.extern.slf4j.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
@@ -22,7 +21,6 @@ import org.springframework.test.context.ActiveProfiles
 import java.net.URI
 import java.net.URISyntaxException
 
-@Slf4j
 @Import(RepositoryConfig::class, RestConfig::class, RabbitConfig::class, RabbitTemplateConfig::class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = [TestApplication::class])
 @ActiveProfiles("test")

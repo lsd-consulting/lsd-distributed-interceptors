@@ -22,10 +22,6 @@ dependencies {
     integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
 
-    // Lombok
-    integrationMongoTestCompileOnly 'org.projectlombok:lombok:1.18.26'
-    integrationMongoTestAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
-
     // Other
     integrationMongoTestImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.5.4'
     integrationMongoTestImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'
