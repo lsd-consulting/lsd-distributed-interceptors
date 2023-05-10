@@ -12,9 +12,16 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+tasks.register('javadocJar', Jar) {
+    dependsOn(dokkaJavadoc)
+    archiveClassifier = 'javadoc'
+    from dokkaHtml.outputDirectory
+}
+
 artifacts {
     archives jar
     archives sourcesJar
+    archives javadocJar
 }
 
 publishing {
@@ -26,6 +33,7 @@ publishing {
 
             from components.java
             artifact sourcesJar
+            artifact javadocJar
             pom {
                 name = 'lsd-distributed-interceptor'
                 description = 'A set of interceptors gathering information from distributed sources for the LSD library.'
