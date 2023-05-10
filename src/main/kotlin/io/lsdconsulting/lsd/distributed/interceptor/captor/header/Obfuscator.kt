@@ -8,9 +8,9 @@ class Obfuscator(headers: String?) {
             .filter { sensitiveHeaders.contains(it.key) }
             .map { it.key to listOf("<obfuscated>") }
 
-        val compliedHeaders = headers.toMutableMap()
-        compliedHeaders.putAll(obfuscatedHeaders)
-        return compliedHeaders
+        val compiledHeaders = headers.toMutableMap()
+        compiledHeaders.putAll(obfuscatedHeaders)
+        return compiledHeaders
     }
 
     companion object {
