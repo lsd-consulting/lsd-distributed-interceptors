@@ -28,14 +28,14 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId = "$group"
-            artifactId = 'lsd-distributed-interceptor'
+            artifactId = 'lsd-distributed-interceptors'
             version = "$version"
 
             from components.java
             artifact sourcesJar
             artifact javadocJar
             pom {
-                name = 'lsd-distributed-interceptor'
+                name = 'lsd-distributed-interceptors'
                 description = 'A set of interceptors gathering information from distributed sources for the LSD library.'
                 url = 'https://github.com/lsd-consulting/lsd-distributed-interceptors'
                 licenses {
