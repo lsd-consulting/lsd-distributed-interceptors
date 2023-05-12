@@ -38,7 +38,7 @@ dependencies {
     integrationHttpTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
 }
 
-task integrationHttpTest(type: Test) {
+tasks.register('integrationHttpTest', Test) {
     useJUnitPlatform()
     dependsOn assemble
 

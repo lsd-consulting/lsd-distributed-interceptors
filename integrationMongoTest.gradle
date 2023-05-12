@@ -35,7 +35,7 @@ dependencies {
     integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:4.0.1'
 }
 
-task integrationMongoTest(type: Test) {
+tasks.register('integrationMongoTest', Test) {
     useJUnitPlatform()
     dependsOn assemble
 

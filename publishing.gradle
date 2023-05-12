@@ -7,7 +7,8 @@ jar {
     classifier = ""
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
     archiveClassifier.set('sources')
     from sourceSets.main.allSource
 }
@@ -88,7 +89,7 @@ signing {
         // Use in-memory ascii-armored keys
         def signingKey = findProperty("signingKey")
         def signingPassword = findProperty("signingPassword")
-        useInMemoryPgpKeys(signingKey, signingPassword)
+        useInMemoryPgpKeys(signingKey as String, signingPassword as String)
         sign publishing.publications.mavenJava
     } else {
         // Use signing properties in ~/.gradle/gradle.properties
