@@ -17,10 +17,10 @@ import org.springframework.web.client.RestTemplate
 open class RestTemplateInterceptorConfig {
     @Bean
     open fun lsdRestTemplateInterceptor(
-        requestCaptor: RequestCaptor?,
-        responseCaptor: ResponseCaptor?
+        requestCaptor: RequestCaptor,
+        responseCaptor: ResponseCaptor
     ): ClientHttpRequestInterceptor {
-        return LsdRestTemplateInterceptor(requestCaptor!!, responseCaptor!!)
+        return LsdRestTemplateInterceptor(requestCaptor, responseCaptor)
     }
 
     @Bean

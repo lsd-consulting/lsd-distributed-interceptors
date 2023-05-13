@@ -1,15 +1,13 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-    id 'org.springframework.boot' version '2.7.10'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java-library'
-    id 'maven-publish'
+    id 'org.springframework.boot' version '2.7.10' apply false
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'signing'
     id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
     id 'com.palantir.git-version' version '0.12.3'
     id 'jacoco'
-    id 'info.solidsoft.pitest' version '1.9.11'
     id 'org.jetbrains.kotlin.jvm' version '1.8.10'
     id 'org.jetbrains.dokka' version "1.8.10"
 }
@@ -22,37 +20,25 @@ sourceCompatibility = '17'
 targetCompatibility = '17'
 compileKotlin.kotlinOptions.jvmTarget = '17'
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled(true)
-        html.enabled(true)
-        html.setDestination(project.provider(() -> new File("${project.buildDir}/reports/coverage")))
-    }
-    executionData(
-            file("${project.buildDir}/jacoco/test.exec"),
-            file("${project.buildDir}/jacoco/integrationMongoTest.exec"),
-            file("${project.buildDir}/jacoco/integrationHttpTest.exec")
-    )
-}
-
-apply plugin: 'io.spring.dependency-management'
-dependencyManagement {
-    imports {
-        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2021.0.6'
-        mavenBom 'io.pivotal.spring.cloud:spring-cloud-services-dependencies:3.5.5'
-        mavenBom SpringBootPlugin.BOM_COORDINATES
+allprojects {
+    repositories {
+        mavenCentral()
+        mavenLocal()
     }
 }
 
-apply from: 'dependencies.gradle'
-apply from: 'publishing.gradle'
-apply from: 'test.gradle'
-apply from: 'integrationMongoTest.gradle'
-apply from: 'integrationHttpTest.gradle'
-apply from: 'pitest.gradle'
+subprojects {
+    group = rootProject.getGroup()
+    version = rootProject.getVersion()
+
+    apply plugin: 'io.spring.dependency-management'
+    dependencyManagement {
+        imports {
+            mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2021.0.6'
+            mavenBom 'io.pivotal.spring.cloud:spring-cloud-services-dependencies:3.5.5'
+            mavenBom SpringBootPlugin.BOM_COORDINATES
+        }
+    }
+}
+
 apply from: 'hooks.gradle'

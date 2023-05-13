@@ -28,10 +28,10 @@ class RepositoryService(
     }
 
     fun enqueue(interceptedInteraction: InterceptedInteraction) {
-        log().debug("Received interceptedInteraction: $interceptedInteraction")
+        log().debug("Received interceptedInteraction: {}", interceptedInteraction)
         try {
             executorService.submit {
-                log().debug("Saving interceptedInteraction: $interceptedInteraction")
+                log().debug("Saving interceptedInteraction: {}", interceptedInteraction)
                 interceptedDocumentRepository.save(interceptedInteraction)
             }
         } catch (e: RejectedExecutionException) {
