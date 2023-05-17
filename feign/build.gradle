@@ -1,5 +1,4 @@
 plugins {
-    id 'org.springframework.boot'
     id 'java-library'
     id 'maven-publish'
     id 'signing'
@@ -14,6 +13,8 @@ apply plugin: 'org.springframework.boot'
 
 apply from: 'dependencies.gradle'
 apply from: 'test.gradle'
+apply from: 'integrationHttpTest.gradle'
+apply from: 'integrationMongoTest.gradle'
 apply from: 'jacoco.gradle'
 apply from: 'pitest.gradle'
 apply from: 'publishing.gradle'

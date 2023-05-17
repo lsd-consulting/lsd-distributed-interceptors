@@ -1,6 +1,7 @@
-package io.lsdconsulting.lsd.distributed.interceptor.captor.convert
+package io.lsdconsulting.lsd.distributed.interceptor.converter
 
 import feign.Response
+import io.lsdconsulting.lsd.distributed.interceptor.convert.stringify
 import io.mockk.every
 import io.mockk.mockk
 import org.apache.commons.io.IOUtils
@@ -13,17 +14,11 @@ import java.nio.charset.StandardCharsets
 
 internal class TypeConverterShould {
     @Test
-    fun `convert byte array to string`() {
-        val body = randomAlphanumeric(20)
-        assertThat(body.toByteArray().stringify(), `is`(body))
-    }
-
-    @Test
     @Throws(IOException::class)
     fun `convert response body to string`() {
         val body = randomAlphanumeric(20)
         val responseBody = mockk<Response.Body>()
         every { responseBody.asInputStream() } returns IOUtils.toInputStream(body, StandardCharsets.UTF_8)
-        assertThat((body).stringify(), `is`(body))
+        assertThat((body.stringify(), `is`(body))
     }
 }

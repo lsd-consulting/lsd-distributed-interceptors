@@ -1,7 +1,6 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   io.lsdconsulting.lsd.distributed.interceptor.config.AmqpLibraryConfig,\
   io.lsdconsulting.lsd.distributed.interceptor.config.CommonLibraryConfig,\
-  io.lsdconsulting.lsd.distributed.interceptor.config.FeignInterceptorConfig,\
   io.lsdconsulting.lsd.distributed.interceptor.config.HttpLibraryConfig,\
   io.lsdconsulting.lsd.distributed.interceptor.config.MessagingConfig,\
   io.lsdconsulting.lsd.distributed.interceptor.config.MessagingLibraryConfig,\

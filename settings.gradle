@@ -1,3 +1,6 @@
 rootProject.name = 'lsd-distributed-interceptors'
 
 include("core")
+include("feign")
+include("integrationHttpTest")
+include("integrationMongoTest")
