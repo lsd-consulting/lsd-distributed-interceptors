@@ -1,7 +1,5 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.http
 
-import feign.Request
-import feign.Response
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
 import io.mockk.every
 import io.mockk.mockk
@@ -58,34 +56,6 @@ internal class HttpHeaderRetrieverShould {
         }
     }
 
-    @ParameterizedTest
-    @MethodSource("provideHeaders")
-    fun `retrieve headers from request`(headers: Map<String, Collection<String>>, expectedSize: Int) {
-        val request = mockk<Request>()
-        every { request.headers() } returns headers
-
-        val result = underTest.retrieve(request)
-
-        assertThat(result.keys, hasSize(expectedSize))
-        headers.keys.forEach {
-            assertThat(result[it], `is`(headers[it]))
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideHeaders")
-    fun `retrieve headers from response`(headers: Map<String, Collection<String>>, expectedSize: Int) {
-        val response = mockk<Response>()
-        every { response.headers() } returns headers
-
-        val result = underTest.retrieve(response)
-
-        assertThat(result.keys, hasSize(expectedSize))
-        headers.keys.forEach {
-            assertThat(result[it], `is`(headers[it]))
-        }
-    }
-
     @Test
     fun `handle headers with no values from http request`() {
         val headers = HttpHeaders(MultiValueMapAdapter(mapOf("name" to listOf())))
@@ -117,15 +87,6 @@ internal class HttpHeaderRetrieverShould {
                 Arguments.of(HttpHeaders(MultiValueMapAdapter(mapOf("name" to listOf("value")))), 1),
                 Arguments.of(HttpHeaders(MultiValueMapAdapter(mapOf("name1" to listOf("value1"), "name2" to listOf("value2")))), 2),
                 Arguments.of(HttpHeaders(MultiValueMapAdapter(mutableMapOf())), 0)
-            )
-        }
-
-        @JvmStatic
-        private fun provideHeaders(): Stream<Arguments> {
-            return Stream.of(
-                Arguments.of(mapOf("name" to listOf("value")), 1),
-                Arguments.of(mapOf("name1" to listOf("value1"), "name2" to listOf("value2")), 2),
-                Arguments.of(mutableMapOf<Any, Any>(), 0)
             )
         }
     }

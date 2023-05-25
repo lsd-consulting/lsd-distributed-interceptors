@@ -3,17 +3,12 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor
 import feign.Response
 import io.lsdconsulting.lsd.distributed.access.model.InteractionType
 import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
-import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.stringify
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.HttpHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.toHttpStatus
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.toPath
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
+import io.lsdconsulting.lsd.distributed.interceptor.convert.stringify
 import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
-import org.apache.commons.lang3.StringUtils
-import org.springframework.http.client.ClientHttpResponse
-import java.io.ByteArrayOutputStream
-import java.io.IOException
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -21,12 +16,13 @@ class FeignResponseCaptor(
     private val repositoryService: RepositoryService,
     private val sourceTargetDeriver: SourceTargetDeriver,
     private val traceIdRetriever: TraceIdRetriever,
-    private val httpHeaderRetriever: HttpHeaderRetriever,
+    private val feignHttpHeaderRetriever: FeignHttpHeaderRetriever,
     private val profile: String,
 ) {
     fun captureResponseInteraction(response: Response, elapsedTime: Long): InterceptedInteraction {
-        val requestHeaders = httpHeaderRetriever.retrieve(response.request())
-        val responseHeaders = httpHeaderRetriever.retrieve(response)
+        println("feignHttpHeaderRetriever=$feignHttpHeaderRetriever")
+        val responseHeaders = feignHttpHeaderRetriever.retrieve(response)
+        val requestHeaders = feignHttpHeaderRetriever.retrieve(response.request())
         val path = response.request().url().toPath()
         val target = sourceTargetDeriver.deriveTarget(requestHeaders, path)
         val serviceName = sourceTargetDeriver.deriveServiceName(requestHeaders)
@@ -71,15 +67,4 @@ class FeignResponseCaptor(
         elapsedTime = elapsedTime,
         createdAt = ZonedDateTime.now(ZoneId.of("UTC"))
     )
-
-    @Throws(IOException::class)
-    private fun copyBodyToString(response: ClientHttpResponse): String {
-        if (response.headers.contentLength == 0L) {
-            return StringUtils.EMPTY
-        }
-        val outputStream = ByteArrayOutputStream()
-        val inputStream = response.body
-        inputStream.transferTo(outputStream)
-        return outputStream.toString()
-    }
 }

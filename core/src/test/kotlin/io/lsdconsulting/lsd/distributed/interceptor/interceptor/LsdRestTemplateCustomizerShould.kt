@@ -54,7 +54,7 @@ internal class LsdRestTemplateCustomizerShould {
 
         underTest.customize(restTemplate)
 
-        val forObject = restTemplate.getForObject("https://httpbin.org/get", String::class.java)
+        val forObject = restTemplate.getForObject("https://bbc.co.uk", String::class.java)
         assertThat(forObject, not(nullValue()))
     }
 }

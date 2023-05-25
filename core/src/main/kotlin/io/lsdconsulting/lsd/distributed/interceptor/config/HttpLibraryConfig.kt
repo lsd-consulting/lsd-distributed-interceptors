@@ -30,18 +30,13 @@ open class HttpLibraryConfig {
         traceIdRetriever: TraceIdRetriever,
         httpHeaderRetriever: HttpHeaderRetriever,
         @Value("\${spring.profiles.active:#{''}}") profile: String
-    ) = RequestCaptor(
-        repositoryService, sourceTargetDeriver, traceIdRetriever, httpHeaderRetriever, profile
-    )
+    ) = RequestCaptor(repositoryService, sourceTargetDeriver, traceIdRetriever, httpHeaderRetriever, profile)
 
     @Bean
     open fun responseCaptor(
         repositoryService: RepositoryService,
         sourceTargetDeriver: SourceTargetDeriver,
-        traceIdRetriever: TraceIdRetriever,
         httpHeaderRetriever: HttpHeaderRetriever,
         @Value("\${spring.profiles.active:#{''}}") profile: String
-    ) = ResponseCaptor(
-        repositoryService, sourceTargetDeriver, traceIdRetriever, httpHeaderRetriever, profile
-    )
+    ) = ResponseCaptor(repositoryService, sourceTargetDeriver, httpHeaderRetriever, profile)
 }
