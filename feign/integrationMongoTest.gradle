@@ -30,9 +30,9 @@ dependencies {
     integrationMongoTestImplementation 'org.jeasy:easy-random-core:5.0.0'
 
     // LSD
-    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-distributed-mongodb-access:4.0.2-1-ga72b2e2.dirty'
+    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-distributed-mongodb-access:4.0.2'
     integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-junit5:4.0.0'
-    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:4.0.1-1-g4678399.dirty'
+    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:4.1.1'
 }
 
 tasks.register('integrationMongoTest', Test) {

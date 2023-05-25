@@ -18,7 +18,7 @@ dependencies {
     // LSD
     testImplementation 'io.github.lsd-consulting:lsd-distributed-http-access:2.0.1'
     testImplementation 'io.github.lsd-consulting:lsd-junit5:4.0.0'
-    testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:4.0.1-1-g4678399.dirty'
+    testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:4.1.1'
     testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:4.0.2')
     testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:4.0.2:wiremock-stubs'){
         exclude group: "*", module: "*"
