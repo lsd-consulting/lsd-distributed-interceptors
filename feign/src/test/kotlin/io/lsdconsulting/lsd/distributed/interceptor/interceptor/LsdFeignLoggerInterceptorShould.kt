@@ -12,7 +12,6 @@ import io.mockk.verify
 import org.apache.commons.lang3.RandomUtils
 import org.jeasy.random.EasyRandom
 import org.jeasy.random.EasyRandomParameters
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class LsdFeignLoggerInterceptorShould {
@@ -34,7 +33,6 @@ internal class LsdFeignLoggerInterceptorShould {
     }
 
     @Test
-    @Disabled
     fun `log and re-buffer response`() {
         every { feignResponseCaptor.captureResponseInteraction(response, elapsedTime) } returns
             easyRandom.nextObject(InterceptedInteraction::class.java).copy(body = null)
