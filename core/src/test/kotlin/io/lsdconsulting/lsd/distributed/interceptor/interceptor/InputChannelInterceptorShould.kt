@@ -8,11 +8,11 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.messaging.Message
 
-internal class EventConsumerInterceptorShould {
+internal class InputChannelInterceptorShould {
 
     private val message = mockk<Message<String>>(relaxed = true)
     private val messagingCaptor = mockk< MessagingCaptor>(relaxed = true)
-    private val underTest = EventConsumerInterceptor(messagingCaptor)
+    private val underTest = InputChannelInterceptor(messagingCaptor)
 
     @Test
     fun `return same message`() {

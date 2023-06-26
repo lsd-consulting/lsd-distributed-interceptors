@@ -5,7 +5,7 @@ import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
 import org.springframework.messaging.support.ChannelInterceptor
 
-class EventConsumerInterceptor(private val captor: MessagingCaptor) : ChannelInterceptor {
+class InputChannelInterceptor(private val captor: MessagingCaptor) : ChannelInterceptor {
     override fun preSend(message: Message<*>, channel: MessageChannel): Message<*> {
         captor.captureConsumeInteraction(message)
         return message

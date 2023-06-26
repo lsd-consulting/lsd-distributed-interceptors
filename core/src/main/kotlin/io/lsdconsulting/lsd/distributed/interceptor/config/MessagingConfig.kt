@@ -2,8 +2,8 @@ package io.lsdconsulting.lsd.distributed.interceptor.config
 
 import com.lsd.core.LsdContext
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessagingCaptor
-import io.lsdconsulting.lsd.distributed.interceptor.interceptor.EventConsumerInterceptor
 import io.lsdconsulting.lsd.distributed.interceptor.interceptor.EventPublisherInterceptor
+import io.lsdconsulting.lsd.distributed.interceptor.interceptor.InputChannelInterceptor
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
@@ -20,8 +20,8 @@ open class MessagingConfig(
 ) {
     @Bean
     @GlobalChannelInterceptor(patterns = ["*-in-*"], order = 100)
-    open fun eventConsumerInterceptor(): EventConsumerInterceptor {
-        return EventConsumerInterceptor(messagingCaptor)
+    open fun eventConsumerInterceptor(): InputChannelInterceptor {
+        return InputChannelInterceptor(messagingCaptor)
     }
 
     @Bean
