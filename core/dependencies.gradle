@@ -4,7 +4,6 @@ dependencies {
     compileOnly 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.springframework.boot:spring-boot-starter-amqp'
     compileOnly 'org.springframework.cloud:spring-cloud-starter-sleuth'
-    compileOnly 'org.springframework.integration:spring-integration-core'
 
     // LSD
     api 'io.github.lsd-consulting:lsd-core:5.0.2'

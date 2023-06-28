@@ -6,7 +6,6 @@ dependencies {
     compileOnly 'io.github.openfeign:feign-core:12.3'
 
     compileOnly 'org.springframework.cloud:spring-cloud-starter-sleuth'
-    compileOnly 'org.springframework.integration:spring-integration-core'
     compileOnly 'io.zipkin.brave:brave:5.13.11'
 
     // LSD
