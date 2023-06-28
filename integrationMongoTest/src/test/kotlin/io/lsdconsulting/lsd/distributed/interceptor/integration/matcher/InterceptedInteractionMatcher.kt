@@ -1,7 +1,7 @@
 package io.lsdconsulting.lsd.distributed.interceptor.integration.matcher
 
-import io.lsdconsulting.lsd.distributed.access.model.InteractionType
-import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
+import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import org.hamcrest.Description
 import org.hamcrest.TypeSafeMatcher
 

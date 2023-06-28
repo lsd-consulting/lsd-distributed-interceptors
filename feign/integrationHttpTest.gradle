@@ -27,11 +27,11 @@ dependencies {
     integrationHttpTestImplementation 'org.jeasy:easy-random-core:5.0.0'
 
     // LSD
-    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-access:2.0.1'
-    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-junit5:4.0.0'
-    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:4.1.1'
-    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:4.0.2')
-    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:4.0.2:wiremock-stubs'){
+    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.0'
+    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-junit5:5.2.0'
+    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:6.0.0'
+    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:5.0.0')
+    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:5.0.0:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
 

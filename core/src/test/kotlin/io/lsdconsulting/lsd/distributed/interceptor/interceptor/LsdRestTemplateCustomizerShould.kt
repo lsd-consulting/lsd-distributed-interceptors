@@ -1,6 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.interceptor
 
-import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
+import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.RequestCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.ResponseCaptor
 import io.mockk.every

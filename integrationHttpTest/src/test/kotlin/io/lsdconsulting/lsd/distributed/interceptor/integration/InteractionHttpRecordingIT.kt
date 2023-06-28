@@ -8,12 +8,11 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.lsdconsulting.generatorui.controller.LsdControllerStub
-import io.lsdconsulting.lsd.distributed.access.model.InteractionType
-import io.lsdconsulting.lsd.distributed.access.model.InteractionType.*
-import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.*
+import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.integration.data.TraceIdGenerator
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.controller.event.SomethingDoneEvent
-import org.apache.commons.lang3.RandomStringUtils
 import org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric
 import org.awaitility.Awaitility
 import org.hamcrest.MatcherAssert.assertThat

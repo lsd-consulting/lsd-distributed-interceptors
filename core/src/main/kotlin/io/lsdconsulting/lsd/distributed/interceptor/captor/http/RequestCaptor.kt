@@ -1,7 +1,7 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.http
 
-import io.lsdconsulting.lsd.distributed.access.model.InteractionType
-import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
+import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.toPath
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever

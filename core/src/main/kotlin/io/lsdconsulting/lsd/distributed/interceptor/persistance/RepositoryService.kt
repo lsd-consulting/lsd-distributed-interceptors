@@ -1,7 +1,7 @@
 package io.lsdconsulting.lsd.distributed.interceptor.persistance
 
-import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
-import io.lsdconsulting.lsd.distributed.access.repository.InterceptedDocumentRepository
+import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
+import io.lsdconsulting.lsd.distributed.connector.repository.InterceptedDocumentRepository
 import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import java.util.concurrent.*
 import javax.annotation.PostConstruct

@@ -36,11 +36,11 @@ implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>"
 
 and one of the storage dependencies:
 ```groovy
-implementation "io.github.lsd-consulting:lsd-distributed-http-access:<version>"
+implementation "io.github.lsd-consulting:lsd-distributed-http-connector:<version>"
 ```
 or
 ```groovy
-implementation "io.github.lsd-consulting:lsd-distributed-mongodb-access:<version>"
+implementation "io.github.lsd-consulting:lsd-distributed-mongodb-connector:<version>"
 ```
 
 and then configure through the available properties.

@@ -1,7 +1,7 @@
 package io.lsdconsulting.lsd.distributed.interceptor.integration
 
-import io.lsdconsulting.lsd.distributed.access.model.InteractionType
-import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
+import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.integration.data.TraceIdGenerator
 import io.lsdconsulting.lsd.distributed.interceptor.integration.matcher.InterceptedInteractionMatcher
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.controller.event.SomethingDoneEvent

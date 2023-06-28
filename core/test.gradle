@@ -11,7 +11,7 @@ dependencies {
     testImplementation 'org.springframework:spring-messaging'
     testImplementation 'org.springframework.integration:spring-integration-core'
 
-    testImplementation 'io.github.lsd-consulting:lsd-distributed-data-access:1.0.4'
+    testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
 }
 
 test {

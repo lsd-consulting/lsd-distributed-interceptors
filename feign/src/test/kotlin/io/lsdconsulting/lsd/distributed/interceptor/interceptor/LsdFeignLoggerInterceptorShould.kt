@@ -3,7 +3,7 @@ package io.lsdconsulting.lsd.distributed.interceptor.interceptor
 import feign.Logger
 import feign.Request
 import feign.Response
-import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
+import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignRequestCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignResponseCaptor
 import io.mockk.every

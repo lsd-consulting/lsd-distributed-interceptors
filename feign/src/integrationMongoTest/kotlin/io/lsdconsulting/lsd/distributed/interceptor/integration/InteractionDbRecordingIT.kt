@@ -2,17 +2,15 @@ package io.lsdconsulting.lsd.distributed.interceptor.integration
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
-import io.lsdconsulting.lsd.distributed.access.model.InteractionType.REQUEST
-import io.lsdconsulting.lsd.distributed.access.model.InteractionType.RESPONSE
-import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
-import io.lsdconsulting.lsd.distributed.interceptor.integration.matcher.InterceptedInteractionMatcher
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.REQUEST
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.RESPONSE
+import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.integration.matcher.InterceptedInteractionMatcher.Companion.with
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.TestApplication
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RepositoryConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.external.ExternalClient
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.external.ExternalClientWithTargetHeader
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.repository.TestRepository
-import org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric
 import org.awaitility.Awaitility
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*

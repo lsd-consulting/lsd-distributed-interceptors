@@ -1,6 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.config
 
-import io.lsdconsulting.lsd.distributed.access.model.InteractionType
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
 import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.RabbitCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.mapper.deriveExchangeName
 import org.springframework.amqp.core.Message

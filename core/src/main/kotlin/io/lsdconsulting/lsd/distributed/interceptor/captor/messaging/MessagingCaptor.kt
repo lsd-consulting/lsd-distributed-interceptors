@@ -1,8 +1,8 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.messaging
 
-import io.lsdconsulting.lsd.distributed.access.model.InteractionType
-import io.lsdconsulting.lsd.distributed.access.model.InteractionType.PUBLISH
-import io.lsdconsulting.lsd.distributed.access.model.InterceptedInteraction
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.PUBLISH
+import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.stringify
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver.Companion.SOURCE_NAME_KEY
