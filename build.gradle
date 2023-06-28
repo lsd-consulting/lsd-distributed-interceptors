@@ -47,18 +47,18 @@ subprojects {
 
         jar {
             enabled = true
-            classifier = ""
+            archiveClassifier.set("${project.name}")
         }
 
         tasks.register('sourcesJar', Jar) {
             dependsOn classes
-            archiveClassifier.set('sources')
+            archiveClassifier.set("${project.name}-sources")
             from sourceSets.main.allSource
         }
 
         tasks.register('javadocJar', Jar) {
             dependsOn(dokkaJavadoc)
-            archiveClassifier = 'javadoc'
+            archiveClassifier.set("${project.name}-javadoc")
             from dokkaHtml.outputDirectory
         }
 
@@ -72,15 +72,15 @@ subprojects {
             publications {
                 mavenJava(MavenPublication) {
                     groupId = "$group"
-                    artifactId = "${rootProject.name}-${project.name}"
+                    artifactId = "${rootProject.name}"
                     version = "$version"
 
                     from components.java
                     artifact sourcesJar
                     artifact javadocJar
                     pom {
-                        name = '${rootProject.name}-${project.name}'
-                        description = 'A set of interceptors gathering information from distributed sources for the LSD library.'
+                        name = "${rootProject.name}-${project.name}"
+                        description = "A set of ${project.name} interceptors gathering information from distributed sources for the LSD library."
                         url = 'https://github.com/lsd-consulting/lsd-distributed-interceptors'
                         licenses {
                             license {
