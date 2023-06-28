@@ -3,5 +3,6 @@ rootProject.name = 'lsd-distributed-interceptors'
 include("core")
 include("feign")
 include("spring-messaging")
+include("spring-web")
 include("integrationHttpTest")
 include("integrationMongoTest")
