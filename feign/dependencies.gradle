@@ -1,10 +1,8 @@
 dependencies {
     implementation project(":core")
 
-    // Spring
+    compileOnly 'org.springframework.boot:spring-boot-autoconfigure:2.7.10'
     compileOnly 'io.github.openfeign:feign-core:12.3'
-
-    compileOnly 'org.springframework.cloud:spring-cloud-starter-sleuth'
     compileOnly 'io.zipkin.brave:brave:5.13.11'
 
     // LSD
@@ -15,4 +13,7 @@ dependencies {
     // Other
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'commons-io:commons-io:2.11.0'
+
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+
 }

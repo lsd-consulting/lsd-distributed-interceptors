@@ -3,7 +3,6 @@ dependencies {
 
     // Spring
     compileOnly 'org.springframework.boot:spring-boot-starter-amqp'
-    compileOnly 'org.springframework.cloud:spring-cloud-starter-sleuth'
 
     // LSD
     api 'io.github.lsd-consulting:lsd-core:5.6.0'

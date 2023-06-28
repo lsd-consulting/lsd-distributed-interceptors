@@ -2,7 +2,7 @@ dependencies {
     implementation project(":core")
 
     // Spring
-    compileOnly 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    compileOnly 'org.springframework.boot:spring-boot-autoconfigure:2.7.10'
     compileOnly 'org.springframework:spring-messaging'
     compileOnly 'org.springframework.integration:spring-integration-core'
 
@@ -19,4 +19,6 @@ dependencies {
     // Other
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'commons-io:commons-io:2.11.0'
+
+    implementation 'org.slf4j:slf4j-api:2.0.7'
 }
