@@ -16,7 +16,6 @@ apply from: 'dependencies.gradle'
 apply from: 'test.gradle'
 apply from: 'jacoco.gradle'
 apply from: 'pitest.gradle'
-apply from: 'publishing.gradle'
 
 sourceCompatibility = '17'
 targetCompatibility = '17'

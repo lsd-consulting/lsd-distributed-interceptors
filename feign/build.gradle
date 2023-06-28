@@ -1,4 +1,5 @@
 plugins {
+    id 'org.springframework.boot'
     id 'java-library'
     id 'maven-publish'
     id 'signing'
@@ -17,7 +18,6 @@ apply from: 'integrationHttpTest.gradle'
 apply from: 'integrationMongoTest.gradle'
 apply from: 'jacoco.gradle'
 apply from: 'pitest.gradle'
-apply from: 'publishing.gradle'
 
 sourceCompatibility = '17'
 targetCompatibility = '17'
