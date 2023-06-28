@@ -1,7 +1,7 @@
 package io.lsdconsulting.lsd.distributed.interceptor.config
 
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.RequestCaptor
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.ResponseCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.RequestCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.ResponseCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.interceptor.LsdRestTemplateCustomizer
 import io.lsdconsulting.lsd.distributed.interceptor.interceptor.LsdRestTemplateInterceptor
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass

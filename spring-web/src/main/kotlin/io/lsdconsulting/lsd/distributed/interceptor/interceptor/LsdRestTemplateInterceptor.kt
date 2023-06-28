@@ -1,8 +1,8 @@
 package io.lsdconsulting.lsd.distributed.interceptor.interceptor
 
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.RequestCaptor
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.ResponseCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.RequestCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.ResponseCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import io.lsdconsulting.lsd.distributed.interceptor.interceptor.TimeHelper.getNow
 import org.springframework.http.HttpRequest

@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.interceptor.captor.http
+package io.lsdconsulting.lsd.distributed.interceptor.captor
 
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction

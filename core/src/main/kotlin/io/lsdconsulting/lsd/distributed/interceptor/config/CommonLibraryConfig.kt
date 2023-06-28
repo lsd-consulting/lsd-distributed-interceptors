@@ -4,6 +4,7 @@ import brave.Tracer
 import io.lsdconsulting.lsd.distributed.connector.repository.InterceptedDocumentRepository
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
+import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
 import org.springframework.beans.factory.annotation.Value
@@ -19,6 +20,10 @@ open class CommonLibraryConfig {
     @Bean
     open fun propertyServiceNameDeriver(@Value("\${info.app.name}") appName: String) =
         PropertyServiceNameDeriver(appName)
+
+    @Bean
+    open fun sourceTargetDeriver(propertyServiceNameDeriver: PropertyServiceNameDeriver) =
+        SourceTargetDeriver(propertyServiceNameDeriver)
 
     @Bean
     open fun obfuscator(@Value("\${lsd.dist.obfuscator.sensitiveHeaders:#{null}}") sensitiveHeaders: String) =

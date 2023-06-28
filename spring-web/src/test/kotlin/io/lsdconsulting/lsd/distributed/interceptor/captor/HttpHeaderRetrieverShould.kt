@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.interceptor.captor.http
+package io.lsdconsulting.lsd.distributed.interceptor.captor
 
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
 import io.mockk.every

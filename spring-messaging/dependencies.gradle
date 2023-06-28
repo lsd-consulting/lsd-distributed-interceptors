@@ -2,7 +2,7 @@ dependencies {
     implementation project(":core")
 
     // Spring
-    compileOnly 'org.springframework.boot:spring-boot-autoconfigure:2.7.10'
+    compileOnly 'org.springframework.boot:spring-boot-autoconfigure:2.7.12'
     compileOnly 'org.springframework:spring-messaging'
     compileOnly 'org.springframework.integration:spring-integration-core'
 
