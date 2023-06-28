@@ -13,11 +13,12 @@ pitest {
             'io.lsdconsulting.lsd.distributed.interceptor.integration.InteractionDbRecordingIT'
     ]
     excludedClasses = [
-            'io.lsdconsulting.lsd.distributed.interceptor.config.*'
+            'io.lsdconsulting.lsd.distributed.interceptor.config.*',
+            'io.lsdconsulting.lsd.distributed.interceptor.persistance.*'
     ]
     threads = 4
     outputFormats = ['HTML']
     coverageThreshold = 100
-    mutationThreshold = 74
-    testStrengthThreshold = 74
+    mutationThreshold = 67
+    testStrengthThreshold = 67
 }

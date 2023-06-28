@@ -1,6 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.lsdconsulting.lsd.distributed.interceptor.config.AmqpLibraryConfig,\
   io.lsdconsulting.lsd.distributed.interceptor.config.CommonLibraryConfig,\
-  io.lsdconsulting.lsd.distributed.interceptor.config.HttpLibraryConfig,\
-  io.lsdconsulting.lsd.distributed.interceptor.config.RabbitListenerInterceptorConfig,\
-  io.lsdconsulting.lsd.distributed.interceptor.config.RabbitTemplateInterceptorConfig
+  io.lsdconsulting.lsd.distributed.interceptor.config.HttpLibraryConfig

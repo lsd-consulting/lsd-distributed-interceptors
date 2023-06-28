@@ -2,6 +2,7 @@ dependencies {
     testImplementation project(":core")
     testImplementation project(":feign")
     testImplementation project(":spring-web")
+    testImplementation project(":rabbitmq")
 
     // Spring
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
