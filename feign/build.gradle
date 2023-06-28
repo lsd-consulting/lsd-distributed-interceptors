@@ -19,6 +19,6 @@ apply from: 'integrationMongoTest.gradle'
 apply from: 'jacoco.gradle'
 apply from: 'pitest.gradle'
 
-sourceCompatibility = '17'
-targetCompatibility = '17'
-compileKotlin.kotlinOptions.jvmTarget = '17'
+kotlin {
+    jvmToolchain(17)
+}
