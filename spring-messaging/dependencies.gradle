@@ -1,9 +1,9 @@
 dependencies {
+    implementation project(":core")
 
     // Spring
-    compileOnly 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.springframework.boot:spring-boot-starter-amqp'
     compileOnly 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    compileOnly 'org.springframework:spring-messaging'
     compileOnly 'org.springframework.integration:spring-integration-core'
 
     // LSD

@@ -5,9 +5,8 @@ dependencies {
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
     testImplementation 'io.mockk:mockk:1.13.5'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-amqp'
     testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    testImplementation 'org.springframework:spring-messaging'
     testImplementation 'org.springframework.integration:spring-integration-core'
 
     testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
