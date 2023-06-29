@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.interceptor.captor.header
+package io.lsdconsulting.lsd.distributed.interceptor.captor.common
 
 class Obfuscator(headers: String?) {
     private val sensitiveHeaders =  headers?.split(DELIMINATOR)?.map { it.trim() } ?: emptyList()

@@ -4,7 +4,7 @@ import feign.Logger.Level
 import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignHttpHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignRequestCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignResponseCaptor
-import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
+import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.interceptor.LsdFeignLoggerInterceptor

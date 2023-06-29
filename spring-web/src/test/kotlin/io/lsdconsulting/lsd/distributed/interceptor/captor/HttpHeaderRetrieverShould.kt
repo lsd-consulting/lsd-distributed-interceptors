@@ -1,6 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor
 
-import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
+import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import io.mockk.every
 import io.mockk.mockk
 import org.hamcrest.MatcherAssert.assertThat

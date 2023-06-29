@@ -1,7 +1,7 @@
 package io.lsdconsulting.lsd.distributed.interceptor.config
 
+import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
-import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessagingCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessagingHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever

@@ -3,7 +3,11 @@ package io.lsdconsulting.lsd.distributed.interceptor.persistance
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.connector.repository.InterceptedDocumentRepository
 import io.lsdconsulting.lsd.distributed.interceptor.config.log
-import java.util.concurrent.*
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
@@ -15,11 +19,8 @@ class RepositoryService(
 
     @PostConstruct
     fun start() {
-        executorService = ThreadPoolExecutor(
-            threadPoolSize, threadPoolSize * 10,
-            0L, TimeUnit.MILLISECONDS,
-            LinkedBlockingQueue()
-        )
+        executorService =
+            ThreadPoolExecutor(threadPoolSize, threadPoolSize * 10, 0L, MILLISECONDS, LinkedBlockingQueue())
     }
 
     @PreDestroy

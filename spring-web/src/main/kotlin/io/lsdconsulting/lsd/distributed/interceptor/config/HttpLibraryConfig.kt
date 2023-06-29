@@ -3,7 +3,7 @@ package io.lsdconsulting.lsd.distributed.interceptor.config
 import io.lsdconsulting.lsd.distributed.interceptor.captor.HttpHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.RequestCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.ResponseCaptor
-import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
+import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService

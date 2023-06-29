@@ -1,6 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit
 
-import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
+import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import org.springframework.amqp.core.Message
 
 class AmqpHeaderRetriever(

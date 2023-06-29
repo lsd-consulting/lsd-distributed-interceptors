@@ -2,7 +2,7 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor
 
 import feign.Request
 import feign.Response
-import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
+import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 
 class FeignHttpHeaderRetriever(
     private val obfuscator: Obfuscator

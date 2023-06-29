@@ -1,6 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.messaging
 
-import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
+import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import org.springframework.messaging.Message
 
 class MessagingHeaderRetriever(
