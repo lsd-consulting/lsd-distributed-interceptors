@@ -3,7 +3,7 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor
 import feign.Request
 import feign.RequestTemplate
 import feign.Response
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver
+import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
 import io.mockk.every

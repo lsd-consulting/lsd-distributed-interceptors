@@ -5,8 +5,8 @@ import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.PUBLISH
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.convert.stringify
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver.Companion.SOURCE_NAME_KEY
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver.Companion.TARGET_NAME_KEY
+import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver.Companion.SOURCE_NAME_KEY
+import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver.Companion.TARGET_NAME_KEY
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService

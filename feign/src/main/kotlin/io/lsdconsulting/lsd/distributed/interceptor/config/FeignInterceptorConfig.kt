@@ -5,7 +5,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignHttpHeaderRetrie
 import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignRequestCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignResponseCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver
+import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.interceptor.LsdFeignLoggerInterceptor
 import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService

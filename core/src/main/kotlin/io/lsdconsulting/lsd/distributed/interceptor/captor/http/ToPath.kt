@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive
+package io.lsdconsulting.lsd.distributed.interceptor.captor.http
 
 fun String.toPath(): String {
     val path = this.replace(EXTRACT_PATH.toRegex(), "$1")

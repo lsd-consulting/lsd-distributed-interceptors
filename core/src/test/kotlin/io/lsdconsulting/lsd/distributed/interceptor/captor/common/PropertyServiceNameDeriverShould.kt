@@ -1,6 +1,5 @@
-package io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive
+package io.lsdconsulting.lsd.distributed.interceptor.captor.common
 
-import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.params.ParameterizedTest

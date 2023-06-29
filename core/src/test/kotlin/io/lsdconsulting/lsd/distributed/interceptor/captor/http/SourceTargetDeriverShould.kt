@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive
+package io.lsdconsulting.lsd.distributed.interceptor.captor.http
 
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
 import io.mockk.every

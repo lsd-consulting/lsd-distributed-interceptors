@@ -3,9 +3,9 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor
 import feign.Response
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.toHttpStatus
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.toPath
+import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver
+import io.lsdconsulting.lsd.distributed.interceptor.captor.http.toHttpStatus
+import io.lsdconsulting.lsd.distributed.interceptor.captor.http.toPath
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import io.lsdconsulting.lsd.distributed.interceptor.convert.stringify

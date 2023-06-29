@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive
+package io.lsdconsulting.lsd.distributed.interceptor.captor.http
 
 import org.apache.commons.lang3.RandomUtils
 import org.hamcrest.MatcherAssert.assertThat

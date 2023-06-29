@@ -4,7 +4,7 @@ import brave.Tracer
 import io.lsdconsulting.lsd.distributed.connector.repository.InterceptedDocumentRepository
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.header.Obfuscator
-import io.lsdconsulting.lsd.distributed.interceptor.captor.http.derive.SourceTargetDeriver
+import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
 import org.springframework.beans.factory.annotation.Value
