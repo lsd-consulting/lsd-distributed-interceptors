@@ -31,10 +31,6 @@ class TestRepository {
         CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build())
     )
 
-    //    public MongoCollection<Document> getCollection() {
-    //        final MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
-    //        return database.getCollection(COLLECTION_NAME).withCodecRegistry(pojoCodecRegistry);
-    //    }
     fun findAll(traceId: String): List<InterceptedInteraction> {
         log().info("Retrieving interceptedInteractions for traceId:{}", traceId)
         val database = mongoClient!!.getDatabase(DATABASE_NAME)
