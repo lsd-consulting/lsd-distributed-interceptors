@@ -1,6 +1,5 @@
 package io.lsdconsulting.lsd.distributed.interceptor.config
 
-import com.lsd.core.LsdContext
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessagingCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.interceptor.InputChannelInterceptor
 import io.lsdconsulting.lsd.distributed.interceptor.interceptor.OutputChannelInterceptor
@@ -13,7 +12,7 @@ import org.springframework.messaging.Message
 import org.springframework.messaging.support.ChannelInterceptor
 
 @Configuration
-@ConditionalOnClass(value = [LsdContext::class, ChannelInterceptor::class, Message::class])
+@ConditionalOnClass(value = [ChannelInterceptor::class, Message::class])
 @ConditionalOnProperty(name = ["lsd.dist.connectionString"])
 open class MessagingConfig(
     private val messagingCaptor: MessagingCaptor
