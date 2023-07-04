@@ -26,7 +26,7 @@ open class CommonLibraryConfig {
         SourceTargetDeriver(propertyServiceNameDeriver)
 
     @Bean
-    open fun obfuscator(@Value("\${lsd.dist.obfuscator.sensitiveHeaders:#{null}}") sensitiveHeaders: String) =
+    open fun obfuscator(@Value("\${lsd.dist.obfuscator.sensitiveHeaders:#{null}}") sensitiveHeaders: String?) =
         Obfuscator(sensitiveHeaders)
 
     @Bean

@@ -31,4 +31,14 @@ internal class ObfuscatorShould {
         val result = underTest.obfuscate(headers)
         assertThat(result, hasEntry(headerName, listOf(headerValue)))
     }
+
+    @Test
+    fun `accept no headers`() {
+        val underTest = Obfuscator(null)
+        val headerName = randomAlphanumeric(30)
+        val headerValue = randomAlphanumeric(30)
+        val headers = mapOf<String, Collection<String>>(headerName to listOf(headerValue))
+        val result = underTest.obfuscate(headers)
+        assertThat(result, hasEntry(headerName, listOf(headerValue)))
+    }
 }
