@@ -31,8 +31,8 @@ dependencies {
 
     // LSD
     integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-distributed-mongodb-connector:5.0.0'
-    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-junit5:5.2.0'
-    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:6.0.0'
+    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-junit5:6.0.0'
+    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:6.0.1'
 }
 
 tasks.register('integrationMongoTest', Test) {
