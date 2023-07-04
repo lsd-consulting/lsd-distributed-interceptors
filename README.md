@@ -28,10 +28,16 @@ It also generates a component diagram:
 
 # Usage
 
-To use the `lsd-distributed-interceptors` library just add it to the production dependencies:
+To use the `lsd-distributed-interceptors` library just add the core module and one or more of the other modules
+(depending on the technology used by the project) to the production dependencies:
 
 ```groovy
-implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>"
+implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:core"
+
+implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:feign"
+implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:rabbitmq"
+implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:spring-messaging"
+implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:spring-web"
 ```
 
 and one of the storage dependencies:
