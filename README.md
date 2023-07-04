@@ -1,6 +1,6 @@
 [![semantic-release](https://img.shields.io/badge/semantic-release-e10079.svg?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
-# lsd-distributed-interceptor
+# lsd-distributed-interceptors
 
 ![GitHub](https://img.shields.io/github/license/lsd-consulting/lsd-distributed-interceptors)
 ![Codecov](https://img.shields.io/codecov/c/github/lsd-consulting/lsd-distributed-interceptors)
@@ -8,7 +8,7 @@
 [![CI](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/ci.yml/badge.svg)](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/ci.yml)
 [![Nightly Build](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/nightly.yml/badge.svg)](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/nightly.yml)
 [![GitHub release](https://img.shields.io/github/release/lsd-consulting/lsd-distributed-interceptors)](https://github.com/lsd-consulting/lsd-distributed-interceptors/releases)
-![Maven Central](https://img.shields.io/maven-central/v/io.github.lsd-consulting/lsd-distributed-interceptor)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.lsd-consulting/lsd-distributed-interceptors)
 
 A set of interceptors gathering information from distributed sources for the LSD library.
 
@@ -28,19 +28,25 @@ It also generates a component diagram:
 
 # Usage
 
-To use the `lsd-distributed-interceptors` library just add it to the production dependencies:
+To use the `lsd-distributed-interceptors` library just add the core module and one or more of the other modules
+(depending on the technology used by the project) to the production dependencies:
 
 ```groovy
-implementation "io.github.lsd-consulting:lsd-distributed-interceptor:<version>"
+implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:core"
+
+implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:feign"
+implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:rabbitmq"
+implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:spring-messaging"
+implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:spring-web"
 ```
 
 and one of the storage dependencies:
 ```groovy
-implementation "io.github.lsd-consulting:lsd-distributed-http-access:<version>"
+implementation "io.github.lsd-consulting:lsd-distributed-http-connector:<version>"
 ```
 or
 ```groovy
-implementation "io.github.lsd-consulting:lsd-distributed-mongodb-access:<version>"
+implementation "io.github.lsd-consulting:lsd-distributed-mongodb-connector:<version>"
 ```
 
 and then configure through the available properties.

@@ -1,0 +1,17 @@
+apply plugin: 'info.solidsoft.pitest'
+
+build.dependsOn "pitest"
+
+// perform mutation test and enforce coverage
+pitest {
+    junit5PluginVersion = '1.1.1'
+    pitestVersion = '1.14.0'
+    useClasspathFile = true
+    timeoutConstInMillis = 20000
+    targetClasses = ['io.lsdconsulting.lsd.distributed.interceptor.*']
+    threads = 4
+    outputFormats = ['HTML']
+    coverageThreshold = 91
+    mutationThreshold = 38
+    testStrengthThreshold = 45
+}

@@ -1,0 +1,29 @@
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testImplementation 'org.pitest:pitest-junit5-plugin:1.2.0'
+    testImplementation 'org.hamcrest:hamcrest-core:2.2'
+    testImplementation 'org.jeasy:easy-random-core:5.0.0'
+    testImplementation 'io.mockk:mockk:1.13.5'
+
+    testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    testImplementation 'org.springframework:spring-messaging'
+    testImplementation 'org.springframework.integration:spring-integration-core'
+
+    testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging.events("skipped", "failed")
+    systemProperty("lsd.core.report.outputDir", "$buildDir/reports/lsd")
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            logger.lifecycle("Unit test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)")
+            if (result.testCount == 0) {
+                throw new IllegalStateException("No tests were found. Failing the build")
+            }
+        }
+    }
+}
+
+compileTestKotlin.kotlinOptions.jvmTarget = "17"

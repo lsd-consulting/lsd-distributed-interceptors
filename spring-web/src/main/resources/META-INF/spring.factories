@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.lsdconsulting.lsd.distributed.interceptor.config.RestTemplateInterceptorConfig,\
+  io.lsdconsulting.lsd.distributed.interceptor.config.HttpLibraryConfig

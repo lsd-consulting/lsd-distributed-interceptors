@@ -1,1 +1,9 @@
-rootProject.name = 'lsd-distributed-interceptor'
+rootProject.name = 'lsd-distributed-interceptors'
+
+include("core")
+include("feign")
+include("spring-messaging")
+include("spring-web")
+include("rabbitmq")
+include("integrationHttpTest")
+include("integrationMongoTest")

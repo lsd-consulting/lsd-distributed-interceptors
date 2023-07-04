@@ -1,0 +1,22 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+    id 'com.palantir.git-version'
+    id 'jacoco'
+    id 'info.solidsoft.pitest' version '1.9.11'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'org.jetbrains.dokka'
+}
+
+apply plugin: 'org.springframework.boot'
+
+apply from: 'dependencies.gradle'
+apply from: 'test.gradle'
+apply from: 'jacoco.gradle'
+apply from: 'pitest.gradle'
+
+kotlin {
+    jvmToolchain(17)
+}

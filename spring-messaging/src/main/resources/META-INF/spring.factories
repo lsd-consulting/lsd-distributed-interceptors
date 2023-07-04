@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.lsdconsulting.lsd.distributed.interceptor.config.MessagingConfig,\
+  io.lsdconsulting.lsd.distributed.interceptor.config.MessagingLibraryConfig

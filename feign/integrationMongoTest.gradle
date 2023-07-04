@@ -1,0 +1,63 @@
+sourceSets {
+    integrationMongoTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/integrationMongoTest/java')
+        }
+    }
+}
+
+configurations {
+    integrationMongoTestImplementation.extendsFrom implementation
+}
+
+dependencies {
+
+    // Spring
+    integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-test'
+    integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-web'
+    integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+
+    // Other
+    integrationMongoTestImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.5.4'
+    integrationMongoTestImplementation 'org.junit.platform:junit-platform-launcher:1.9.2'
+    integrationMongoTestImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'
+    integrationMongoTestImplementation 'org.awaitility:awaitility:4.1.0'
+    integrationMongoTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
+    integrationMongoTestImplementation 'org.jeasy:easy-random-core:5.0.0'
+
+    // LSD
+    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-distributed-mongodb-connector:5.0.0'
+    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-junit5:6.0.0'
+    integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:6.0.1'
+}
+
+tasks.register('integrationMongoTest', Test) {
+    useJUnitPlatform()
+    dependsOn assemble
+
+    testClassesDirs = sourceSets.integrationMongoTest.output.classesDirs
+    classpath = sourceSets.integrationMongoTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+    testLogging.showStandardStreams = false
+    mustRunAfter(test)
+    finalizedBy jacocoTestReport
+}
+
+check.dependsOn(integrationMongoTest)
+
+integrationMongoTest {
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            println "Mongo integration test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+            if (result.testCount == 0) {
+                throw new IllegalStateException("No tests were found. Failing the build")
+            }
+        }
+    }
+}
+
+compileIntegrationMongoTestKotlin.kotlinOptions.jvmTarget = '17'
