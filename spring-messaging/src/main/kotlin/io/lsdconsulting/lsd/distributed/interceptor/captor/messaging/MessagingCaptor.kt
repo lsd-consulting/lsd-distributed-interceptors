@@ -26,7 +26,7 @@ class MessagingCaptor(
         val headers = messagingHeaderRetriever.retrieve(message)
         val interceptedInteraction = InterceptedInteraction(
             traceId = traceIdRetriever.getTraceId(headers),
-            body = PrettyPrinter.prettyPrint((message.payload as ByteArray).stringify()),
+            body = PrettyPrinter.prettyPrint(message.payload),
             requestHeaders = headers,
             responseHeaders = emptyMap(),
             serviceName = propertyServiceNameDeriver.serviceName,
@@ -43,7 +43,8 @@ class MessagingCaptor(
     }
 
     private fun getSource(message: Message<*>): String {
-        var source = message.headers[TARGET_NAME_KEY] as String?
+        val header = message.headers[TARGET_NAME_KEY]
+        var source = if (header is String) header else if (header is ByteArray) String(header) else null
         if (source.isNullOrEmpty()) {
             val typeIdHeader = message.headers["__TypeId__"] as String?
             source = getSourceFrom(typeIdHeader)

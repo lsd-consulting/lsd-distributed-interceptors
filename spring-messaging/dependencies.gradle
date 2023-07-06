@@ -7,7 +7,7 @@ dependencies {
     compileOnly 'org.springframework.integration:spring-integration-core'
 
     // LSD
-    implementation 'io.github.lsd-consulting:lsd-formatting-library:1.0.8'
+    implementation 'io.github.lsd-consulting:lsd-formatting-library:1.0.10'
     compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
 
     // JSON & XML pretty formatting
