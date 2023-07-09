@@ -1,6 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.messaging
 
-import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.CONSUME
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.PUBLISH
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
@@ -10,7 +10,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeri
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
-import lsd.format.PrettyPrinter
+import lsd.format.prettyPrint
 import org.springframework.messaging.Message
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -26,40 +26,38 @@ class MessagingCaptor(
         val headers = messagingHeaderRetriever.retrieve(message)
         val interceptedInteraction = InterceptedInteraction(
             traceId = traceIdRetriever.getTraceId(headers),
-            body = PrettyPrinter.prettyPrint(message.payload),
+            body = prettyPrint(message.payload),
             requestHeaders = headers,
             responseHeaders = emptyMap(),
             serviceName = propertyServiceNameDeriver.serviceName,
-            target = getSource(message),
+            target = getTarget(message),
             path = propertyServiceNameDeriver.serviceName,
-            httpStatus = null,
-            httpMethod = null, interactionType = InteractionType.CONSUME,
-            profile = profile,
-            elapsedTime = 0L,
+            httpStatus = null, httpMethod = null,
+            interactionType = CONSUME, profile = profile, elapsedTime = 0L,
             createdAt = ZonedDateTime.now(ZoneId.of("UTC"))
         )
         repositoryService.enqueue(interceptedInteraction)
         return interceptedInteraction
     }
 
-    private fun getSource(message: Message<*>): String {
+    // TODO Add support for info.app.name
+    private fun getTarget(message: Message<*>): String {
         val header = message.headers[TARGET_NAME_KEY]
-        var source = if (header is String) header else if (header is ByteArray) String(header) else null
-        if (source.isNullOrEmpty()) {
+        var target = if (header is String) header else if (header is ByteArray) String(header) else null
+        if (target.isNullOrEmpty()) {
             val typeIdHeader = message.headers["__TypeId__"] as String?
-            source = getSourceFrom(typeIdHeader)
+            target = getTargetFrom(typeIdHeader)
         }
-        if (source.isNullOrEmpty()) {
-            source = "UNKNOWN"
+        if (target.isNullOrEmpty()) {
+            target = "UNKNOWN"
         }
-        log().debug("found source:{}", source)
-        return source
+        log().debug("found target:{}", target)
+        return target
     }
 
-    private fun getSourceFrom(typeIdHeader: String?): String? {
+    private fun getTargetFrom(typeIdHeader: String?): String? {
         return if (!typeIdHeader.isNullOrBlank()) {
-            val sourceTokens = typeIdHeader.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            return sourceTokens[sourceTokens.size - 1]
+            return typeIdHeader.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray<String>().last()
         }
         else null
     }
@@ -76,8 +74,8 @@ class MessagingCaptor(
             serviceName = source ?: propertyServiceNameDeriver.serviceName,
             target = target, path = target,
             httpStatus = null, httpMethod = null,
-            interactionType = PUBLISH, profile = profile,
-            elapsedTime = 0L, createdAt = ZonedDateTime.now(ZoneId.of("UTC"))
+            interactionType = PUBLISH, profile = profile, elapsedTime = 0L,
+            createdAt = ZonedDateTime.now(ZoneId.of("UTC"))
         )
         repositoryService.enqueue(interceptedInteraction)
         return interceptedInteraction
