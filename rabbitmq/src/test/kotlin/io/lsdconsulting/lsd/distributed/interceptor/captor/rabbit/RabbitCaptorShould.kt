@@ -3,7 +3,7 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.PUBLISH
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
-import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
+import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
 import io.mockk.every
 import io.mockk.mockk
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic

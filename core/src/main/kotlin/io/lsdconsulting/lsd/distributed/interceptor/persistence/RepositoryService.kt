@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.interceptor.persistance
+package io.lsdconsulting.lsd.distributed.interceptor.persistence
 
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.connector.repository.InterceptedDocumentRepository

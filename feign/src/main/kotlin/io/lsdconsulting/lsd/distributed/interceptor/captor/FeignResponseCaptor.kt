@@ -9,7 +9,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.http.toPath
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import io.lsdconsulting.lsd.distributed.interceptor.convert.stringify
-import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
+import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
 import java.time.ZoneId
 import java.time.ZonedDateTime
 

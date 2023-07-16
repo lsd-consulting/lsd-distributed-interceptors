@@ -4,7 +4,7 @@ import feign.Request
 import feign.RequestTemplate
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
-import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
+import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

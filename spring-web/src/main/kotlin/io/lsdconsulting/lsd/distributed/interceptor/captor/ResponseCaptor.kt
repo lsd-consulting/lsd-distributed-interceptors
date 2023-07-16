@@ -3,7 +3,7 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver
-import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
+import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
 import org.apache.commons.lang3.StringUtils
 import org.springframework.http.HttpRequest
 import org.springframework.http.client.ClientHttpResponse

@@ -5,7 +5,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServic
 import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.AmqpHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.RabbitCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
-import io.lsdconsulting.lsd.distributed.interceptor.persistance.RepositoryService
+import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
 import org.springframework.amqp.core.Message
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean

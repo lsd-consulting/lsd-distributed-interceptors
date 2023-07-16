@@ -14,7 +14,7 @@ pitest {
     ]
     excludedClasses = [
             'io.lsdconsulting.lsd.distributed.interceptor.config.*',
-            'io.lsdconsulting.lsd.distributed.interceptor.persistance.*'
+            'io.lsdconsulting.lsd.distributed.interceptor.persistence.*'
     ]
     threads = 4
     outputFormats = ['HTML']
