@@ -37,7 +37,7 @@ open class CommonLibraryConfig {
     @ConditionalOnMissingClass("io.lsdconsulting.lsd.distributed.connector.repository.InterceptedDocumentRepository")
     @ConditionalOnExpression("#{!'\${lsd.dist.connectionString:}'.startsWith('mongodb://') and !'\${lsd.dist.connectionString:}'.startsWith('http')}")
     open fun interceptedDocumentRepository(@Value("\${lsd.dist.connectionString}") connectionString: String): InterceptedDocumentRepository {
-        throw IllegalArgumentException("Wrong connection string: $connectionString. Make sure it start with http(s):// or mongodb://")
+        throw IllegalArgumentException("Wrong connection string: $connectionString. Make sure it starts with http(s):// or mongodb://")
     }
 
     @Bean
