@@ -17,7 +17,7 @@ open class TestRepository(
 ) {
 
     open fun createTable(dataSource: DataSource) {
-        val prepareDatabaseQuery = javaClass.classLoader.getResourceAsStream("db/prepareDatabase.sql")?.bufferedReader()?.readText()
+        val prepareDatabaseQuery = javaClass.getResourceAsStream("/db/prepareDatabase.sql")?.bufferedReader()?.readText()
         dataSource.connection.use { con ->
             con.prepareStatement(prepareDatabaseQuery).use { pst ->
                 pst.executeUpdate()
