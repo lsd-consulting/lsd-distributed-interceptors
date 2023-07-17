@@ -1,0 +1,16 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+apply plugin: 'org.springframework.boot'
+
+apply from: 'test.gradle'
+
+kotlin {
+    jvmToolchain(17)
+}
+
+bootJar {
+    enabled = false
+}
