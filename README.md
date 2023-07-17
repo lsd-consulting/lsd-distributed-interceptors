@@ -28,16 +28,14 @@ It also generates a component diagram:
 
 # Usage
 
-To use the `lsd-distributed-interceptors` library just add the core module and one or more of the other modules
+To use the `lsd-distributed-interceptors` library just add one or more of the available modules
 (depending on the technology used by the project) to the production dependencies:
 
 ```groovy
-implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:core"
-
-implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:feign"
-implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:rabbitmq"
-implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:spring-messaging"
-implementation "io.github.lsd-consulting:lsd-distributed-interceptors:<version>:spring-web"
+implementation "io.github.lsd-consulting:lsd-distributed-interceptors-feign:<version>"
+implementation "io.github.lsd-consulting:lsd-distributed-interceptors-rabbitmq:<version>"
+implementation "io.github.lsd-consulting:lsd-distributed-interceptors-spring-messaging:<version>"
+implementation "io.github.lsd-consulting:lsd-distributed-interceptors-spring-web:<version>"
 ```
 
 and one of the storage dependencies:
@@ -48,6 +46,10 @@ or
 ```groovy
 implementation "io.github.lsd-consulting:lsd-distributed-mongodb-connector:<version>"
 ```
+or
+```groovy
+implementation "io.github.lsd-consulting:lsd-distributed-postgres-connector:<version>"
+```
 
 and then configure through the available properties.
 
@@ -57,11 +59,6 @@ The following properties can be overridden by setting System or Environment prop
 
 | Property Name        | Default | Required | Description                                                                                                                                    |
 | ----------- |---------| ------------ |------------------------------------------------------------------------------------------------------------------------------------------------|
-| lsd.dist.connectionString | N/A     | YES | Connection string to the database, eg. mongodb://localhost:27017                                                                               |
-| lsd.dist.db.connectionTimeout.millis | 500     | NO | Database connection timeout.                                                                                                                   |
-| lsd.dist.db.collectionSizeLimit.megabytes | 10,000  | NO | Capped database collection size in megabytes.                                                                                                  |
-| lsd.dist.db.trustStoreLocation | N/A     | NO | The location of the trust store containing the certificate of the signing authority (only required for TLS where the certificate if provided). |
-| lsd.dist.db.trustStorePassword | N/A     | NO | The password to the trust store containing the certificate of the signing authority.                                                           |
 | lsd.dist.obfuscator.sensitiveHeaders | None    | NO | A comma delimited list of header names that will be removed before storing in the database, eg. Authorization, JWT                             |
 | lsd.dist.threadPool.size | 16      | NO | `corePoolSize` of the `ThreadPoolExecutor` for enqueueuing intercepted interactions. `maximumPoolSize` is set as `corePoolSize` * 10           |
 
