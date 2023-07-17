@@ -9,7 +9,6 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetrieve
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -34,13 +33,12 @@ open class CommonLibraryConfig {
 
     // TODO Add test for these conditions
     @Bean
-    @ConditionalOnMissingClass("io.lsdconsulting.lsd.distributed.connector.repository.InterceptedDocumentRepository")
     @ConditionalOnExpression("#{!'\${lsd.dist.connectionString:}'.startsWith('mongodb://') " +
-            "and !'\${lsd.dist.connectionString:}'.startsWith('http')}" +
-            "and !'\${lsd.dist.connectionString:}'.startsWith('jdbc:postgresql://')}" +
+            "and !'\${lsd.dist.connectionString:}'.startsWith('http') " +
+            "and !'\${lsd.dist.connectionString:}'.startsWith('jdbc:postgresql://') " +
             "and !'\${lsd.dist.connectionString:}'.startsWith('dataSource')}")
     open fun interceptedDocumentRepository(@Value("\${lsd.dist.connectionString}") connectionString: String): InterceptedDocumentRepository {
-        throw IllegalArgumentException("Wrong connection string: $connectionString. Make sure it starts with http(s):// or mongodb://")
+        throw IllegalArgumentException("Wrong connection string: $connectionString. Make sure it starts with 'http(s)://' or 'mongodb://' or 'jdbc:postgresql://' or 'dataSource'")
     }
 
     @Bean
