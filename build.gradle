@@ -47,18 +47,17 @@ subprojects {
 
         jar {
             enabled = true
-            archiveClassifier.set("${project.name}")
         }
 
         tasks.register('sourcesJar', Jar) {
             dependsOn classes
-            archiveClassifier.set("${project.name}-sources")
+            archiveClassifier.set("sourcesJar")
             from sourceSets.main.allSource
         }
 
         tasks.register('javadocJar', Jar) {
             dependsOn(dokkaJavadoc)
-            archiveClassifier.set("${project.name}-javadoc")
+            archiveClassifier.set("javadocJar")
             from dokkaHtml.outputDirectory
         }
 
@@ -72,7 +71,7 @@ subprojects {
             publications {
                 mavenJava(MavenPublication) {
                     groupId = "$group"
-                    artifactId = "${rootProject.name}"
+                    artifactId = "${rootProject.name}-${project.name}"
                     version = "$version"
 
                     from components.java
