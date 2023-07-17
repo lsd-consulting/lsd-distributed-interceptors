@@ -16,13 +16,14 @@ dependencies {
     testImplementation 'org.awaitility:awaitility:4.1.0'
     testImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
 
     // LSD
-    testImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.0'
-    testImplementation 'io.github.lsd-consulting:lsd-junit5:6.0.0'
-    testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:6.0.1'
-    testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:5.0.0')
-    testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:5.0.0:wiremock-stubs'){
+    testImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.1'
+    testImplementation 'io.github.lsd-consulting:lsd-junit5:6.0.1'
+    testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:7.0.0'
+    testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:6.0.1')
+    testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.0.1:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
 
@@ -35,7 +36,7 @@ test {
     systemProperty("lsd.core.report.outputDir", "$buildDir/reports/lsd")
     afterSuite { desc, result ->
         if (!desc.parent) {
-            logger.lifecycle("Unit test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)")
+            logger.lifecycle("Integration HTTP test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)")
             if (result.testCount == 0) {
                 throw new IllegalStateException("No tests were found. Failing the build")
             }
