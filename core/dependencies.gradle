@@ -1,18 +1,17 @@
 dependencies {
 
     // Spring
-    compileOnly 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
+    compileOnly 'io.zipkin.brave:brave:5.16.0'
+    compileOnly 'jakarta.annotation:jakarta.annotation-api'
 
     // LSD
     compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
 
     // JSON & XML pretty formatting
-    implementation 'com.google.code.gson:gson:2.8.8'
-    implementation 'org.dom4j:dom4j:2.1.3'
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.3'
 
     // Other
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
 }

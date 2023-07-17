@@ -5,8 +5,9 @@ dependencies {
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
     testImplementation 'io.mockk:mockk:1.13.5'
     testImplementation 'org.apache.commons:commons-lang3:3.12.0'
+
     testImplementation 'io.github.openfeign:feign-core:12.3'
-    testImplementation 'io.zipkin.brave:brave:5.13.11'
+    testImplementation 'io.zipkin.brave:brave:5.16.0'
     testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
 }
 

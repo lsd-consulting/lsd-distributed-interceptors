@@ -6,7 +6,7 @@ dependencies {
     testImplementation 'io.mockk:mockk:1.13.5'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    testImplementation 'io.zipkin.brave:brave:5.16.0'
 
     testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
 }

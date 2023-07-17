@@ -1,17 +1,18 @@
 dependencies {
-    api project(":core")
+    implementation project(":core")
 
     compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
     compileOnly 'io.github.openfeign:feign-core:12.3'
-    compileOnly 'io.zipkin.brave:brave:5.13.11'
+    compileOnly 'io.zipkin.brave:brave:5.16.0'
 
     // LSD
     compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
 
+    // JSON & XML pretty formatting
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.3'
+
     // Other
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'commons-io:commons-io:2.11.0'
-
     implementation 'org.slf4j:slf4j-api:2.0.7'
-
+    implementation 'commons-io:commons-io:2.13.0'
 }
