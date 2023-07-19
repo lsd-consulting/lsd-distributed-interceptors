@@ -47,6 +47,7 @@ subprojects {
 
         jar {
             enabled = true
+            archiveClassifier.set("")
         }
 
         tasks.register('sourcesJar', Jar) {
@@ -59,12 +60,6 @@ subprojects {
             dependsOn(dokkaJavadoc)
             archiveClassifier.set("javadocJar")
             from dokkaHtml.outputDirectory
-        }
-
-        artifacts {
-            archives jar
-            archives sourcesJar
-            archives javadocJar
         }
 
         publishing {
