@@ -52,13 +52,13 @@ subprojects {
 
         tasks.register('sourcesJar', Jar) {
             dependsOn classes
-            archiveClassifier.set("sourcesJar")
+            archiveClassifier.set("sources")
             from sourceSets.main.allSource
         }
 
         tasks.register('javadocJar', Jar) {
             dependsOn(dokkaJavadoc)
-            archiveClassifier.set("javadocJar")
+            archiveClassifier.set("javadoc")
             from dokkaHtml.outputDirectory
         }
 
