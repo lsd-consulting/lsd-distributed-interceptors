@@ -37,7 +37,7 @@ test {
     systemProperty("lsd.core.report.outputDir", "$buildDir/reports/lsd")
     afterSuite { desc, result ->
         if (!desc.parent) {
-            logger.lifecycle("Integration MongoDB test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)")
+            logger.lifecycle("Integration Postgres test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)")
             if (result.testCount == 0) {
                 throw new IllegalStateException("No tests were found. Failing the build")
             }
