@@ -45,12 +45,9 @@ internal class MessagingHeaderRetrieverShould {
             val mp1Value = MessageHeaders(map1)
             val map2 = mapOf<String, Any>("name1" to "value1", "name2" to "value2")
             val mp2Values = MessageHeaders(map2)
-//            val map3 = mapOf("name1" to listOf("value1"), "name2" to mapOf("key2" to "value2"))
-//            val mp3Values = MessageHeaders(map3)
             return Stream.of(
                 Arguments.of(mp1Value, map1),
                 Arguments.of(mp2Values, map2),
-//                Arguments.of(mp3Values, map3),
                 Arguments.of(MessageHeaders(mapOf()), mapOf<String, Any>())
             )
         }

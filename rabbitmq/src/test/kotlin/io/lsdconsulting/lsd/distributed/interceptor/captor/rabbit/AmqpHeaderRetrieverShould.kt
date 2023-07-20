@@ -31,7 +31,7 @@ internal class AmqpHeaderRetrieverShould {
 
         val result = underTest.retrieve(message)
 
-        assertThat<Set<String>>(result.keys, hasSize(expectedSize))
+        assertThat(result.keys, hasSize(expectedSize))
         for (headerName in messageProperties.headers.keys) {
             val header = messageProperties.getHeader<String>(headerName)
             assertThat(result[headerName], contains(header))
@@ -44,10 +44,38 @@ internal class AmqpHeaderRetrieverShould {
         messageProperties.setHeader("name", null)
         val message = mockk<Message>()
         every { message.messageProperties } returns messageProperties
-        val headers = underTest.retrieve(message)
 
-        assertThat<Set<String>>(headers.keys, hasSize(1))
-        assertThat(headers["name"], `is`(listOf<Any>()))
+        val result = underTest.retrieve(message)
+
+        assertThat(result.keys, hasSize(1))
+        assertThat(result["name"], `is`(listOf<Any>()))
+    }
+
+    @Test
+    fun `retrieve message headers with list value`() {
+        val messageProperties = MessageProperties()
+        messageProperties.setHeader("name", listOf("value"))
+        val message = mockk<Message>()
+        every { message.messageProperties } returns messageProperties
+
+        val result = underTest.retrieve(message)
+
+        assertThat(result.keys, hasSize(1))
+        assertThat(result["name"], hasItem(containsString("value")))
+    }
+
+    @Test
+    fun `retrieve message headers with map value`() {
+        val messageProperties = MessageProperties()
+        messageProperties.setHeader("name", mapOf("key" to "value"))
+        val message = mockk<Message>()
+        every { message.messageProperties } returns messageProperties
+
+        val result = underTest.retrieve(message)
+
+        assertThat(result.keys, hasSize(1))
+        assertThat(result["name"], hasItem(containsString("key")))
+        assertThat(result["name"], hasItem(containsString("value")))
     }
 
     companion object {
