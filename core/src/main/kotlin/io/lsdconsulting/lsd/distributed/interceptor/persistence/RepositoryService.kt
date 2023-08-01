@@ -34,6 +34,7 @@ class RepositoryService(
             executorService.submit {
                 log().debug("Saving interceptedInteraction: {}", interceptedInteraction)
                 interceptedDocumentRepository.save(interceptedInteraction)
+                log().debug("Saved interceptedInteraction: {}", interceptedInteraction)
             }
         } catch (e: RejectedExecutionException) {
             log().error("Dropping interceptedInteraction because of ${e.message}", e)
