@@ -12,8 +12,4 @@ dependencies {
     // JSON & XML pretty formatting
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.3'
-
-    // Other
-    implementation 'org.slf4j:slf4j-api:2.0.7'
-    implementation 'commons-io:commons-io:2.13.0'
 }
