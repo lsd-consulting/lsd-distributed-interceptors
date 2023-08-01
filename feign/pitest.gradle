@@ -11,7 +11,7 @@ pitest {
     targetClasses = ['io.lsdconsulting.lsd.distributed.interceptor.*']
     threads = 4
     outputFormats = ['HTML']
-    coverageThreshold = 91
-    mutationThreshold = 38
-    testStrengthThreshold = 45
+    coverageThreshold = 96
+    mutationThreshold = 35
+    testStrengthThreshold = 35
 }

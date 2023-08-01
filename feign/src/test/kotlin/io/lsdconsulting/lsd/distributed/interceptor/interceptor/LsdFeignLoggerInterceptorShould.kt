@@ -39,7 +39,6 @@ internal class LsdFeignLoggerInterceptorShould {
     fun `log and re-buffer response`() {
         val request = Request.create(POST, "url", mapOf(), null, UTF_8, null)
         val response = Response.builder().body(body.byteInputStream(UTF_8), body.length).request(request).build()
-        every { response.body() } returns response.body()
         every { feignResponseCaptor.captureResponseInteraction(response, elapsedTime) } returns
             easyRandom.nextObject(InterceptedInteraction::class.java).copy(body = null)
 
