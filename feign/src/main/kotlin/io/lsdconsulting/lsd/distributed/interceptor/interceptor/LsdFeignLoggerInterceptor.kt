@@ -1,8 +1,8 @@
 package io.lsdconsulting.lsd.distributed.interceptor.interceptor
 
-import feign.Logger.JavaLogger
 import feign.Request
 import feign.Response
+import feign.slf4j.Slf4jLogger
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignRequestCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignResponseCaptor
@@ -10,7 +10,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import java.io.IOException
 
 class LsdFeignLoggerInterceptor(private val feignRequestCaptor: FeignRequestCaptor, private val feignResponseCaptor: FeignResponseCaptor) :
-    JavaLogger(LsdFeignLoggerInterceptor::class.java) {
+    Slf4jLogger(LsdFeignLoggerInterceptor::class.java) {
 
     public override fun logRequest(configKey: String, level: Level, request: Request) {
         super.logRequest(configKey, level, request)
