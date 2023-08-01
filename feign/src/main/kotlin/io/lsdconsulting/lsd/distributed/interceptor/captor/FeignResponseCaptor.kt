@@ -30,15 +30,15 @@ class FeignResponseCaptor(
         val traceId = traceIdRetriever.getTraceId(requestHeaders)
         val httpStatus = response.status().toHttpStatus()
         val interceptedInteraction = buildInterceptedInteraction(
-            target,
-            path,
-            traceId,
-            elapsedTime,
-            requestHeaders,
-            responseHeaders,
-            serviceName,
-            response.body()?.stringify(),
-            httpStatus
+            target = target,
+            path = path,
+            traceId = traceId,
+            elapsedTime = elapsedTime,
+            requestHeaders = requestHeaders,
+            responseHeaders = responseHeaders,
+            serviceName = serviceName,
+            body = response.body()?.stringify(),
+            httpStatus = httpStatus
         )
         repositoryService.enqueue(interceptedInteraction)
         return interceptedInteraction
