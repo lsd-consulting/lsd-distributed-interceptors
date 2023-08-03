@@ -10,7 +10,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeri
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
-import lsd.format.prettyPrint
+import lsd.format.printFlat
 import org.springframework.messaging.Message
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -26,7 +26,7 @@ class MessagingCaptor(
         val headers = messagingHeaderRetriever.retrieve(message)
         val interceptedInteraction = InterceptedInteraction(
             traceId = traceIdRetriever.getTraceId(headers),
-            body = prettyPrint(message.payload),
+            body = printFlat(message.payload),
             requestHeaders = headers,
             responseHeaders = emptyMap(),
             serviceName = propertyServiceNameDeriver.serviceName,
