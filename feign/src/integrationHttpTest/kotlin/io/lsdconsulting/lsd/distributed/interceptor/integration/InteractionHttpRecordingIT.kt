@@ -64,7 +64,7 @@ class InteractionHttpRecordingIT {
             verify(2, postRequestedFor(urlPathEqualTo("/lsds")))
             verify(
                 buildExpectedInterceptedInteraction(
-                    body = null,
+                    body = "",
                     serviceName = "TestApp",
                     target = "UNKNOWN_TARGET",
                     path = "/get-api?message=from_test_client",

@@ -63,7 +63,7 @@ class InteractionDbRecordingIT {
                 with(
                     interactionType = REQUEST,
                     serviceName = "TestApp",
-                    body = null,
+                    body = "",
                     target = "UNKNOWN_TARGET",
                     path = "/get-api?message=from_test_client",
                     httpStatus = null,
