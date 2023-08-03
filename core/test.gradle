@@ -23,5 +23,3 @@ test {
         }
     }
 }
-
-compileTestKotlin.kotlinOptions.jvmTarget = "17"

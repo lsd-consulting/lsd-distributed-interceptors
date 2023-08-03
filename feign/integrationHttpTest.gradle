@@ -62,5 +62,3 @@ integrationHttpTest {
         }
     }
 }
-
-compileIntegrationHttpTestKotlin.kotlinOptions.jvmTarget = "17"
