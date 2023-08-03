@@ -5,8 +5,6 @@ jacocoTestReport {
         html.setDestination(project.provider(() -> new File("${project.buildDir}/reports/coverage")))
     }
     executionData(
-            file("${project.buildDir}/jacoco/test.exec"),
-            file("${project.buildDir}/jacoco/integrationMongoTest.exec"),
-            file("${project.buildDir}/jacoco/integrationHttpTest.exec")
+            file("${project.buildDir}/jacoco/test.exec")
     )
 }
