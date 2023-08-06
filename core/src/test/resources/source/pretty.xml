@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parent attribute="abc">
+    <child1>value  1</child1>
+    <child2>value 2</child2>
+    <child3>value3</child3>
+</parent>

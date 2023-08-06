@@ -1,0 +1,17 @@
+<ns10:PublishGOTDEventsRequest xmlns="urn:ford/VehicleOrder/v2.0" xmlns:ns10="urn:ford/interface/GOTDPublication/v1"
+                               xmlns:ns16="urn:ford/VehicleOrder/UnitDetail/v4"
+                               xmlns:ns2="urn:ford/interface/GOTDPublication/v1"
+>
+    <ns10:Part PartID="Order_2950815949">
+        <ns10:VehicleOrder>
+        </ns10:VehicleOrder>
+    </ns10:Part>
+    <ns2:Part PartID="Vehicle_ETA">
+        <ns2:VehicleETA>
+            <ns16:ETAStartDate>2020-12-12</ns16:ETAStartDate>
+            <ns16:ETAEndDate>2020-12-12</ns16:ETAEndDate>
+            <ns16:ETAReasonCode>32</ns16:ETAReasonCode>
+            <ns16:LeadTimeDate>2023-08-04Z</ns16:LeadTimeDate>
+        </ns2:VehicleETA>
+    </ns2:Part>
+</ns10:PublishGOTDEventsRequest>
