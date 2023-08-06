@@ -8,7 +8,6 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.http.toHttpStatus
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.toPath
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.config.log
-import io.lsdconsulting.lsd.distributed.interceptor.convert.stringify
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -20,7 +19,7 @@ class FeignResponseCaptor(
     private val feignHttpHeaderRetriever: FeignHttpHeaderRetriever,
     private val profile: String,
 ) {
-    fun captureResponseInteraction(response: Response, elapsedTime: Long): InterceptedInteraction {
+    fun captureResponseInteraction(response: Response, body: String, elapsedTime: Long): InterceptedInteraction {
         log().debug("feignHttpHeaderRetriever={}", feignHttpHeaderRetriever)
         val responseHeaders = feignHttpHeaderRetriever.retrieve(response)
         val requestHeaders = feignHttpHeaderRetriever.retrieve(response.request())
@@ -37,7 +36,7 @@ class FeignResponseCaptor(
             requestHeaders = requestHeaders,
             responseHeaders = responseHeaders,
             serviceName = serviceName,
-            body = response.body()?.stringify(),
+            body = body,
             httpStatus = httpStatus
         )
         repositoryService.enqueue(interceptedInteraction)

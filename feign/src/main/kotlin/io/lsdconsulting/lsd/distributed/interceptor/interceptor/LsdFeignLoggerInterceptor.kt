@@ -5,8 +5,8 @@ import feign.Response
 import feign.slf4j.Slf4jLogger
 import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignRequestCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignResponseCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.common.print
 import io.lsdconsulting.lsd.distributed.interceptor.config.log
-import io.lsdconsulting.lsd.distributed.interceptor.convert.stringify
 import java.io.IOException
 
 class LsdFeignLoggerInterceptor(private val feignRequestCaptor: FeignRequestCaptor, private val feignResponseCaptor: FeignResponseCaptor) :
@@ -23,11 +23,11 @@ class LsdFeignLoggerInterceptor(private val feignRequestCaptor: FeignRequestCapt
 
     @Throws(IOException::class)
     public override fun logAndRebufferResponse(configKey: String, logLevel: Level, response: Response, elapsedTime: Long): Response {
-        val convertedResponse =
-            response.body()?.stringify()?.let { resetBodyData(response, it.toByteArray()) } ?: response
+        val body = print(response.body().asInputStream())
+        val convertedResponse = resetBodyData(response, body.toByteArray()) ?: response
         super.logAndRebufferResponse(configKey, logLevel, convertedResponse, elapsedTime)
         try {
-            feignResponseCaptor.captureResponseInteraction(convertedResponse, elapsedTime)
+            feignResponseCaptor.captureResponseInteraction(convertedResponse, body, elapsedTime)
         } catch (t: Throwable) {
             log().error(t.message, t)
             return convertedResponse

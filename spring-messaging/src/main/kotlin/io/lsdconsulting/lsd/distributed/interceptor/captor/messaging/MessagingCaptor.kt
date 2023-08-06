@@ -4,13 +4,12 @@ import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.CONSUME
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.PUBLISH
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
-import io.lsdconsulting.lsd.distributed.interceptor.captor.common.stringify
+import io.lsdconsulting.lsd.distributed.interceptor.captor.common.print
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver.Companion.SOURCE_NAME_KEY
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver.Companion.TARGET_NAME_KEY
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
-import lsd.format.printFlat
 import org.springframework.messaging.Message
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -26,7 +25,7 @@ class MessagingCaptor(
         val headers = messagingHeaderRetriever.retrieve(message)
         val interceptedInteraction = InterceptedInteraction(
             traceId = traceIdRetriever.getTraceId(headers),
-            body = printFlat(message.payload),
+            body = print(message.payload),
             requestHeaders = headers,
             responseHeaders = emptyMap(),
             serviceName = propertyServiceNameDeriver.serviceName,
@@ -68,7 +67,7 @@ class MessagingCaptor(
         val headers = messagingHeaderRetriever.retrieve(message)
         val interceptedInteraction = InterceptedInteraction(
             traceId = traceIdRetriever.getTraceId(headers),
-            body = (message.payload as ByteArray).stringify(),
+            body = print(message.payload),
             requestHeaders = headers,
             responseHeaders = emptyMap(),
             serviceName = source ?: propertyServiceNameDeriver.serviceName,

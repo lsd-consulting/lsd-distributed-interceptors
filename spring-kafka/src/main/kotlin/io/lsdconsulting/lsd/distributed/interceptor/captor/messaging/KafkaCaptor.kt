@@ -3,12 +3,11 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor.messaging
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.PUBLISH
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
-import io.lsdconsulting.lsd.distributed.interceptor.captor.common.stringify
+import io.lsdconsulting.lsd.distributed.interceptor.captor.common.print
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver.Companion.SOURCE_NAME_KEY
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver.Companion.TARGET_NAME_KEY
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
-import lsd.format.printFlat
 import org.apache.kafka.clients.producer.ProducerRecord
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -50,15 +49,15 @@ class KafkaCaptor(
 //    }
 
     fun capturePublishInteraction(record: ProducerRecord<String, Any>): InterceptedInteraction {
-        val source = record.headers().headers(SOURCE_NAME_KEY).firstOrNull()?.value()?.stringify()
-        val target = record.headers().headers(TARGET_NAME_KEY).firstOrNull()?.value()?.stringify() ?: ""
+        val source = print(record.headers().headers(SOURCE_NAME_KEY).firstOrNull()?.value())
+        val target = print(record.headers().headers(TARGET_NAME_KEY).firstOrNull()?.value())
         val headers = messagingHeaderRetriever.retrieve(record.headers())
         val interceptedInteraction = InterceptedInteraction(
             traceId = traceIdRetriever.getTraceId(headers),
-            body = printFlat(record.value()),
+            body = print(record.value()),
             requestHeaders = headers,
             responseHeaders = emptyMap(),
-            serviceName = source ?: propertyServiceNameDeriver.serviceName,
+            serviceName = source.ifBlank { propertyServiceNameDeriver.serviceName },
             target = target, path = target,
             httpStatus = null, httpMethod = null,
             interactionType = PUBLISH, profile = profile,

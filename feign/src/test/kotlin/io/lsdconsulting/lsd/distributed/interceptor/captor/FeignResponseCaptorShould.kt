@@ -41,7 +41,7 @@ internal class FeignResponseCaptorShould {
         every { feignHttpHeaderRetriever.retrieve(any<Request>()) } returns requestHeaders
         every { feignHttpHeaderRetriever.retrieve(any<Response>()) } returns responseHeaders
 
-        val (traceId) = underTest.captureResponseInteraction(response, 10L)
+        val (traceId) = underTest.captureResponseInteraction(response, body, 10L)
 
         assertThat(traceId, `is`(this.traceId))
     }
@@ -54,7 +54,7 @@ internal class FeignResponseCaptorShould {
         every { feignHttpHeaderRetriever.retrieve(any<Request>()) } returns requestHeaders
         every { feignHttpHeaderRetriever.retrieve(any<Response>()) } returns responseHeaders
 
-        val (_, _, _, _, _, target1) = underTest.captureResponseInteraction(response, 10L)
+        val (_, _, _, _, _, target1) = underTest.captureResponseInteraction(response, body, 10L)
 
         assertThat(target1, `is`(target))
     }
@@ -67,7 +67,7 @@ internal class FeignResponseCaptorShould {
         every { feignHttpHeaderRetriever.retrieve(any<Request>()) } returns requestHeaders
         every { feignHttpHeaderRetriever.retrieve(any<Response>()) } returns responseHeaders
 
-        val interceptedInteraction = underTest.captureResponseInteraction(response, 10L)
+        val interceptedInteraction = underTest.captureResponseInteraction(response, body, 10L)
 
         verify { repositoryService.enqueue(interceptedInteraction) }
     }

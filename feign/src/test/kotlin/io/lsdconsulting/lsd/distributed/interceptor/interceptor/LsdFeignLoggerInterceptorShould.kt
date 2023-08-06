@@ -39,11 +39,11 @@ internal class LsdFeignLoggerInterceptorShould {
     fun `log and re-buffer response`() {
         val request = Request.create(POST, "url", mapOf(), null, UTF_8, null)
         val response = Response.builder().body(body.byteInputStream(UTF_8), body.length).request(request).build()
-        every { feignResponseCaptor.captureResponseInteraction(response, elapsedTime) } returns
+        every { feignResponseCaptor.captureResponseInteraction(response, body, elapsedTime) } returns
             easyRandom.nextObject(InterceptedInteraction::class.java).copy(body = null)
 
         underTest.logAndRebufferResponse("configKey", level, response, elapsedTime)
 
-        verify { feignResponseCaptor.captureResponseInteraction(any<Response>(), elapsedTime) }
+        verify { feignResponseCaptor.captureResponseInteraction(any<Response>(), body, elapsedTime) }
     }
 }

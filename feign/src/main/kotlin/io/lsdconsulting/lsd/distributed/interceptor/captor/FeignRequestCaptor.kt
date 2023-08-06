@@ -3,11 +3,11 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor
 import feign.Request
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
+import io.lsdconsulting.lsd.distributed.interceptor.captor.common.print
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.toPath
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
-import lsd.format.printFlat
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -20,7 +20,7 @@ class FeignRequestCaptor(
 ){
     fun captureRequestInteraction(request: Request): InterceptedInteraction {
         val headers = feignHttpHeaderRetriever.retrieve(request)
-        val body = printFlat(request.body())
+        val body = print(request.body())
         val path = request.url().toPath()
         val traceId = traceIdRetriever.getTraceId(headers)
         val target = sourceTargetDeriver.deriveTarget(headers, path)
