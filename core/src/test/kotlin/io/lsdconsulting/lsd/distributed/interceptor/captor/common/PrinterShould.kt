@@ -124,6 +124,13 @@ internal class PrinterShould {
         verify(print(selfReference), options)
     }
 
+    @Test
+    fun `handle self referenced objects with a broken toString implementation`() {
+        val selfReference = SelfReferenceWithBrokenToString()
+        selfReference.value = selfReference
+        verify(print(selfReference), options)
+    }
+
     private fun byteArrayExamples(): Stream<ByteArray?> {
         return Stream.of(
             "".toByteArray(),
@@ -155,9 +162,14 @@ internal class PrinterShould {
 
     private data class SelfReference(
         var value: SelfReference? = null
-    ) {
+    )
+    {
         override fun toString(): String {
             return "SelfReference"
         }
     }
+
+    private data class SelfReferenceWithBrokenToString(
+        var value: SelfReferenceWithBrokenToString? = null
+    )
 }

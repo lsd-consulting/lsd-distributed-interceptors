@@ -31,7 +31,10 @@ fun print(obj: Any?): String =
                     }
                 }
             }
-        } catch (e: Exception) {
+        } catch (e: StackOverflowError) {
+            log().error("Problem serialising intercepted object for LSD - probably self referencing object with a broken toString() implementation")
+            ""
+        } catch (e: Throwable) {
             log().error("Problem serialising intercepted object for LSD: {}", e.message)
             if (log().isTraceEnabled) {
                 log().trace("Problem serialising intercepted object for LSD:$obj", e)
