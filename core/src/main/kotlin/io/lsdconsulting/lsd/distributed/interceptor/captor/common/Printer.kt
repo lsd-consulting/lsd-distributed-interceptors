@@ -26,8 +26,8 @@ fun print(obj: Any?): String =
             }
         } catch (e: Exception) {
             log().error("Problem serialising intercepted object for LSD: {}", e.message)
-            if (log().isInfoEnabled) {
-                log().info("Problem serialising intercepted object for LSD:$obj", e)
+            if (log().isTraceEnabled) {
+                log().trace("Problem serialising intercepted object for LSD:$obj", e)
             }
             ""
         }
