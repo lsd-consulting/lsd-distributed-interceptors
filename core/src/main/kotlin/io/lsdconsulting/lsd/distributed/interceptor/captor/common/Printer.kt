@@ -25,6 +25,7 @@ fun print(obj: Any?): String =
             }
         } catch (e: Exception) {
             log().error("Problem serialising intercepted object for LSD: {}", e.message)
+            log().trace("Problem serialising intercepted object for LSD", e)
             ""
         }
     } ?: ""
