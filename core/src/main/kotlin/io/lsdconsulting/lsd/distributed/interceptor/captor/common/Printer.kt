@@ -1,5 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.common
 
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException
 import lsd.format.config.log
 import lsd.format.json.objectMapper
 import java.io.BufferedReader
@@ -22,7 +23,13 @@ fun print(obj: Any?): String =
                     if (obj.isEmpty()) "" else obj.trim()
                 }
 
-                else -> objectMapper.writeValueAsString(obj)
+                else -> {
+                    try {
+                        return objectMapper.writeValueAsString(obj)
+                    } catch (e: InvalidDefinitionException) {
+                        return obj.toString()
+                    }
+                }
             }
         } catch (e: Exception) {
             log().error("Problem serialising intercepted object for LSD: {}", e.message)

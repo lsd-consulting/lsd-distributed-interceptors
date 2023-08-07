@@ -117,6 +117,13 @@ internal class PrinterShould {
         verify(print(ExampleObject()), options)
     }
 
+    @Test
+    fun `handle self referenced objects`() {
+        val selfReference = SelfReference()
+        selfReference.value = selfReference
+        verify(print(selfReference), options)
+    }
+
     private fun byteArrayExamples(): Stream<ByteArray?> {
         return Stream.of(
             "".toByteArray(),
@@ -145,4 +152,12 @@ internal class PrinterShould {
     private data class ExampleObjectWithBytes(
         val value: ByteArray?
     )
+
+    private data class SelfReference(
+        var value: SelfReference? = null
+    ) {
+        override fun toString(): String {
+            return "SelfReference"
+        }
+    }
 }
