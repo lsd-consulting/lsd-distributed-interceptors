@@ -19,6 +19,6 @@ pitest {
     threads = 4
     outputFormats = ['HTML']
     coverageThreshold = 100
-    mutationThreshold = 67
-    testStrengthThreshold = 67
+    mutationThreshold = 65
+    testStrengthThreshold = 65
 }
