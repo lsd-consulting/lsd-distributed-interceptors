@@ -5,6 +5,7 @@ import lsd.format.json.objectMapper
 import java.io.BufferedReader
 import java.io.InputStream
 
+@Suppress("LoggingStringTemplateAsArgument")
 fun print(obj: Any?): String =
     obj?.let {
         try {
@@ -25,7 +26,9 @@ fun print(obj: Any?): String =
             }
         } catch (e: Exception) {
             log().error("Problem serialising intercepted object for LSD: {}", e.message)
-            log().trace("Problem serialising intercepted object for LSD", e)
+            if (log().isInfoEnabled) {
+                log().info("Problem serialising intercepted object for LSD:$obj", e)
+            }
             ""
         }
     } ?: ""
