@@ -19,7 +19,7 @@ class FeignResponseCaptor(
     private val feignHttpHeaderRetriever: FeignHttpHeaderRetriever,
     private val profile: String,
 ) {
-    fun captureResponseInteraction(response: Response, body: String, elapsedTime: Long): InterceptedInteraction {
+    fun captureResponseInteraction(response: Response, body: String?, elapsedTime: Long): InterceptedInteraction {
         log().debug("feignHttpHeaderRetriever={}", feignHttpHeaderRetriever)
         val responseHeaders = feignHttpHeaderRetriever.retrieve(response)
         val requestHeaders = feignHttpHeaderRetriever.retrieve(response.request())

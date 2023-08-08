@@ -23,8 +23,8 @@ class LsdFeignLoggerInterceptor(private val feignRequestCaptor: FeignRequestCapt
 
     @Throws(IOException::class)
     public override fun logAndRebufferResponse(configKey: String, logLevel: Level, response: Response, elapsedTime: Long): Response {
-        val body = print(response.body().asInputStream())
-        val convertedResponse = resetBodyData(response, body.toByteArray()) ?: response
+        val body = if (response.body() != null) print(response.body().asInputStream()) else null
+        val convertedResponse = resetBodyData(response, body?.toByteArray()) ?: response
         super.logAndRebufferResponse(configKey, logLevel, convertedResponse, elapsedTime)
         try {
             feignResponseCaptor.captureResponseInteraction(convertedResponse, body, elapsedTime)
@@ -35,6 +35,6 @@ class LsdFeignLoggerInterceptor(private val feignRequestCaptor: FeignRequestCapt
         return convertedResponse
     }
 
-    private fun resetBodyData(response: Response, bodyData: ByteArray) =
+    private fun resetBodyData(response: Response, bodyData: ByteArray?) =
         response.toBuilder().body(bodyData).build()
 }
