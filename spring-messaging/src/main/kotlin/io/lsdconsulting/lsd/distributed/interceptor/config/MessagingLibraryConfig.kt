@@ -2,7 +2,9 @@ package io.lsdconsulting.lsd.distributed.interceptor.config
 
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
-import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessagingCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.ErrorMessagePublishingCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessageConsumingCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessagePublishingCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessagingHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
@@ -23,19 +25,47 @@ open class MessagingLibraryConfig {
     }
 
     @Bean
-    open fun messagingCaptor(
+    open fun messageConsumingCaptor(
         repositoryService: RepositoryService,
         propertyServiceNameDeriver: PropertyServiceNameDeriver,
         traceIdRetriever: TraceIdRetriever,
         messagingHeaderRetriever: MessagingHeaderRetriever,
         @Value("\${spring.profiles.active:#{''}}") profile: String
-    ): MessagingCaptor {
-        return MessagingCaptor(
-            repositoryService,
-            propertyServiceNameDeriver,
-            traceIdRetriever,
-            messagingHeaderRetriever,
-            profile
-        )
-    }
+    ) = MessageConsumingCaptor(
+        repositoryService,
+        propertyServiceNameDeriver,
+        traceIdRetriever,
+        messagingHeaderRetriever,
+        profile
+    )
+
+    @Bean
+    open fun messagePublishingCaptor(
+        repositoryService: RepositoryService,
+        propertyServiceNameDeriver: PropertyServiceNameDeriver,
+        traceIdRetriever: TraceIdRetriever,
+        messagingHeaderRetriever: MessagingHeaderRetriever,
+        @Value("\${spring.profiles.active:#{''}}") profile: String
+    ) = MessagePublishingCaptor(
+        repositoryService,
+        propertyServiceNameDeriver,
+        traceIdRetriever,
+        messagingHeaderRetriever,
+        profile
+    )
+
+    @Bean
+    open fun errorMessagePublishingCaptor(
+        repositoryService: RepositoryService,
+        propertyServiceNameDeriver: PropertyServiceNameDeriver,
+        traceIdRetriever: TraceIdRetriever,
+        messagingHeaderRetriever: MessagingHeaderRetriever,
+        @Value("\${spring.profiles.active:#{''}}") profile: String
+    ) = ErrorMessagePublishingCaptor(
+        repositoryService,
+        propertyServiceNameDeriver,
+        traceIdRetriever,
+        messagingHeaderRetriever,
+        profile
+    )
 }

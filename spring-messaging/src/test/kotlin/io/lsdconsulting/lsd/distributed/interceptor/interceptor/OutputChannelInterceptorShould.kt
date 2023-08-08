@@ -1,6 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.interceptor
 
-import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessagingCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessagePublishingCaptor
 import io.mockk.mockk
 import io.mockk.verify
 import org.hamcrest.CoreMatchers.`is`
@@ -11,7 +11,7 @@ import org.springframework.messaging.Message
 internal class OutputChannelInterceptorShould {
 
     private val message = mockk<Message<String>>(relaxed = true)
-    private val messagingCaptor = mockk< MessagingCaptor>(relaxed = true)
+    private val messagingCaptor = mockk<MessagePublishingCaptor>(relaxed = true)
     private val underTest = OutputChannelInterceptor(messagingCaptor)
 
     @Test
