@@ -87,7 +87,7 @@ internal class MessagePublishingCaptorShould {
         val result = underTest.capturePublishInteraction(message, channelName)
 
         assertThat(result.target, `is`(channelName))
-        assertThat(result.path, `is`(topic))
+        assertThat(result.path, `is`(channelName))
         assertThat(result.body, `is`(body))
         assertThat(result.serviceName, `is`(serviceName))
         assertThat(result.traceId, `is`(traceId))
