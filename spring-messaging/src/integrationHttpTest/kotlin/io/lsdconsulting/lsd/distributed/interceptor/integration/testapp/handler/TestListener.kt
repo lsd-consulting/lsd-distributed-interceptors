@@ -8,14 +8,23 @@ import java.util.concurrent.ArrayBlockingQueue
 
 @Component
 class TestListener {
-    private val outputQueue = ArrayBlockingQueue<Message<String>>(1)
+    private val outputTopic = ArrayBlockingQueue<Message<String>>(1)
+    private val noLsdHeadersOutputTopic = ArrayBlockingQueue<Message<String>>(1)
 
-    @KafkaListener(id = "outputListener", topics = ["output.topic"], groupId = "someGroup",
+    @KafkaListener(id = "outputListener", topics = ["\${spring.cloud.stream.bindings.inputOutputHandlerFunction-out-0.destination}"], groupId = "someGroup",
         clientIdPrefix = "output", properties = ["bootstrap.servers=localhost:9093"])
-    fun vehicleOrderUpdatedEventListen(message: Message<String>) {
+    fun outputTopicListener(message: Message<String>) {
         log().info("Received in listener={}", message)
-        outputQueue.add(message)
+        outputTopic.add(message)
     }
 
-    fun getOutputQueue() = outputQueue
+    @KafkaListener(id = "anotherOutputListener", topics = ["\${spring.cloud.stream.bindings.noOutputLsdHeadersHandlerFunction-out-0.destination}"], groupId = "someGroup",
+        clientIdPrefix = "output", properties = ["bootstrap.servers=localhost:9093"])
+    fun noLsdHeadersOutputTopicListener(message: Message<String>) {
+        log().info("Received in listener={}", message)
+        noLsdHeadersOutputTopic.add(message)
+    }
+
+    fun getOutputTopic() = outputTopic
+    fun getNoLsdHeadersOutputTopic() = noLsdHeadersOutputTopic
 }

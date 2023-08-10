@@ -16,4 +16,10 @@ open class ServiceConfig(
         Function<Input, Output> {
             inputOutputHandler.handle(it)
         }
+
+    @Bean
+    open fun noOutputLsdHeadersHandlerFunction() =
+        Function<Input, Output> {
+            inputOutputHandler.handle(it)
+        }
 }

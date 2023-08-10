@@ -14,6 +14,12 @@ import org.springframework.context.annotation.Bean
 open class RabbitMqConfig(
     @Value("\${spring.cloud.stream.bindings.inputOutputHandlerFunction-in-0.destination}")
     private val inputExchange: String,
+    @Value("\${spring.cloud.stream.bindings.noOutputLsdHeadersHandlerFunction-in-0.destination}")
+    private val noLsdHeadersInputExchange: String,
+    @Value("\${spring.cloud.stream.bindings.inputOutputHandlerFunction-in-0.group}")
+    private val inputQueue: String,
+    @Value("\${spring.cloud.stream.bindings.noOutputLsdHeadersHandlerFunction-in-0.group}")
+    private val noLsdHeadersInputQueue: String,
 ) {
     @Bean
     open fun connectionFactory(): CachingConnectionFactory = CachingConnectionFactory(MockConnectionFactory())
@@ -22,13 +28,27 @@ open class RabbitMqConfig(
     open fun inputExchange() = FanoutExchange(inputExchange)
 
     @Bean
-    open fun inputQueue(): Queue = Queue("input.queue")
+    open fun noLsdHeadersInputExchange() = FanoutExchange(noLsdHeadersInputExchange)
 
     @Bean
-    open fun bindOrderUpdatedEventQueue(
-        outputQueue: Queue,
-        outputExchange: FanoutExchange
+    open fun inputQueue(): Queue = Queue(inputQueue)
+
+    @Bean
+    open fun noLsdHeadersInputQueue(): Queue = Queue(noLsdHeadersInputQueue)
+
+    @Bean
+    open fun bindInputQueue(
+        inputQueue: Queue,
+        inputExchange: FanoutExchange
     ): Binding {
-        return BindingBuilder.bind(outputQueue).to(outputExchange)
+        return BindingBuilder.bind(inputQueue).to(inputExchange)
+    }
+
+    @Bean
+    open fun bindNoLsdHeadersInputQueue(
+        noLsdHeadersInputQueue: Queue,
+        noLsdHeadersInputExchange: FanoutExchange
+    ): Binding {
+        return BindingBuilder.bind(noLsdHeadersInputQueue).to(noLsdHeadersInputExchange)
     }
 }

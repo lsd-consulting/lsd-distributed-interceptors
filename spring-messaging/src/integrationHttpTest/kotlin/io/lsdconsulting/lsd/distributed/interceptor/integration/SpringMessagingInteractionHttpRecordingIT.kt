@@ -84,7 +84,7 @@ class SpringMessagingInteractionHttpRecordingIT {
         )
 
         Awaitility.await().untilAsserted {
-            val messages = testListener.getOutputQueue()
+            val messages = testListener.getOutputTopic()
             assertThat(messages, not(empty()))
             assertThat(messages, hasSize(1))
             assertThat(messages.map { it.payload }, hasItem(containsString("value")))
@@ -124,7 +124,7 @@ class SpringMessagingInteractionHttpRecordingIT {
         )
 
         Awaitility.await().untilAsserted {
-            val messages = testListener.getOutputQueue()
+            val messages = testListener.getOutputTopic()
             assertThat(messages, not(empty()))
             assertThat(messages, hasSize(1))
             assertThat(messages.map { it.payload }, hasItem(containsString("value")))
@@ -146,6 +146,46 @@ class SpringMessagingInteractionHttpRecordingIT {
                 body = "{\"id\":\"id\",\"value\":\"value\",\"receivedDateTime\":",
                 target = "output.topic",
                 path = "output.topic",
+                interactionType = PUBLISH
+            )
+        )
+    }
+
+    @Test
+    fun `should handle no LSD headers in Kafka output channel`() {
+        val input = Input(id = "id", value = "value")
+
+        rabbitTemplate.convertAndSend(
+            "no-lsd-headers.input.fanout", "", MessageBuilder
+                .withBody(ObjectMapperCreator().objectMapper.writeValueAsString(input).toByteArray())
+                .setHeader(CONTENT_TYPE, APPLICATION_JSON)
+                .setHeader("b3", "dbfb676cf98bee5e-dbfb676cf98bee5e-0")
+                .build()
+        )
+
+        Awaitility.await().untilAsserted {
+            val messages = testListener.getNoLsdHeadersOutputTopic()
+            assertThat(messages, not(empty()))
+            assertThat(messages, hasSize(1))
+            assertThat(messages.map { it.payload }, hasItem(containsString("value")))
+        }
+
+        verify(
+            buildExpectedInterceptedInteraction(
+                traceId = "dbfb676cf98bee5e",
+                body = "{\"id\":\"id\",\"value\":\"value\"}",
+                target = "no-lsd-headers.input.queue",
+                path = "TestApp",
+                interactionType = CONSUME
+            )
+        )
+
+        verify(
+            buildExpectedInterceptedInteraction(
+                traceId = "dbfb676cf98bee5e",
+                body = "{\"id\":\"id\",\"value\":\"value\",\"receivedDateTime\":",
+                target = "application.noOutputLsdHeadersHandlerFunction-out-0",
+                path = "application.noOutputLsdHeadersHandlerFunction-out-0",
                 interactionType = PUBLISH
             )
         )

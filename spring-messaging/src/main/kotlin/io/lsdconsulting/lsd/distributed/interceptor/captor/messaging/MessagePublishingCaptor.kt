@@ -19,9 +19,9 @@ class MessagePublishingCaptor(
     private val messagingHeaderRetriever: MessagingHeaderRetriever,
     private val profile: String,
 ) {
-    fun capturePublishInteraction(message: Message<*>): InterceptedInteraction {
+    fun capturePublishInteraction(message: Message<*>, fullChannelName: String): InterceptedInteraction {
         val source = message.headers[SOURCE_NAME_KEY] as String?
-        val target = message.headers[TARGET_NAME_KEY] as String
+        val target = message.headers[TARGET_NAME_KEY] as String? ?: fullChannelName
         val headers = messagingHeaderRetriever.retrieve(message)
         val interceptedInteraction = InterceptedInteraction(
             traceId = traceIdRetriever.getTraceId(headers),

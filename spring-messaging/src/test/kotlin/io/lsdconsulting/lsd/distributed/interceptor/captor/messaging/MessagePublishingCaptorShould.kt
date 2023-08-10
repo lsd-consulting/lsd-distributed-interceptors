@@ -34,7 +34,7 @@ internal class MessagePublishingCaptorShould {
         val headers = mapOf("name" to listOf("value"), "Source-Name" to serviceName, "Target-Name" to topic)
         val message: Message<*> = MutableMessage(body.toByteArray(), headers)
 
-        val result = underTest.capturePublishInteraction(message)
+        val result = underTest.capturePublishInteraction(message, "fullChannelName")
 
         assertThat(result.target, `is`(topic))
         assertThat(result.path, `is`(topic))
@@ -57,10 +57,36 @@ internal class MessagePublishingCaptorShould {
         every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"))
         val headers = mapOf("name" to listOf("value"), "Target-Name" to topic)
         val message: Message<*> = MutableMessage(body.toByteArray(), headers)
+        val channelName = randomAlphabetic(10)
 
-        val result = underTest.capturePublishInteraction(message)
+        val result = underTest.capturePublishInteraction(message, channelName)
 
         assertThat(result.target, `is`(topic))
+        assertThat(result.path, `is`(topic))
+        assertThat(result.body, `is`(body))
+        assertThat(result.serviceName, `is`(serviceName))
+        assertThat(result.traceId, `is`(traceId))
+        assertThat(result.interactionType, `is`(PUBLISH))
+        assertThat(result.httpMethod, emptyOrNullString())
+        assertThat(result.httpStatus, emptyOrNullString())
+        assertThat(result.profile, `is`("profile"))
+        assertThat(result.requestHeaders, `is`(mapOf("name" to listOf("value"))))
+        assertThat(result.responseHeaders, aMapWithSize(0))
+        verify { repositoryService.enqueue(result) }
+    }
+
+    @Test
+    fun `capture publish interaction without target from header`() {
+        every { propertyServiceNameDeriver.serviceName } returns serviceName
+        every { traceIdRetriever.getTraceId(any()) } returns traceId
+        every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"))
+        val headers = mapOf("name" to listOf("value"))
+        val message: Message<*> = MutableMessage(body.toByteArray(), headers)
+        val channelName = randomAlphabetic(10)
+
+        val result = underTest.capturePublishInteraction(message, channelName)
+
+        assertThat(result.target, `is`(channelName))
         assertThat(result.path, `is`(topic))
         assertThat(result.body, `is`(body))
         assertThat(result.serviceName, `is`(serviceName))
