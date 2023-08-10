@@ -26,6 +26,7 @@ import org.junit.jupiter.api.*
 import org.springframework.amqp.core.MessageBuilder
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 import org.springframework.context.annotation.Import
@@ -38,6 +39,7 @@ import java.time.ZonedDateTime
 import java.util.*
 
 private const val WIREMOCK_SERVER_PORT = 8070
+private const val NO_ROUTING_KEY = ""
 
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = [TestApplication::class])
 @ActiveProfiles("test")
@@ -46,7 +48,12 @@ private const val WIREMOCK_SERVER_PORT = 8070
     brokerProperties = ["log.dir=build/kafka_broker_logs",
         "listeners=PLAINTEXT://localhost:9093", "auto.create.topics.enable=true"]
 )
-class SpringMessagingInteractionHttpRecordingIT {
+class SpringMessagingInteractionHttpRecordingIT(
+    @Value("\${spring.cloud.stream.bindings.inputOutputHandlerFunction-in-0.destination}")
+    private val inputExchange: String,
+    @Value("\${spring.cloud.stream.bindings.noOutputLsdHeadersHandlerFunction-in-0.destination}")
+    private val noLsdHeadersInputExchange: String,
+) {
 
     @Autowired
     private lateinit var rabbitTemplate: RabbitTemplate
@@ -74,7 +81,7 @@ class SpringMessagingInteractionHttpRecordingIT {
         val input = Input(id = "id", value = "value")
 
         rabbitTemplate.convertAndSend(
-            "input.fanout", "", MessageBuilder
+            inputExchange, NO_ROUTING_KEY, MessageBuilder
                 .withBody(ObjectMapperCreator().objectMapper.writeValueAsString(input).toByteArray())
                 .setHeader(CONTENT_TYPE, APPLICATION_JSON)
                 .setHeader("Source-Name", "SourceService")
@@ -116,7 +123,7 @@ class SpringMessagingInteractionHttpRecordingIT {
         val input = Input(id = "id", value = "value")
 
         rabbitTemplate.convertAndSend(
-            "input.fanout", "", MessageBuilder
+            inputExchange, NO_ROUTING_KEY, MessageBuilder
                 .withBody(ObjectMapperCreator().objectMapper.writeValueAsString(input).toByteArray())
                 .setHeader(CONTENT_TYPE, APPLICATION_JSON)
                 .setHeader("b3", "dbfb676cf98bee5d-dbfb676cf98bee5d-0")
@@ -156,7 +163,7 @@ class SpringMessagingInteractionHttpRecordingIT {
         val input = Input(id = "id", value = "value")
 
         rabbitTemplate.convertAndSend(
-            "no-lsd-headers.input.fanout", "", MessageBuilder
+            noLsdHeadersInputExchange, NO_ROUTING_KEY, MessageBuilder
                 .withBody(ObjectMapperCreator().objectMapper.writeValueAsString(input).toByteArray())
                 .setHeader(CONTENT_TYPE, APPLICATION_JSON)
                 .setHeader("b3", "dbfb676cf98bee5e-dbfb676cf98bee5e-0")
@@ -206,7 +213,7 @@ class SpringMessagingInteractionHttpRecordingIT {
         httpStatus = null,
         httpMethod = null,
         interactionType = interactionType,
-        profile = "",
+        profile = NO_ROUTING_KEY,
         elapsedTime = 0L,
         createdAt = ZonedDateTime.now(ZoneId.of("UTC"))
     )
