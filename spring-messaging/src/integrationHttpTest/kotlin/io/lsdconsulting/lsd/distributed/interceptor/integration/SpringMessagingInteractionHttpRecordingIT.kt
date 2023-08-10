@@ -73,7 +73,6 @@ class SpringMessagingInteractionHttpRecordingIT {
     fun `should record interactions from intercepted channel headers`() {
         val input = Input(id = "id", value = "value")
 
-
         rabbitTemplate.convertAndSend(
             "input.fanout", "", MessageBuilder
                 .withBody(ObjectMapperCreator().objectMapper.writeValueAsString(input).toByteArray())
@@ -91,48 +90,81 @@ class SpringMessagingInteractionHttpRecordingIT {
             assertThat(messages.map { it.payload }, hasItem(containsString("value")))
         }
 
-
         verify(
             buildExpectedInterceptedInteraction(
+                traceId = "dbfb676cf98bee5c",
                 body = "{\"id\":\"id\",\"value\":\"value\"}",
-                serviceName = "TestApp",
                 target = "InputEvent",
                 path = "TestApp",
-                httpStatus = null,
-                httpMethod = null,
                 interactionType = CONSUME
             )
         )
 
         verify(
             buildExpectedInterceptedInteraction(
+                traceId = "dbfb676cf98bee5c",
                 body = "{\"id\":\"id\",\"value\":\"value\",\"receivedDateTime\":",
-                serviceName = "TestApp",
                 target = "output.topic",
                 path = "output.topic",
-                httpStatus = null,
-                httpMethod = null,
+                interactionType = PUBLISH
+            )
+        )
+    }
+
+    @Test
+    fun `should handle no LSD headers in Rabbit input channel`() {
+        val input = Input(id = "id", value = "value")
+
+        rabbitTemplate.convertAndSend(
+            "input.fanout", "", MessageBuilder
+                .withBody(ObjectMapperCreator().objectMapper.writeValueAsString(input).toByteArray())
+                .setHeader(CONTENT_TYPE, APPLICATION_JSON)
+                .setHeader("b3", "dbfb676cf98bee5d-dbfb676cf98bee5d-0")
+                .build()
+        )
+
+        Awaitility.await().untilAsserted {
+            val messages = testListener.getOutputQueue()
+            assertThat(messages, not(empty()))
+            assertThat(messages, hasSize(1))
+            assertThat(messages.map { it.payload }, hasItem(containsString("value")))
+        }
+
+        verify(
+            buildExpectedInterceptedInteraction(
+                traceId = "dbfb676cf98bee5d",
+                body = "{\"id\":\"id\",\"value\":\"value\"}",
+                target = "input.queue",
+                path = "TestApp",
+                interactionType = CONSUME
+            )
+        )
+
+        verify(
+            buildExpectedInterceptedInteraction(
+                traceId = "dbfb676cf98bee5d",
+                body = "{\"id\":\"id\",\"value\":\"value\",\"receivedDateTime\":",
+                target = "output.topic",
+                path = "output.topic",
                 interactionType = PUBLISH
             )
         )
     }
 
     private fun buildExpectedInterceptedInteraction(
+        traceId: String,
         body: String?,
-        serviceName: String,
         target: String,
         path: String,
-        httpStatus: String?,
-        httpMethod: String?,
         interactionType: InteractionType
     ) = InterceptedInteraction(
-        traceId = "dbfb676cf98bee5c",
+        traceId = traceId,
         body = body,
-        serviceName = serviceName,
+        serviceName = "TestApp",
         target = target,
         path = path,
-        httpStatus = httpStatus,
-        httpMethod = httpMethod,
+        httpStatus = null,
+        httpMethod = null,
         interactionType = interactionType,
         profile = "",
         elapsedTime = 0L,

@@ -37,13 +37,15 @@ class MessageConsumingCaptor(
         return interceptedInteraction
     }
 
-    // TODO Add support for info.app.name
     private fun getTarget(message: Message<*>): String {
         val header = message.headers[TARGET_NAME_KEY]
         var target = if (header is String) header else if (header is ByteArray) String(header) else null
         if (target.isNullOrEmpty()) {
             val typeIdHeader = message.headers["__TypeId__"] as String?
             target = getTargetFrom(typeIdHeader)
+        }
+        if (target.isNullOrEmpty()) {
+            target = message.headers["amqp_consumerQueue"] as String?
         }
         if (target.isNullOrEmpty()) {
             target = "UNKNOWN"
