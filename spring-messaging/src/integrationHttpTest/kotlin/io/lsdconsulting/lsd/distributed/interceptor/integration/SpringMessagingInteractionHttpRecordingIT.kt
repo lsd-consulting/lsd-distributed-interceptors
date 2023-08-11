@@ -13,7 +13,7 @@ import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.*
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.config.mapper.ObjectMapperCreator
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.TestApplication
-import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RabbitMqConfig
+import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.InputRabbitMqConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.ServiceConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.handler.Input
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.handler.TestListener
@@ -43,7 +43,7 @@ private const val NO_ROUTING_KEY = ""
 
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = [TestApplication::class])
 @ActiveProfiles("test")
-@Import(ServiceConfig::class, RabbitMqConfig::class)
+@Import(ServiceConfig::class, InputRabbitMqConfig::class)
 @EmbeddedKafka(
     brokerProperties = ["log.dir=build/kafka_broker_logs",
         "listeners=PLAINTEXT://localhost:9093", "auto.create.topics.enable=true"]
@@ -191,8 +191,8 @@ class SpringMessagingInteractionHttpRecordingIT(
             buildExpectedInterceptedInteraction(
                 traceId = "dbfb676cf98bee5e",
                 body = "{\"id\":\"id\",\"value\":\"value\",\"receivedDateTime\":",
-                target = "application.noOutputLsdHeadersHandlerFunction-out-0",
-                path = "application.noOutputLsdHeadersHandlerFunction-out-0",
+                target = "applicationnoOutputLsdHeadersHandlerFunctionout0",
+                path = "applicationnoOutputLsdHeadersHandlerFunctionout0",
                 interactionType = PUBLISH
             )
         )

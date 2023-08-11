@@ -21,7 +21,7 @@ class MessagePublishingCaptor(
 ) {
     fun capturePublishInteraction(message: Message<*>, fullChannelName: String): InterceptedInteraction {
         val source = message.headers[SOURCE_NAME_KEY] as String?
-        val target = message.headers[TARGET_NAME_KEY] as String? ?: fullChannelName
+        val target = message.headers[TARGET_NAME_KEY] as String? ?: fullChannelName.replace(".", "").replace("-", "")
         val headers = messagingHeaderRetriever.retrieve(message)
         val interceptedInteraction = InterceptedInteraction(
             traceId = traceIdRetriever.getTraceId(headers),

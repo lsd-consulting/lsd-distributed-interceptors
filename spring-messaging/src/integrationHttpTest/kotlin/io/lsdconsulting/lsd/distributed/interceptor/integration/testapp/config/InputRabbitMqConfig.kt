@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 
 @TestConfiguration
-open class RabbitMqConfig(
+open class InputRabbitMqConfig(
     @Value("\${spring.cloud.stream.bindings.inputOutputHandlerFunction-in-0.destination}")
     private val inputExchange: String,
     @Value("\${spring.cloud.stream.bindings.noOutputLsdHeadersHandlerFunction-in-0.destination}")
