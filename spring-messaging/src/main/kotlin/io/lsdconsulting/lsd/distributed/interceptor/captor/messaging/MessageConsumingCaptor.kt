@@ -41,7 +41,7 @@ class MessageConsumingCaptor(
         val header = message.headers[TARGET_NAME_KEY]
         var target = if (header is String) header else if (header is ByteArray) String(header) else null
         if (target.isNullOrEmpty()) {
-            val typeIdHeader = message.headers["__TypeId__"] as String?
+            val typeIdHeader = print(message.headers["__TypeId__"])
             target = getTargetFrom(typeIdHeader)
         }
         if (target.isNullOrEmpty()) {
