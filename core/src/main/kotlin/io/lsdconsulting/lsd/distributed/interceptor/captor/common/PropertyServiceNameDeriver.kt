@@ -6,7 +6,6 @@ class PropertyServiceNameDeriver(appName: String) {
     init {
         serviceName = appName
             .replace(DEFAULT_SERVICE_NAME_SUFFIX_TO_REMOVE.toRegex(), "")
-            .replace(" ".toRegex(), "")
     }
 
     companion object {

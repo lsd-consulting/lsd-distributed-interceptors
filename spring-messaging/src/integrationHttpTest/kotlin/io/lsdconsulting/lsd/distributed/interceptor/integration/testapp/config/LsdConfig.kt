@@ -21,7 +21,7 @@ class LsdConfig(@Value("\${info.app.name}") val appName: String) : ChannelInterc
         val headers: MutableMap<String, Any> = message.headers.entries
             .filter { !it.key.equals(SOURCE_NAME) && !it.key.equals(TARGET_NAME) }
             .associate { it.key to it.value }.toMutableMap()
-        headers[SOURCE_NAME] = appName.replace(" ", "")
+        headers[SOURCE_NAME] = appName
         headers[TARGET_NAME] = "output.topic"
         return GenericMessage(message.payload, headers.toMap())
     }

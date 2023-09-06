@@ -102,7 +102,7 @@ class SpringMessagingInteractionHttpRecordingIT(
                 traceId = "dbfb676cf98bee5c",
                 body = "{\"id\":\"id\",\"value\":\"value\"}",
                 target = "InputEvent",
-                path = "TestApp",
+                path = "Test App",
                 interactionType = CONSUME
             )
         )
@@ -142,7 +142,7 @@ class SpringMessagingInteractionHttpRecordingIT(
                 traceId = "dbfb676cf98bee5d",
                 body = "{\"id\":\"id\",\"value\":\"value\"}",
                 target = "input.queue",
-                path = "TestApp",
+                path = "Test App",
                 interactionType = CONSUME
             )
         )
@@ -182,7 +182,7 @@ class SpringMessagingInteractionHttpRecordingIT(
                 traceId = "dbfb676cf98bee5e",
                 body = "{\"id\":\"id\",\"value\":\"value\"}",
                 target = "no-lsd-headers.input.queue",
-                path = "TestApp",
+                path = "Test App",
                 interactionType = CONSUME
             )
         )
@@ -191,8 +191,8 @@ class SpringMessagingInteractionHttpRecordingIT(
             buildExpectedInterceptedInteraction(
                 traceId = "dbfb676cf98bee5e",
                 body = "{\"id\":\"id\",\"value\":\"value\",\"receivedDateTime\":",
-                target = "applicationnoOutputLsdHeadersHandlerFunctionout0",
-                path = "applicationnoOutputLsdHeadersHandlerFunctionout0",
+                target = "application.noOutputLsdHeadersHandlerFunction-out-0",
+                path = "application.noOutputLsdHeadersHandlerFunction-out-0",
                 interactionType = PUBLISH
             )
         )
@@ -207,7 +207,7 @@ class SpringMessagingInteractionHttpRecordingIT(
     ) = InterceptedInteraction(
         traceId = traceId,
         body = body,
-        serviceName = "TestApp",
+        serviceName = "Test App",
         target = target,
         path = path,
         httpStatus = null,

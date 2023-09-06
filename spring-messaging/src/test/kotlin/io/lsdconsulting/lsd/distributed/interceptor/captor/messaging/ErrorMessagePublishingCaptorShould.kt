@@ -39,8 +39,8 @@ internal class ErrorMessagePublishingCaptorShould {
 
         val result = underTest.capturePublishErrorInteraction(message, channel)
 
-        assertThat(result.target, `is`("unknownchannelname"))
-        assertThat(result.path, `is`("unknownchannelname"))
+        assertThat(result.target, `is`("unknown.channel.name"))
+        assertThat(result.path, `is`("unknown.channel.name"))
         assertThat(result.body, `is`(body))
         assertThat(result.serviceName, `is`(serviceName))
         assertThat(result.traceId, `is`(traceId))

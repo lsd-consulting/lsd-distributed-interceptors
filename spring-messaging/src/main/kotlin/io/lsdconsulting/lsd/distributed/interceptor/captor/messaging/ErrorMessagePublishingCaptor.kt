@@ -39,5 +39,5 @@ class ErrorMessagePublishingCaptor(
     }
 
     private fun getPlantUmlFriendlyName(channel: MessageChannel) =
-        (channel as PublishSubscribeChannel).fullChannelName.replace(".", "").replace("-", "")
+        (channel as PublishSubscribeChannel).fullChannelName
 }
