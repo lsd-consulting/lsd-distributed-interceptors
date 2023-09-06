@@ -1,8 +1,8 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.common
 
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException
-import lsd.format.config.log
 import lsd.format.json.objectMapper
+import lsd.logging.log
 import java.io.BufferedReader
 import java.io.InputStream
 

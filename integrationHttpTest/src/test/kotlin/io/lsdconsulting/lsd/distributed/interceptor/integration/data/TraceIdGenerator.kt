@@ -1,6 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.integration.data
 
-import io.lsdconsulting.lsd.distributed.interceptor.config.log
+import lsd.logging.log
 import org.apache.commons.lang3.RandomUtils
 
 object TraceIdGenerator {

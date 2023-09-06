@@ -1,7 +1,7 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.trace
 
 import brave.Tracer
-import io.lsdconsulting.lsd.distributed.interceptor.config.log
+import lsd.logging.log
 
 private const val B3_HEADER = "b3"
 private const val X_REQUEST_INFO_HEADER = "X-Request-Info"

@@ -2,12 +2,12 @@ package io.lsdconsulting.lsd.distributed.interceptor.integration
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
-import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.TestApplication
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RabbitConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RabbitTemplateConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RepositoryConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RestConfig
+import lsd.logging.log
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,6 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.handler
 
-import io.lsdconsulting.lsd.distributed.interceptor.config.log
+import lsd.logging.log
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.Message
 import org.springframework.stereotype.Component

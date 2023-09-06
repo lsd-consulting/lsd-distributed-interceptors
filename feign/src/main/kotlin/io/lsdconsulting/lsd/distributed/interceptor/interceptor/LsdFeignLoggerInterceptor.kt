@@ -6,7 +6,7 @@ import feign.slf4j.Slf4jLogger
 import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignRequestCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignResponseCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.print
-import io.lsdconsulting.lsd.distributed.interceptor.config.log
+import lsd.logging.log
 import java.io.IOException
 
 class LsdFeignLoggerInterceptor(private val feignRequestCaptor: FeignRequestCaptor, private val feignResponseCaptor: FeignResponseCaptor) :

@@ -1,8 +1,8 @@
 package io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.listener
 
-import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.external.ExternalClient
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.external.ExternalClientWithTargetHeader
+import lsd.logging.log
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component
 

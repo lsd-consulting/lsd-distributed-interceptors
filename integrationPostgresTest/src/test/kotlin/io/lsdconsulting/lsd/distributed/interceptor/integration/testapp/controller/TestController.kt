@@ -1,7 +1,7 @@
 package io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.controller
 
-import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.controller.event.SomethingDoneEvent
+import lsd.logging.log
 import org.springframework.amqp.core.Message
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.http.ResponseEntity

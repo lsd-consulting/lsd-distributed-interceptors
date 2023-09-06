@@ -6,8 +6,8 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServic
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.print
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver.Companion.TARGET_NAME_KEY
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
-import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
+import lsd.logging.log
 import org.springframework.messaging.Message
 import java.time.ZoneId
 import java.time.ZonedDateTime

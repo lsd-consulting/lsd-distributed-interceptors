@@ -2,7 +2,7 @@ package io.lsdconsulting.lsd.distributed.interceptor.interceptor
 
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.KafkaCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.config.ApplicationContextProvider
-import io.lsdconsulting.lsd.distributed.interceptor.config.log
+import lsd.logging.log
 import org.apache.kafka.clients.producer.ProducerInterceptor
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata

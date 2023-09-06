@@ -16,9 +16,11 @@ dependencies {
     testImplementation 'org.awaitility:awaitility:4.1.0'
     testImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
+    testImplementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
+    testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
 
     // LSD
+    testImplementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
     testImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.1'
     testImplementation 'io.github.lsd-consulting:lsd-junit5:6.0.1'
     testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:7.1.1'
@@ -26,8 +28,6 @@ dependencies {
     testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.0.1:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
-
-    testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
 }
 
 test {

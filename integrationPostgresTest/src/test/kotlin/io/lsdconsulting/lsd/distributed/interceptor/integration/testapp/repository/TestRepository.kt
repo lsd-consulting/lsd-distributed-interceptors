@@ -2,8 +2,8 @@ package io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.reposit
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
-import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import io.lsdconsulting.lsd.distributed.postgres.repository.toInterceptedInteraction
+import lsd.logging.log
 import org.postgresql.util.PSQLException
 import org.springframework.stereotype.Repository
 import javax.sql.DataSource

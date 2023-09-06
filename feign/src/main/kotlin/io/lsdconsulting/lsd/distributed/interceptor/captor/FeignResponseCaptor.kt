@@ -7,8 +7,8 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeri
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.toHttpStatus
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.toPath
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
-import io.lsdconsulting.lsd.distributed.interceptor.config.log
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
+import lsd.logging.log
 import java.time.ZoneId
 import java.time.ZonedDateTime
 

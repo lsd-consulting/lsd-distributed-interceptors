@@ -3,6 +3,7 @@ package io.lsdconsulting.lsd.distributed.interceptor.config
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
 import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.RabbitCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.mapper.deriveExchangeName
+import lsd.logging.log
 import org.springframework.amqp.core.Message
 import org.springframework.amqp.core.MessageBuilder
 import org.springframework.amqp.core.MessagePostProcessor
