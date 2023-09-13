@@ -7,8 +7,16 @@ dependencies {
     compileOnly 'io.zipkin.brave:brave:5.16.0'
 
     // LSD
+    implementation('io.github.lsd-consulting:lsd-core:6.1.2') {
+        because "We need to load properties for the non-spring option"
+    }
     implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
-    compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
+    implementation('io.github.lsd-consulting:lsd-formatting-library:4.0.2') {
+        because "We need the LSD objectMapper"
+    }
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-mongodb-connector:5.0.0'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-postgres-connector:1.0.3'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.2'
 
     // JSON & XML pretty formatting
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
