@@ -8,9 +8,9 @@ pitest {
     pitestVersion = '1.14.0'
     useClasspathFile = true
     timeoutConstInMillis = 20000
-    targetClasses = ['io.lsdconsulting.lsd.distributed.interceptor.*']
+    targetClasses.set(['io.lsdconsulting.lsd.distributed.interceptor.*'])
     threads = 4
-    outputFormats = ['HTML']
+    outputFormats.set(["XML", "HTML"])
     coverageThreshold = 67
     mutationThreshold = 26
     testStrengthThreshold = 37

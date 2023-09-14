@@ -7,15 +7,15 @@ pitest {
     junit5PluginVersion = '1.1.0'
     useClasspathFile = true
     timeoutConstInMillis = 20000
-    targetClasses = [
+    targetClasses.set([
             'io.lsdconsulting.lsd.distributed.interceptor.*'
-    ]
-    excludedClasses = [
+    ])
+    excludedClasses.set([
             'io.lsdconsulting.lsd.distributed.interceptor.interceptor.*',
             'io.lsdconsulting.lsd.distributed.interceptor.config.*'
-    ]
+    ])
     threads = 4
-    outputFormats = ['HTML']
+    outputFormats.set(['HTML'])
     coverageThreshold = 100
     mutationThreshold = 54
     testStrengthThreshold = 54
