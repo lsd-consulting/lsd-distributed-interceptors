@@ -72,6 +72,7 @@ class LsdFeignLoggerInterceptor(private val feignRequestCaptor: FeignRequestCapt
 
             val repository = buildInterceptedDocumentRepository(connectionString)
             val repositoryService = RepositoryService(threadPoolSize, repository)
+            repositoryService.start()
             val sourceTargetDeriver = SourceTargetDeriver(PropertyServiceNameDeriver(appName))
             val traceIdRetriever = TraceIdRetriever(Tracing.newBuilder().build().tracer())
             val feignHttpHeaderRetriever = FeignHttpHeaderRetriever(Obfuscator(sensitiveHeaders))
