@@ -10,7 +10,6 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetrieve
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -22,7 +21,6 @@ import org.springframework.messaging.Message
 open class MessagingLibraryConfig {
 
     @Bean
-    @ConditionalOnMissingBean(name = ["messagingHeaderRetriever"])
     open fun messagingHeaderRetriever(obfuscator: Obfuscator): MessagingHeaderRetriever {
         return MessagingHeaderRetriever(obfuscator)
     }

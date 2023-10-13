@@ -18,9 +18,9 @@ internal class KafkaCaptorShould {
     private val repositoryService = mockk<RepositoryService>(relaxed = true)
     private val propertyServiceNameDeriver = mockk<PropertyServiceNameDeriver>()
     private val traceIdRetriever = mockk<TraceIdRetriever>()
-    private val messagingHeaderRetriever = mockk<KafkaHeaderRetriever>()
+    private val kafkaHeaderRetriever = mockk<KafkaHeaderRetriever>()
 
-    private val underTest = KafkaCaptor(repositoryService, propertyServiceNameDeriver, traceIdRetriever, messagingHeaderRetriever, "profile")
+    private val underTest = KafkaCaptor(repositoryService, propertyServiceNameDeriver, traceIdRetriever, kafkaHeaderRetriever, "profile")
 
     private val topic = randomAlphabetic(20)
     private val serviceName = randomAlphabetic(20)
@@ -102,7 +102,7 @@ internal class KafkaCaptorShould {
     @Test
     fun `capture publish interaction with source from header`() {
         every { traceIdRetriever.getTraceId(any()) } returns traceId
-        every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"))
+        every { kafkaHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"))
         val headers = listOf(RecordHeader("name", "value".toByteArray()), RecordHeader("Source-Name", serviceName.toByteArray()), RecordHeader("Target-Name", topic.toByteArray()))
         val message: ProducerRecord<String, Any> = ProducerRecord("topic", 0, "key", body.toByteArray(), headers)
 
@@ -126,7 +126,7 @@ internal class KafkaCaptorShould {
     fun `capture publish interaction without source from header`() {
         every { propertyServiceNameDeriver.serviceName } returns serviceName
         every { traceIdRetriever.getTraceId(any()) } returns traceId
-        every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"))
+        every { kafkaHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"))
         val headers = listOf(RecordHeader("name", "value".toByteArray()), RecordHeader("Target-Name", topic.toByteArray()))
         val message: ProducerRecord<String, Any> = ProducerRecord("topic", 0, "key", body.toByteArray(), headers)
 

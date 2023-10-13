@@ -16,7 +16,7 @@ class KafkaCaptor(
     private val repositoryService: RepositoryService,
     private val propertyServiceNameDeriver: PropertyServiceNameDeriver,
     private val traceIdRetriever: TraceIdRetriever,
-    private val messagingHeaderRetriever: KafkaHeaderRetriever,
+    private val kafkaHeaderRetriever: KafkaHeaderRetriever,
     private val profile: String,
 ) {
 //    fun capturePublishInteraction(record: ProducerRecord<String, Any>): InterceptedInteraction {
@@ -51,7 +51,7 @@ class KafkaCaptor(
     fun capturePublishInteraction(record: ProducerRecord<String, Any>): InterceptedInteraction {
         val source = print(record.headers().headers(SOURCE_NAME_KEY).firstOrNull()?.value())
         val target = print(record.headers().headers(TARGET_NAME_KEY).firstOrNull()?.value())
-        val headers = messagingHeaderRetriever.retrieve(record.headers())
+        val headers = kafkaHeaderRetriever.retrieve(record.headers())
         val interceptedInteraction = InterceptedInteraction(
             traceId = traceIdRetriever.getTraceId(headers),
             body = print(record.value()),
