@@ -11,6 +11,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryServic
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -24,6 +25,7 @@ open class KafkaLibraryConfig {
     open fun applicationContextProvider() = ApplicationContextProvider()
 
     @Bean
+    @ConditionalOnMissingBean(name = ["messagingHeaderRetriever"])
     open fun messagingHeaderRetriever(obfuscator: Obfuscator): KafkaHeaderRetriever {
         return KafkaHeaderRetriever(obfuscator)
     }

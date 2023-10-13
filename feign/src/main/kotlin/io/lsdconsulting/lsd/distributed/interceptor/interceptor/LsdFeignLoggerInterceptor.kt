@@ -2,9 +2,9 @@ package io.lsdconsulting.lsd.distributed.interceptor.interceptor
 
 import brave.Tracing
 import com.lsd.core.properties.LsdProperties
-import feign.Request
+import feign.RequestInterceptor
+import feign.RequestTemplate
 import feign.Response
-import feign.slf4j.Slf4jLogger
 import io.lsdconsulting.lsd.distributed.connector.repository.InterceptedDocumentRepository
 import io.lsdconsulting.lsd.distributed.http.config.CONNECTION_TIMEOUT_MILLIS_DEFAULT
 import io.lsdconsulting.lsd.distributed.http.repository.InterceptedDocumentHttpRepository
@@ -13,7 +13,6 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignRequestCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.FeignResponseCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
-import io.lsdconsulting.lsd.distributed.interceptor.captor.common.print
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
@@ -24,38 +23,63 @@ import io.lsdconsulting.lsd.distributed.mongo.repository.InterceptedInteractionC
 import io.lsdconsulting.lsd.distributed.postgres.repository.InterceptedDocumentPostgresRepository
 import lsd.format.json.createObjectMapper
 import lsd.logging.log
-import java.io.IOException
 
 class LsdFeignLoggerInterceptor(private val feignRequestCaptor: FeignRequestCaptor, private val feignResponseCaptor: FeignResponseCaptor) :
-    Slf4jLogger(LsdFeignLoggerInterceptor::class.java) {
+    RequestInterceptor {
 
-    public override fun logRequest(configKey: String, level: Level, request: Request) {
-        super.logRequest(configKey, level, request)
+    private val startTime = ThreadLocal.withInitial { 0L }
+
+
+    override fun apply(template: RequestTemplate) {
         try {
-            feignRequestCaptor.captureRequestInteraction(request)
+            feignRequestCaptor.captureRequestInteraction(template.request())
+            startTime.set(System.currentTimeMillis());
         } catch (t: Throwable) {
             log().error(t.message, t)
         }
     }
+//
+//    override fun aroundDecode(invocationContext: InvocationContext): Any {
+//        val elapsedTime = System.currentTimeMillis() - startTime.get()
+//        val response = invocationContext.response()
+//        val body = if (response.body() != null) print(response.body().asInputStream()) else null
+//        val convertedResponse = resetBodyData(response, body?.toByteArray()) ?: response
+//        try {
+//            feignResponseCaptor.captureResponseInteraction(convertedResponse, body, elapsedTime)
+//        } catch (t: Throwable) {
+//            log().error(t.message, t)
+//            return convertedResponse
+//        }
+//        return invocationContext.proceed()
+//    }
 
-    @Throws(IOException::class)
-    public override fun logAndRebufferResponse(
-        configKey: String,
-        logLevel: Level,
-        response: Response,
-        elapsedTime: Long
-    ): Response {
-        val body = if (response.body() != null) print(response.body().asInputStream()) else null
-        val convertedResponse = resetBodyData(response, body?.toByteArray()) ?: response
-        super.logAndRebufferResponse(configKey, logLevel, convertedResponse, elapsedTime)
-        try {
-            feignResponseCaptor.captureResponseInteraction(convertedResponse, body, elapsedTime)
-        } catch (t: Throwable) {
-            log().error(t.message, t)
-            return convertedResponse
-        }
-        return convertedResponse
-    }
+//    public override fun logRequest(configKey: String, level: Level, request: Request) {
+//        super.logRequest(configKey, level, request)
+//        try {
+//            feignRequestCaptor.captureRequestInteraction(request)
+//        } catch (t: Throwable) {
+//            log().error(t.message, t)
+//        }
+//    }
+
+//    @Throws(IOException::class)
+//    public override fun logAndRebufferResponse(
+//        configKey: String,
+//        logLevel: Level,
+//        response: Response,
+//        elapsedTime: Long
+//    ): Response {
+//        val body = if (response.body() != null) print(response.body().asInputStream()) else null
+//        val convertedResponse = resetBodyData(response, body?.toByteArray()) ?: response
+//        super.logAndRebufferResponse(configKey, logLevel, convertedResponse, elapsedTime)
+//        try {
+//            feignResponseCaptor.captureResponseInteraction(convertedResponse, body, elapsedTime)
+//        } catch (t: Throwable) {
+//            log().error(t.message, t)
+//            return convertedResponse
+//        }
+//        return convertedResponse
+//    }
 
     private fun resetBodyData(response: Response, bodyData: ByteArray?) =
         response.toBuilder().body(bodyData).build()

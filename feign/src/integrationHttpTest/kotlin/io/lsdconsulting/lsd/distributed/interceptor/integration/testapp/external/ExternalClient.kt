@@ -1,7 +1,9 @@
 package io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.external
 
+import feign.InvocationContext
 import feign.RequestInterceptor
 import feign.RequestTemplate
+import feign.ResponseInterceptor
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.context.annotation.Bean
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,6 +25,13 @@ interface ExternalClient {
                 template
                     .header("Authorization", "Password")
                     .header("b3", "3e316fc2da26a3c7-3e316fc2da26a3c7-1")
+                    .header("test", "3e316fc2da26a3c7-3e316fc2da26a3c7-1")
+            }
+        }
+        @Bean
+        fun responseTestInterceptor(): ResponseInterceptor {
+            return ResponseInterceptor { invocationContext: InvocationContext ->
+                invocationContext.proceed()
             }
         }
     }

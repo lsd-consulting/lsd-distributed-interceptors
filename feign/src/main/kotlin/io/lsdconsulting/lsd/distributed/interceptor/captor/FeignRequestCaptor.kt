@@ -8,6 +8,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeri
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.toPath
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
+import lsd.logging.log
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -19,6 +20,7 @@ class FeignRequestCaptor(
     private val profile: String,
 ){
     fun captureRequestInteraction(request: Request): InterceptedInteraction {
+        log().info("request={}", request)
         val headers = feignHttpHeaderRetriever.retrieve(request)
         val body = print(request.body())
         val path = request.url().toPath()
