@@ -5,7 +5,7 @@ plugins {
     id 'signing'
     id 'com.palantir.git-version'
     id 'jacoco'
-    id 'info.solidsoft.pitest' version '1.9.11'
+    id 'info.solidsoft.pitest' version '1.15.0'
     id 'org.jetbrains.kotlin.jvm'
     id 'org.jetbrains.dokka'
 }
