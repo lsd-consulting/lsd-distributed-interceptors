@@ -5,7 +5,7 @@
 ![GitHub](https://img.shields.io/github/license/lsd-consulting/lsd-distributed-interceptors)
 ![Codecov](https://img.shields.io/codecov/c/github/lsd-consulting/lsd-distributed-interceptors)
 
-[![CI](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/ci.yml/badge.svg)](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/ci.yml)
+[![CI](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/ci.yml)
 [![Nightly Build](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/nightly.yml/badge.svg)](https://github.com/lsd-consulting/lsd-distributed-interceptors/actions/workflows/nightly.yml)
 [![GitHub release](https://img.shields.io/github/release/lsd-consulting/lsd-distributed-interceptors)](https://github.com/lsd-consulting/lsd-distributed-interceptors/releases)
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.lsd-consulting/lsd-distributed-interceptors-core)

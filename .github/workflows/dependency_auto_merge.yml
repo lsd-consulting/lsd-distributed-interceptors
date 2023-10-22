@@ -1,8 +1,9 @@
 name: Request dependabot merge
 on:
-  pull_request_target:
+  pull_request:
+    types: [opened, edited, reopened]
     branches:
-      - main
+      - master
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
