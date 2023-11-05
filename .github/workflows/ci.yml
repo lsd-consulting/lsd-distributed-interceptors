@@ -13,27 +13,11 @@ on:
       - master
 jobs:
   build:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'adopt'
-          cache: 'gradle'
-      - name: Build with Gradle
-        run: ./gradlew build
-      - name: Upload build artifacts
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-directory
-          path: build
-      - uses: codecov/codecov-action@v3
-        with:
-          files: build/reports/jacoco/test/jacocoTestReport.xml
-          verbose: true
+    uses: lsd-consulting/shared-workflows/.github/workflows/build.yml@main
+    with:
+      operating-system: ubuntu-22.04
+      java-version: '17'
+      codecov: true
   release:
     needs: build
     uses: lsd-consulting/shared-workflows/.github/workflows/release.yml@main
