@@ -24,7 +24,7 @@ open class RequestCaptor(
         val target = sourceTargetDeriver.deriveTarget(headers, path)
         val serviceName = sourceTargetDeriver.deriveServiceName(headers)
         val interceptedInteraction =
-            buildInterceptedInteraction(headers, body, path, traceId, target, serviceName, request.methodValue)
+            buildInterceptedInteraction(headers, body, path, traceId, target, serviceName, request.method.toString())
         repositoryService.enqueue(interceptedInteraction)
         return interceptedInteraction
     }

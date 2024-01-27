@@ -15,18 +15,20 @@ configurations {
 dependencies {
 
     // Spring
+    integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-actuator'
     integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-test'
     integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-web'
     integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-    integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    integrationMongoTestImplementation 'io.micrometer:micrometer-tracing'
+    integrationMongoTestImplementation 'io.micrometer:micrometer-tracing-bridge-otel'
 
     // Other
     integrationMongoTestImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.5.4'
     integrationMongoTestImplementation 'org.junit.platform:junit-platform-launcher:1.9.2'
     integrationMongoTestImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'
     integrationMongoTestImplementation 'org.awaitility:awaitility:4.1.0'
-    integrationMongoTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
+    integrationMongoTestImplementation 'org.wiremock:wiremock-standalone:3.3.1'
     integrationMongoTestImplementation 'org.jeasy:easy-random-core:5.0.0'
 
     // LSD

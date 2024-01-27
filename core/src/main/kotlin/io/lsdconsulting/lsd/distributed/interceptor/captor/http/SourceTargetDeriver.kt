@@ -1,7 +1,7 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.http
 
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 class SourceTargetDeriver(
     private val propertyServiceNameDeriver: PropertyServiceNameDeriver,
