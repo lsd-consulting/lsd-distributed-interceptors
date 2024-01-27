@@ -5,8 +5,12 @@ dependencies {
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
     testImplementation 'io.mockk:mockk:1.13.5'
     testImplementation 'org.apache.commons:commons-lang3:3.12.0'
-    testImplementation 'org.apache.kafka:kafka-clients:3.5.0'
-    testImplementation 'io.zipkin.brave:brave:5.16.0'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
+    testImplementation 'io.micrometer:micrometer-tracing'
+    testImplementation 'org.springframework:spring-messaging'
+    testImplementation 'org.springframework.integration:spring-integration-core'
+
     testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
 }
 

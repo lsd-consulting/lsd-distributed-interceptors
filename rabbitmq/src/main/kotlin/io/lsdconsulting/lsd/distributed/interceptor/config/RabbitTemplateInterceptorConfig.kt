@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Configuration
 import java.util.function.Consumer
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 @Configuration
 @ConditionalOnProperty(name = ["lsd.dist.connectionString"])
