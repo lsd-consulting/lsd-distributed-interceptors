@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.lsdconsulting.lsd.distributed.interceptor.config.FeignInterceptorConfig
