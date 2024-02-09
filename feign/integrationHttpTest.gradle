@@ -21,6 +21,7 @@ dependencies {
     integrationHttpTestImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     integrationHttpTestImplementation 'io.micrometer:micrometer-tracing'
     integrationHttpTestImplementation 'io.micrometer:micrometer-tracing-bridge-otel'
+    integrationHttpTestImplementation 'io.zipkin.brave:brave:5.18.1'
 
     // Other
     integrationHttpTestImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'
@@ -29,11 +30,11 @@ dependencies {
     integrationHttpTestImplementation 'org.jeasy:easy-random-core:5.0.0'
 
     // LSD
-    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.0'
+    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:4.0.0'
     integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-junit5:6.0.0'
-    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:7.1.1'
-    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:6.0.1')
-    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.0.1:wiremock-stubs'){
+    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:8.0.0'
+    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:7.0.0')
+    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:7.0.0:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
 

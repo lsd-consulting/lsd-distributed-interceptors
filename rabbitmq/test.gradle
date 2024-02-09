@@ -4,11 +4,12 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest-core:2.2'
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
     testImplementation 'io.mockk:mockk:1.13.5'
+    testImplementation 'io.zipkin.brave:brave:5.18.1'
 
     testImplementation 'org.springframework.amqp:spring-amqp'
     testImplementation 'org.springframework.amqp:spring-rabbit'
-    testImplementation 'io.zipkin.brave:brave:5.16.0'
-    testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
+    testImplementation 'io.zipkin.brave:brave:5.18.1'
+    testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.0.4'
 }
 
 test {
