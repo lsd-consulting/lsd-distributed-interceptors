@@ -1,10 +1,8 @@
 dependencies {
     implementation project(":core")
 
+    // Spring
     compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
-    compileOnly 'io.github.openfeign:feign-core:12.4'
-    compileOnly 'io.github.openfeign:feign-slf4j:12.4'
-    compileOnly 'io.zipkin.brave:brave:5.16.0'
 
     // LSD
     implementation('io.github.lsd-consulting:lsd-core:6.1.2') {
@@ -14,11 +12,16 @@ dependencies {
     implementation('io.github.lsd-consulting:lsd-formatting-library:4.0.47') {
         because "We need the LSD objectMapper"
     }
-    compileOnly 'io.github.lsd-consulting:lsd-distributed-mongodb-connector:5.0.0'
-    compileOnly 'io.github.lsd-consulting:lsd-distributed-postgres-connector:1.0.3'
-    compileOnly 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.2'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-mongodb-connector:6.0.0'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-postgres-connector:2.0.0'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-http-connector:4.0.0'
 
     // JSON & XML pretty formatting
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.3'
+
+    // Other
+    compileOnly 'io.github.openfeign:feign-core:12.4'
+    compileOnly 'io.github.openfeign:feign-slf4j:12.4'
+    compileOnly 'io.zipkin.brave:brave:5.18.1'
 }

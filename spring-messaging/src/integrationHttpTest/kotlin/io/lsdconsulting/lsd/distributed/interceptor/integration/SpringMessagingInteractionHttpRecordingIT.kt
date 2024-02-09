@@ -54,12 +54,13 @@ private const val MIN_VALID_TRACE_ID_VALUE = 1152921504606846976L
     brokerProperties = ["log.dir=build/messaging_kafka_broker_logs",
         "listeners=PLAINTEXT://localhost:9095", "auto.create.topics.enable=true"]
 )
-class SpringMessagingInteractionHttpRecordingIT(
+class SpringMessagingInteractionHttpRecordingIT {
+
     @Value("\${spring.cloud.stream.bindings.inputOutputHandlerFunction-in-0.destination}")
-    private val inputExchange: String,
+    private lateinit var inputExchange: String
+
     @Value("\${spring.cloud.stream.bindings.noOutputLsdHeadersHandlerFunction-in-0.destination}")
-    private val noLsdHeadersInputExchange: String,
-) {
+    private lateinit var noLsdHeadersInputExchange: String
 
     @Autowired
     private lateinit var rabbitTemplate: RabbitTemplate

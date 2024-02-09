@@ -29,18 +29,18 @@ dependencies {
     integrationHttpTestImplementation 'org.awaitility:awaitility:4.1.0'
     integrationHttpTestImplementation 'org.wiremock:wiremock-standalone:3.3.1'
     integrationHttpTestImplementation 'org.jeasy:easy-random-core:5.0.0'
+    integrationHttpTestImplementation 'io.zipkin.brave:brave:5.18.1'
 
     // LSD
-    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.1'
-//    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:6.0.2')
-    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.0.2:wiremock-stubs'){
+    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:4.0.0'
+    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:7.0.0:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
 
     integrationHttpTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
 
-    integrationHttpTestImplementation 'ch.qos.logback:logback-core:1.2.12'
-    integrationHttpTestImplementation 'ch.qos.logback:logback-classic:1.2.12'
+    integrationHttpTestImplementation 'ch.qos.logback:logback-core:1.4.14'
+    integrationHttpTestImplementation 'ch.qos.logback:logback-classic:1.4.14'
 }
 
 tasks.register('integrationHttpTest', Test) {

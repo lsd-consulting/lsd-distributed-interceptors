@@ -2,10 +2,9 @@ dependencies {
     api project(":core")
 
     // Spring
-    compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
-    compileOnly 'org.springframework.kafka:spring-kafka'
-    compileOnly 'org.apache.kafka:kafka-clients:3.5.0'
-    compileOnly 'io.zipkin.brave:brave:5.16.0'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.apache.kafka:kafka-clients:3.5.0'
 
     // LSD
     implementation('io.github.lsd-consulting:lsd-core:6.1.2') {
@@ -26,6 +25,10 @@ dependencies {
     }
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2'
 
+    // Other
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+    implementation 'org.apache.kafka:kafka-clients:3.5.0'
+    compileOnly 'io.zipkin.brave:brave:5.18.1'
     // Avro
     implementation 'org.apache.avro:avro:1.11.3'
 }

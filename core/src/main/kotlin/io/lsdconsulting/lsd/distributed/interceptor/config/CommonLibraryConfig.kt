@@ -1,6 +1,7 @@
 package io.lsdconsulting.lsd.distributed.interceptor.config
 
 import brave.Tracer
+import brave.Tracing
 import io.lsdconsulting.lsd.distributed.connector.repository.InterceptedDocumentRepository
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
@@ -27,6 +28,9 @@ open class CommonLibraryConfig {
     @Bean
     open fun obfuscator(@Value("\${lsd.dist.obfuscator.sensitiveHeaders:#{null}}") sensitiveHeaders: String?) =
         Obfuscator(sensitiveHeaders)
+
+    @Bean
+    open fun tracer(): Tracer = Tracing.newBuilder().build().tracer()
 
     @Bean
     open fun traceIdRetriever(tracer: Tracer) = TraceIdRetriever(tracer)

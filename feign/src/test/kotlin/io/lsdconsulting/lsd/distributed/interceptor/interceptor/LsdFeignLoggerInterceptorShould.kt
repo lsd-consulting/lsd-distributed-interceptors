@@ -11,10 +11,10 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.apache.commons.lang3.RandomStringUtils
-import org.apache.commons.lang3.RandomUtils
 import org.jeasy.random.EasyRandom
 import org.jeasy.random.EasyRandomParameters
 import org.junit.jupiter.api.Test
+import java.util.*
 import kotlin.text.Charsets.UTF_8
 
 internal class LsdFeignLoggerInterceptorShould {
@@ -23,7 +23,7 @@ internal class LsdFeignLoggerInterceptorShould {
     private val feignResponseCaptor = mockk<FeignResponseCaptor>()
     private val request = mockk<Request>(relaxed = true)
     private val level = Logger.Level.BASIC
-    private val elapsedTime = RandomUtils.nextLong()
+    private val elapsedTime = Random().nextLong()
     private val body = RandomStringUtils.randomAlphanumeric(10)
 
     private val underTest = LsdFeignLoggerInterceptor(feignRequestCaptor, feignResponseCaptor)
