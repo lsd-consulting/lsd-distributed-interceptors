@@ -7,7 +7,7 @@ dependencies {
 
     // LSD
     implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
-    compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.0.4'
 
     // JSON & XML pretty formatting
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
@@ -16,4 +16,5 @@ dependencies {
     // Other
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.slf4j:slf4j-api:2.0.7'
+    compileOnly 'io.zipkin.brave:brave:5.18.1'
 }

@@ -21,14 +21,15 @@ dependencies {
     testImplementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
     testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
     testImplementation 'org.apache.commons:commons-lang3:3.14.0'
+    testImplementation 'io.zipkin.brave:brave:5.18.1'
 
     // LSD
     testImplementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
-    testImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.1'
+    testImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:4.0.0'
     testImplementation 'io.github.lsd-consulting:lsd-junit5:6.0.1'
-    testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:7.1.1'
-    testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:6.0.1')
-    testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.0.1:wiremock-stubs'){
+    testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:8.0.0'
+    testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:7.0.0')
+    testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:7.0.0:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
 }

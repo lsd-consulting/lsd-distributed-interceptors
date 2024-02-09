@@ -6,6 +6,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.integration.data.TraceIdGene
 import io.lsdconsulting.lsd.distributed.interceptor.integration.matcher.InterceptedInteractionMatcher
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.controller.event.SomethingDoneEvent
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.repository.TestRepository
+import lsd.logging.log
 import org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric
 import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
@@ -46,6 +47,7 @@ class InteractionPostgresRecordingIT: IntegrationTestBase() {
     @Throws(URISyntaxException::class)
     fun `should record rest template feign client and listener interactions`() {
         givenExternalApi()
+        log().info("mainTraceId=${mainTraceId}")
         val response = sentRequest("/api-listener", mainTraceId, null, null)
         assertThat(response.statusCode, `is`(HttpStatus.OK))
         assertThat(response.body, `is`("response_from_controller"))
