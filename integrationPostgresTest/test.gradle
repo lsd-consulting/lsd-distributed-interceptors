@@ -5,11 +5,13 @@ dependencies {
     testImplementation project(":rabbitmq")
 
     // Spring
+    testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-amqp'
     testImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-    testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    testImplementation 'io.micrometer:micrometer-tracing'
+    testImplementation 'io.micrometer:micrometer-tracing-bridge-otel'
     testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // Db
@@ -21,7 +23,7 @@ dependencies {
     // Other
     testImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'
     testImplementation 'org.awaitility:awaitility:4.1.0'
-    testImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
+    testImplementation 'org.wiremock:wiremock-standalone:3.3.1'
     testImplementation 'org.junit.platform:junit-platform-launcher:1.9.2'
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
 

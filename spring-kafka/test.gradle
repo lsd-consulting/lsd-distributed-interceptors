@@ -6,7 +6,9 @@ dependencies {
     testImplementation 'io.mockk:mockk:1.13.5'
     testImplementation 'org.apache.commons:commons-lang3:3.12.0'
 
-    testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
+    testImplementation 'io.micrometer:micrometer-tracing'
+    testImplementation 'io.micrometer:micrometer-tracing-bridge-otel'
     testImplementation 'org.springframework:spring-messaging'
     testImplementation 'org.springframework.integration:spring-integration-core'
 
