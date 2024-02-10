@@ -17,5 +17,5 @@ dependencies {
 
     // Other
     implementation 'org.slf4j:slf4j-api:2.0.11'
-    compileOnly 'io.zipkin.brave:brave:5.18.1'
+    compileOnly 'io.zipkin.brave:brave:5.16.0'
 }

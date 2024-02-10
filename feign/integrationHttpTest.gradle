@@ -20,8 +20,8 @@ dependencies {
     integrationHttpTestImplementation 'org.springframework.boot:spring-boot-starter-web'
     integrationHttpTestImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     integrationHttpTestImplementation 'io.micrometer:micrometer-tracing'
-    integrationHttpTestImplementation 'io.micrometer:micrometer-tracing-bridge-otel'
-    integrationHttpTestImplementation 'io.zipkin.brave:brave:5.18.1'
+    integrationHttpTestImplementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    integrationHttpTestImplementation 'io.zipkin.brave:brave:5.16.0'
 
     // Other
     integrationHttpTestImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'

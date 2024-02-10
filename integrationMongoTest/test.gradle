@@ -12,7 +12,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-amqp'
     testImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     testImplementation 'io.micrometer:micrometer-tracing'
-    testImplementation 'io.micrometer:micrometer-tracing-bridge-otel'
+    testImplementation 'io.micrometer:micrometer-tracing-bridge-brave'
 
     // Other
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.5.4'
@@ -21,7 +21,7 @@ dependencies {
     testImplementation 'org.wiremock:wiremock-standalone:3.3.1'
     testImplementation 'org.junit.platform:junit-platform-launcher:1.9.2'
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
-    testImplementation 'io.zipkin.brave:brave:5.18.1'
+    testImplementation 'io.zipkin.brave:brave:5.16.0'
 
     // LSD
     testImplementation 'io.github.lsd-consulting:lsd-distributed-mongodb-connector:6.0.0'
