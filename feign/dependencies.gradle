@@ -23,5 +23,5 @@ dependencies {
     // Other
     compileOnly 'io.github.openfeign:feign-core:12.4'
     compileOnly 'io.github.openfeign:feign-slf4j:12.4'
-    compileOnly 'io.zipkin.brave:brave:5.18.1'
+    compileOnly 'io.zipkin.brave:brave:5.16.0'
 }

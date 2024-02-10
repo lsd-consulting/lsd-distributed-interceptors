@@ -18,7 +18,7 @@ dependencies {
     integrationHttpTestImplementation 'org.springframework.boot:spring-boot-starter-actuator'
     integrationHttpTestImplementation 'org.springframework.boot:spring-boot-starter-test'
     integrationHttpTestImplementation 'io.micrometer:micrometer-tracing'
-    integrationHttpTestImplementation 'io.micrometer:micrometer-tracing-bridge-otel'
+    integrationHttpTestImplementation 'io.micrometer:micrometer-tracing-bridge-brave'
     integrationHttpTestImplementation 'org.springframework.cloud:spring-cloud-stream'
     integrationHttpTestImplementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka'
     integrationHttpTestImplementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
@@ -29,7 +29,7 @@ dependencies {
     integrationHttpTestImplementation 'org.awaitility:awaitility:4.1.0'
     integrationHttpTestImplementation 'org.wiremock:wiremock-standalone:3.3.1'
     integrationHttpTestImplementation 'org.jeasy:easy-random-core:5.0.0'
-    integrationHttpTestImplementation 'io.zipkin.brave:brave:5.18.1'
+    integrationHttpTestImplementation 'io.zipkin.brave:brave:5.16.0'
 
     // LSD
     integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:4.0.0'

@@ -21,7 +21,7 @@ dependencies {
     integrationMongoTestImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     integrationMongoTestImplementation 'io.micrometer:micrometer-tracing'
-    integrationMongoTestImplementation 'io.micrometer:micrometer-tracing-bridge-otel'
+    integrationMongoTestImplementation 'io.micrometer:micrometer-tracing-bridge-brave'
 
     // Other
     integrationMongoTestImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.5.4'
@@ -30,7 +30,7 @@ dependencies {
     integrationMongoTestImplementation 'org.awaitility:awaitility:4.1.0'
     integrationMongoTestImplementation 'org.wiremock:wiremock-standalone:3.3.1'
     integrationMongoTestImplementation 'org.jeasy:easy-random-core:5.0.0'
-    integrationMongoTestImplementation 'io.zipkin.brave:brave:5.18.1'
+    integrationMongoTestImplementation 'io.zipkin.brave:brave:5.16.0'
 
     // LSD
     integrationMongoTestImplementation 'io.github.lsd-consulting:lsd-distributed-mongodb-connector:6.0.0'
