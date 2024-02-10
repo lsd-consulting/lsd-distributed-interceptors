@@ -11,7 +11,7 @@ import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFacto
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Configuration
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 /*
     This config adds the interception of messages to RabbitMq listeners

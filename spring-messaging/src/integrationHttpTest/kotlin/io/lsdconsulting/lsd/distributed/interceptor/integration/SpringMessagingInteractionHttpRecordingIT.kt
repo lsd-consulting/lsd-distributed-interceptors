@@ -48,12 +48,13 @@ private const val NO_ROUTING_KEY = ""
     brokerProperties = ["log.dir=build/kafka_broker_logs",
         "listeners=PLAINTEXT://localhost:9093", "auto.create.topics.enable=true"]
 )
-class SpringMessagingInteractionHttpRecordingIT(
+class SpringMessagingInteractionHttpRecordingIT {
+
     @Value("\${spring.cloud.stream.bindings.inputOutputHandlerFunction-in-0.destination}")
-    private val inputExchange: String,
+    private lateinit var inputExchange: String
+
     @Value("\${spring.cloud.stream.bindings.noOutputLsdHeadersHandlerFunction-in-0.destination}")
-    private val noLsdHeadersInputExchange: String,
-) {
+    private lateinit var noLsdHeadersInputExchange: String
 
     @Autowired
     private lateinit var rabbitTemplate: RabbitTemplate

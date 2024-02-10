@@ -6,26 +6,30 @@ dependencies {
 
     // Spring
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
     testImplementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-amqp'
     testImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-    testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    testImplementation 'io.micrometer:micrometer-tracing'
+    testImplementation 'io.micrometer:micrometer-tracing-bridge-brave'
 
     // Other
     testImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'
     testImplementation 'org.awaitility:awaitility:4.1.0'
-    testImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
+    testImplementation 'org.wiremock:wiremock-standalone:3.3.1'
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
     testImplementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
     testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
+    testImplementation 'org.apache.commons:commons-lang3:3.14.0'
+    testImplementation 'io.zipkin.brave:brave:5.16.0'
 
     // LSD
     testImplementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
-    testImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.1'
+    testImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:4.0.0'
     testImplementation 'io.github.lsd-consulting:lsd-junit5:6.0.1'
-    testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:7.1.1'
-    testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:6.0.1')
-    testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.0.1:wiremock-stubs'){
+    testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:8.0.0'
+    testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:7.0.0')
+    testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:7.0.0:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
 }

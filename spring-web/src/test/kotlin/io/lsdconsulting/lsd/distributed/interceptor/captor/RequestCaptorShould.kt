@@ -11,6 +11,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod.GET
 import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.client.ClientHttpResponse
@@ -37,7 +38,7 @@ internal class RequestCaptorShould {
     fun `handle empty response body from delete request`() {
         val httpHeaders = mockk<HttpHeaders>()
         every { httpRequest.headers} returns httpHeaders
-        every { httpRequest.methodValue} returns "GET"
+        every { httpRequest.method} returns GET
         every { httpRequest.uri} returns URI.create("http://localhost/test")
         every { clientHttpResponse.headers} returns httpHeaders
         every { clientHttpResponse.statusCode} returns HttpStatus.NO_CONTENT
@@ -56,7 +57,7 @@ internal class RequestCaptorShould {
     fun `enqueue intercepted interaction on spring response`() {
         val httpHeaders = mockk<HttpHeaders>()
         every { httpRequest.headers} returns httpHeaders
-        every { httpRequest.methodValue} returns "GET"
+        every { httpRequest.method} returns GET
         every { httpRequest.uri} returns URI.create("http://localhost/test")
         every { clientHttpResponse.headers} returns httpHeaders
         every { clientHttpResponse.statusCode} returns HttpStatus.NO_CONTENT
