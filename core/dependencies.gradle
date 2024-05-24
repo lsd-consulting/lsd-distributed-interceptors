@@ -7,7 +7,7 @@ dependencies {
 
     // LSD
     compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
-    implementation 'io.github.lsd-consulting:lsd-formatting-library:4.0.1'
+    implementation 'io.github.lsd-consulting:lsd-formatting-library:4.0.46'
     implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
 
     // JSON & XML pretty formatting

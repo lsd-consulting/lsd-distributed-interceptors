@@ -3,7 +3,6 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor.messaging
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.PUBLISH
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
-import io.lsdconsulting.lsd.distributed.interceptor.captor.common.print
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver.Companion.SOURCE_NAME_KEY
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver.Companion.TARGET_NAME_KEY
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
