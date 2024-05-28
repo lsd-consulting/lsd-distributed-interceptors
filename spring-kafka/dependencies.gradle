@@ -5,8 +5,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-autoconfigure'
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.apache.kafka:kafka-clients:3.5.0'
+    compileOnly 'org.apache.avro:avro:1.11.3'
 
     // LSD
+    implementation 'io.github.lsd-consulting:lsd-formatting-library:4.0.46'
     implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
     compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
 
