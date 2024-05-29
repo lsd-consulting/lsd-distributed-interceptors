@@ -25,7 +25,9 @@ class ErrorMessagePublishingCaptor(
         val headers = messagingHeaderRetriever.retrieve(message)
         val interceptedInteraction = InterceptedInteraction(
             traceId = traceIdRetriever.getTraceId(headers),
-            body = print(message.payload),
+            body = print(message.payload) { obj ->
+                serialiseWithAvro(obj)
+            },
             requestHeaders = headers,
             responseHeaders = emptyMap(),
             serviceName = source,

@@ -6,8 +6,7 @@ import lsd.logging.log
 import java.io.BufferedReader
 import java.io.InputStream
 
-@Suppress("LoggingStringTemplateAsArgument")
-fun print(obj: Any?): String =
+fun print(obj: Any?, serialiseFunction: (input: Any) -> String = { _ -> defaultSerialise(obj) }): String =
     obj?.let {
         try {
             when (obj) {
@@ -24,11 +23,7 @@ fun print(obj: Any?): String =
                 }
 
                 else -> {
-                    try {
-                        return objectMapper.writeValueAsString(obj)
-                    } catch (e: InvalidDefinitionException) {
-                        return obj.toString()
-                    }
+                    return serialiseFunction(obj)
                 }
             }
         } catch (e: StackOverflowError) {
@@ -42,3 +37,10 @@ fun print(obj: Any?): String =
             ""
         }
     } ?: ""
+
+fun defaultSerialise(obj: Any?): String =
+    try {
+        objectMapper.writeValueAsString(obj)
+    } catch (e: InvalidDefinitionException) {
+        obj.toString()
+    }

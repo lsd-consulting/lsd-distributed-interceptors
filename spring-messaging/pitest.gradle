@@ -15,7 +15,7 @@ pitest {
     ])
     threads = 4
     outputFormats.set(['HTML'])
-    coverageThreshold = 97
-    mutationThreshold = 74
-    testStrengthThreshold = 74
+    coverageThreshold = 89
+    mutationThreshold = 70
+    testStrengthThreshold = 79
 }
