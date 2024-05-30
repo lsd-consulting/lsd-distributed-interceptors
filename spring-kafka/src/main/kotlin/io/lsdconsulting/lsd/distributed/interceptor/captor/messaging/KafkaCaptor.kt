@@ -80,7 +80,8 @@ class KafkaCaptor(
     } catch (e: JsonMappingException) {
         if (e.cause is AvroRuntimeException) {
             obj.toString()
+        } else {
+            throw e
         }
-        throw e
     }
 }

@@ -1,0 +1,1 @@
+ExampleObject(value=0)

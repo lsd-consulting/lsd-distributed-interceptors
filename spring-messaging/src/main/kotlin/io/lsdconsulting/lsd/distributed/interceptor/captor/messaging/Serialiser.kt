@@ -12,6 +12,7 @@ fun serialiseWithAvro(obj: Any): String = try {
 } catch (e: JsonMappingException) {
     if (e.cause is AvroRuntimeException) {
         obj.toString()
+    } else {
+        throw e
     }
-    throw e
 }
