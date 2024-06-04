@@ -7,8 +7,10 @@ dependencies {
     testImplementation 'org.apache.commons:commons-lang3:3.12.0'
 
     testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
-    testImplementation 'org.springframework:spring-messaging'
-    testImplementation 'org.springframework.integration:spring-integration-core'
+    testImplementation 'org.springframework.boot:spring-boot-autoconfigure'
+    testImplementation 'org.springframework.kafka:spring-kafka'
+    testImplementation 'org.apache.kafka:kafka-clients:3.5.0'
+    testImplementation 'io.zipkin.brave:brave:5.16.0'
 
     testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
 }
