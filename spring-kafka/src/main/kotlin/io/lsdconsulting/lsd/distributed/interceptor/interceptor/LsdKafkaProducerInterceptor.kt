@@ -24,6 +24,8 @@ import org.apache.kafka.clients.producer.RecordMetadata
 
 class LsdKafkaProducerInterceptor(private val kafkaCaptor: KafkaCaptor): ProducerInterceptor<String, Any> {
 
+    constructor() : this(instance())
+
     override fun configure(configs: MutableMap<String, *>?) {}
 
     override fun onAcknowledgement(metadata: RecordMetadata?, exception: Exception?) {}
@@ -37,9 +39,9 @@ class LsdKafkaProducerInterceptor(private val kafkaCaptor: KafkaCaptor): Produce
     }
 
     companion object {
-        fun instance(): LsdKafkaProducerInterceptor? {
+        private fun instance(): KafkaCaptor {
             val connectionString = LsdProperties["lsd.dist.connectionString", ""]
-            if (connectionString.isBlank()) return null
+            if (connectionString.isBlank()) throw IllegalArgumentException("Missing lsd.dist.connectionString")
             val appName = LsdProperties["info.app.name", ""]
             val sensitiveHeaders = LsdProperties["lsd.dist.obfuscator.sensitiveHeaders", ""]
             val profile = LsdProperties["spring.profiles.active", ""]
@@ -50,8 +52,7 @@ class LsdKafkaProducerInterceptor(private val kafkaCaptor: KafkaCaptor): Produce
             repositoryService.start()
             val traceIdRetriever = TraceIdRetriever(Tracing.newBuilder().build().tracer())
             val kafkaHeaderRetriever = KafkaHeaderRetriever(Obfuscator(sensitiveHeaders))
-            val kafkaCaptor = KafkaCaptor(repositoryService, PropertyServiceNameDeriver(appName), traceIdRetriever, kafkaHeaderRetriever, profile)
-            return LsdKafkaProducerInterceptor(kafkaCaptor)
+            return KafkaCaptor(repositoryService, PropertyServiceNameDeriver(appName), traceIdRetriever, kafkaHeaderRetriever, profile)
         }
 
         private fun buildInterceptedDocumentRepository(connectionString: String): InterceptedDocumentRepository {
