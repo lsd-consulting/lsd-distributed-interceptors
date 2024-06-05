@@ -18,11 +18,15 @@ import io.lsdconsulting.lsd.distributed.mongo.repository.InterceptedInteractionC
 import io.lsdconsulting.lsd.distributed.postgres.repository.InterceptedDocumentPostgresRepository
 import lsd.format.json.createObjectMapper
 import lsd.logging.log
+import org.apache.kafka.clients.consumer.ConsumerInterceptor
+import org.apache.kafka.clients.consumer.ConsumerRecords
+import org.apache.kafka.clients.consumer.OffsetAndMetadata
 import org.apache.kafka.clients.producer.ProducerInterceptor
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
+import org.apache.kafka.common.TopicPartition
 
-class LsdKafkaProducerInterceptor(private val kafkaCaptor: KafkaCaptor): ProducerInterceptor<String, Any> {
+class LsdKafkaProducerInterceptor(private val kafkaCaptor: KafkaCaptor): ProducerInterceptor<String, Any>, ConsumerInterceptor<String, Any> {
 
     constructor() : this(instance())
 
@@ -31,6 +35,14 @@ class LsdKafkaProducerInterceptor(private val kafkaCaptor: KafkaCaptor): Produce
     override fun onAcknowledgement(metadata: RecordMetadata?, exception: Exception?) {}
 
     override fun close() {}
+
+    override fun onCommit(p0: MutableMap<TopicPartition, OffsetAndMetadata>?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onConsume(p0: ConsumerRecords<String, Any>?): ConsumerRecords<String, Any> {
+        TODO("Not yet implemented")
+    }
 
     override fun onSend(record: ProducerRecord<String, Any>): ProducerRecord<String, Any> {
         log().debug("Intercepted record: {}", record)
