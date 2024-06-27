@@ -99,4 +99,21 @@ internal class MessagePublishingCaptorShould {
         assertThat(result.responseHeaders, aMapWithSize(0))
         verify { repositoryService.enqueue(result) }
     }
+
+    @Test
+    fun `capture publish interaction with headers as byte arrays`() {
+        every { traceIdRetriever.getTraceId(any()) } returns traceId
+        every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"))
+        val headers = mapOf("name" to listOf("value".toByteArray()), "Source-Name" to serviceName.toByteArray(), "Target-Name" to topic.toByteArray())
+        val message: Message<*> = MutableMessage(body.toByteArray(), headers)
+
+        val result = underTest.capturePublishInteraction(message, "fullChannelName")
+
+        assertThat(result.target, `is`(topic))
+        assertThat(result.path, `is`(topic))
+        assertThat(result.serviceName, `is`(serviceName))
+        assertThat(result.requestHeaders, `is`(mapOf("name" to listOf("value"))))
+        assertThat(result.responseHeaders, aMapWithSize(0))
+        verify { repositoryService.enqueue(result) }
+    }
 }

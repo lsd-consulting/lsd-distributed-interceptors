@@ -20,8 +20,8 @@ class MessagePublishingCaptor(
     private val profile: String,
 ) {
     fun capturePublishInteraction(message: Message<*>, fullChannelName: String): InterceptedInteraction {
-        val source = message.headers[SOURCE_NAME_KEY] as String?
-        val target = message.headers[TARGET_NAME_KEY] as String? ?: fullChannelName
+        val source = print(message.headers[SOURCE_NAME_KEY])
+        val target = print(message.headers[TARGET_NAME_KEY] ?: fullChannelName)
         val headers = messagingHeaderRetriever.retrieve(message)
         val interceptedInteraction = InterceptedInteraction(
             traceId = traceIdRetriever.getTraceId(headers),
@@ -30,7 +30,7 @@ class MessagePublishingCaptor(
             },
             requestHeaders = headers,
             responseHeaders = emptyMap(),
-            serviceName = source ?: propertyServiceNameDeriver.serviceName,
+            serviceName = source.ifEmpty { propertyServiceNameDeriver.serviceName },
             target = target, path = target,
             httpStatus = null, httpMethod = null,
             interactionType = PUBLISH, profile = profile, elapsedTime = 0L,
