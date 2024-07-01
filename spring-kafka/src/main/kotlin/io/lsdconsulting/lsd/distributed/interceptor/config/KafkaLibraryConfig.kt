@@ -49,5 +49,5 @@ open class KafkaLibraryConfig {
     open fun producerFactoryCustomizer() = ProducerFactoryCustomizer()
 
     @Bean
-    open fun lsdKafkaProducerInterceptor(kafkaCaptor: KafkaCaptor) = LsdKafkaProducerInterceptor(kafkaCaptor)
+    open fun lsdKafkaProducerInterceptor() = LsdKafkaProducerInterceptor()
 }

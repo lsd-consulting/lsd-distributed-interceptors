@@ -10,6 +10,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServic
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.KafkaCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.KafkaHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
+import io.lsdconsulting.lsd.distributed.interceptor.config.ApplicationContextProvider
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
 import io.lsdconsulting.lsd.distributed.mongo.repository.DEFAULT_COLLECTION_SIZE_LIMIT_MBS
 import io.lsdconsulting.lsd.distributed.mongo.repository.DEFAULT_TIMEOUT_MILLIS
@@ -26,9 +27,9 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.TopicPartition
 
-class LsdKafkaProducerInterceptor(private val kafkaCaptor: KafkaCaptor): ProducerInterceptor<String, Any>, ConsumerInterceptor<String, Any> {
+class LsdKafkaProducerInterceptor: ProducerInterceptor<String, Any>, ConsumerInterceptor<String, Any> {
 
-    constructor() : this(instance())
+    private val kafkaCaptor: KafkaCaptor = ApplicationContextProvider.context.getBean(KafkaCaptor::class.java)
 
     override fun configure(configs: MutableMap<String, *>?) {}
 
