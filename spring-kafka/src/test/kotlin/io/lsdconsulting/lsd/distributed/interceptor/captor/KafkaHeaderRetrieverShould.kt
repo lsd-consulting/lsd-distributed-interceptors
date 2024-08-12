@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.interceptor.captor.messaging
+package io.lsdconsulting.lsd.distributed.interceptor.captor
 
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import io.mockk.every
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.util.*
 import java.util.stream.Stream
 
 internal class KafkaHeaderRetrieverShould {

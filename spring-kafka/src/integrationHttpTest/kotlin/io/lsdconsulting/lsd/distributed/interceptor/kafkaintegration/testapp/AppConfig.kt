@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.interceptor.integration.testapp
+package io.lsdconsulting.lsd.distributed.interceptor.kafkaintegration.testapp
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.lsdconsulting.lsd.distributed.interceptor.config.mapper.ObjectMapperCreator

@@ -1,6 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.interceptor
 
-import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.KafkaCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.config.ApplicationContextProvider
 import lsd.logging.log
 import org.apache.kafka.clients.consumer.ConsumerInterceptor

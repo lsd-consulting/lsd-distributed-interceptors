@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.interceptor.integration
+package io.lsdconsulting.lsd.distributed.interceptor.kafkaintegration
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
@@ -7,9 +7,9 @@ import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.print
 import io.lsdconsulting.lsd.distributed.interceptor.config.mapper.ObjectMapperCreator
-import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.Input
-import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.Output
-import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.TestApplication
+import io.lsdconsulting.lsd.distributed.interceptor.kafkaintegration.testapp.Input
+import io.lsdconsulting.lsd.distributed.interceptor.kafkaintegration.testapp.Output
+import io.lsdconsulting.lsd.distributed.interceptor.kafkaintegration.testapp.TestApplication
 import lsd.logging.log
 import org.apache.kafka.clients.consumer.CommitFailedException
 import org.apache.kafka.clients.consumer.ConsumerConfig

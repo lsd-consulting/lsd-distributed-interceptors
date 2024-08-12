@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.interceptor.integration.testapp
+package io.lsdconsulting.lsd.distributed.interceptor.springkafkaintegration.testapp
 
 import java.time.OffsetDateTime
 

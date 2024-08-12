@@ -5,10 +5,10 @@ import com.lsd.core.properties.LsdProperties
 import io.lsdconsulting.lsd.distributed.connector.repository.InterceptedDocumentRepository
 import io.lsdconsulting.lsd.distributed.http.config.CONNECTION_TIMEOUT_MILLIS_DEFAULT
 import io.lsdconsulting.lsd.distributed.http.repository.InterceptedDocumentHttpRepository
+import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
-import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.KafkaCaptor
-import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.KafkaHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
 import io.lsdconsulting.lsd.distributed.mongo.repository.DEFAULT_COLLECTION_SIZE_LIMIT_MBS

@@ -1,9 +1,9 @@
 package io.lsdconsulting.lsd.distributed.interceptor.config
 
+import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
-import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.KafkaCaptor
-import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.KafkaHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.interceptor.ConsumerFactoryCustomizer
 import io.lsdconsulting.lsd.distributed.interceptor.interceptor.LsdSpringKafkaInterceptor
