@@ -39,8 +39,8 @@ private const val NO_ROUTING_KEY = ""
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = [TestApplication::class])
 @ActiveProfiles("test")
 @EmbeddedKafka(
-    brokerProperties = ["log.dir=build/kafka_broker_logs",
-        "listeners=PLAINTEXT://localhost:9093", "auto.create.topics.enable=true"]
+    brokerProperties = ["log.dir=build/spring_kafka_broker_logs",
+        "listeners=PLAINTEXT://localhost:9094", "auto.create.topics.enable=true"]
 )
 class SpringKafkaInteractionHttpRecordingIT(
     @Value("\${service.incomingTopic}")

@@ -19,7 +19,7 @@ class TestListener {
     }
 
 //    @KafkaListener(id = "anotherOutputListener", topics = ["\${spring.cloud.stream.bindings.noOutputLsdHeadersHandlerFunction-out-0.destination}"], groupId = "someGroup",
-//        clientIdPrefix = "output", properties = ["bootstrap.servers=localhost:9093"])
+//        clientIdPrefix = "output", properties = ["bootstrap.servers=localhost:9094"])
 //    fun noLsdHeadersOutputTopicListener(message: Message<String>) {
 //        log().info("Received in listener={}", message)
 //        noLsdHeadersOutputTopic.add(message)
