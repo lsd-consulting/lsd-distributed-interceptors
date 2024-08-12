@@ -9,7 +9,8 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.lsdconsulting.generatorui.controller.LsdControllerStub
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
-import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.*
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.CONSUME
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.PUBLISH
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.config.mapper.ObjectMapperCreator
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.TestApplication
@@ -22,7 +23,10 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.jeasy.random.EasyRandom
 import org.jeasy.random.EasyRandomParameters
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.amqp.core.MessageBuilder
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Autowired
@@ -36,7 +40,6 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.util.MimeTypeUtils.APPLICATION_JSON
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.util.*
 
 private const val WIREMOCK_SERVER_PORT = 8070
 private const val NO_ROUTING_KEY = ""
@@ -45,8 +48,8 @@ private const val NO_ROUTING_KEY = ""
 @ActiveProfiles("test")
 @Import(ServiceConfig::class, InputRabbitMqConfig::class)
 @EmbeddedKafka(
-    brokerProperties = ["log.dir=build/kafka_broker_logs",
-        "listeners=PLAINTEXT://localhost:9093", "auto.create.topics.enable=true"]
+    brokerProperties = ["log.dir=build/messaging_kafka_broker_logs",
+        "listeners=PLAINTEXT://localhost:9095", "auto.create.topics.enable=true"]
 )
 class SpringMessagingInteractionHttpRecordingIT(
     @Value("\${spring.cloud.stream.bindings.inputOutputHandlerFunction-in-0.destination}")

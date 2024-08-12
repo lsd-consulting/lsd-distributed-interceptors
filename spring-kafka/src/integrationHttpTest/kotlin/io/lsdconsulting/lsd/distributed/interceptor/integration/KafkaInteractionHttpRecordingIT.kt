@@ -48,7 +48,7 @@ private const val NO_ROUTING_KEY = ""
 @ActiveProfiles("test")
 @EmbeddedKafka(
     brokerProperties = ["log.dir=build/kafka_broker_logs",
-        "listeners=PLAINTEXT://localhost:9093", "auto.create.topics.enable=true"]
+        "listeners=PLAINTEXT://localhost:9095", "auto.create.topics.enable=true"]
 )
 class KafkaInteractionHttpRecordingIT(
     @Value("\${service.incomingTopic}")
@@ -152,13 +152,13 @@ class KafkaInteractionHttpRecordingIT(
             "io.lsdconsulting.lsd.distributed.interceptor.interceptor.LsdKafkaInterceptor"
         producerProperties["key.serializer"] = "org.apache.kafka.common.serialization.StringSerializer"
         producerProperties["value.serializer"] = "org.springframework.kafka.support.serializer.JsonSerializer"
-        producerProperties["bootstrap.servers"] = "localhost:9093"
+        producerProperties["bootstrap.servers"] = "localhost:9095"
         return producerProperties
     }
 
     private fun setupKafkaConsumer(): KafkaConsumer<String, Output> {
         val consumerProperties = Properties()
-        consumerProperties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9093")
+        consumerProperties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9095")
         consumerProperties.setProperty(
             ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
             StringDeserializer::class.java.getName()
