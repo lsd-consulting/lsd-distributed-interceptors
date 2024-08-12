@@ -130,86 +130,73 @@ class SpringKafkaInteractionHttpRecordingIT(
             )
         )
     }
-//
-//    @Test
-//    fun `should handle no LSD headers in Rabbit input channel`() {
-//        val input = Input(id = "id", value = "value")
-//
-//        rabbitTemplate.convertAndSend(
-//            inputExchange, NO_ROUTING_KEY, MessageBuilder
-//                .withBody(ObjectMapperCreator().objectMapper.writeValueAsString(input).toByteArray())
-//                .setHeader(CONTENT_TYPE, APPLICATION_JSON)
-//                .setHeader("b3", "dbfb676cf98bee5d-dbfb676cf98bee5d-0")
-//                .build()
-//        )
-//
-//        Awaitility.await().untilAsserted {
-//            val messages = testListener.getOutgoingTopic()
-//            assertThat(messages, not(empty()))
-//            assertThat(messages, hasSize(1))
-//            assertThat(messages.map { it.payload }, hasItem(containsString("value")))
-//        }
-//
-//        verify(
-//            buildExpectedInterceptedInteraction(
-//                traceId = "dbfb676cf98bee5d",
-//                body = "{\"id\":\"id\",\"value\":\"value\"}",
-//                target = "input.queue",
-//                path = "Test App",
-//                interactionType = CONSUME
-//            )
-//        )
-//
-//        verify(
-//            buildExpectedInterceptedInteraction(
-//                traceId = "dbfb676cf98bee5d",
-//                body = "{\"id\":\"id\",\"value\":\"value\",\"receivedDateTime\":",
-//                target = "output.topic",
-//                path = "output.topic",
-//                interactionType = PUBLISH
-//            )
-//        )
-//    }
-//
-//    @Test
-//    fun `should handle no LSD headers in Kafka output channel`() {
-//        val input = Input(id = "id", value = "value")
-//
-//        rabbitTemplate.convertAndSend(
-//            noLsdHeadersInputExchange, NO_ROUTING_KEY, MessageBuilder
-//                .withBody(ObjectMapperCreator().objectMapper.writeValueAsString(input).toByteArray())
-//                .setHeader(CONTENT_TYPE, APPLICATION_JSON)
-//                .setHeader("b3", "dbfb676cf98bee5e-dbfb676cf98bee5e-0")
-//                .build()
-//        )
-//
-//        Awaitility.await().untilAsserted {
-//            val messages = testListener.getNoLsdHeadersOutputTopic()
-//            assertThat(messages, not(empty()))
-//            assertThat(messages, hasSize(1))
-//            assertThat(messages.map { it.payload }, hasItem(containsString("value")))
-//        }
-//
-//        verify(
-//            buildExpectedInterceptedInteraction(
-//                traceId = "dbfb676cf98bee5e",
-//                body = "{\"id\":\"id\",\"value\":\"value\"}",
-//                target = "no-lsd-headers.input.queue",
-//                path = "Test App",
-//                interactionType = CONSUME
-//            )
-//        )
-//
-//        verify(
-//            buildExpectedInterceptedInteraction(
-//                traceId = "dbfb676cf98bee5e",
-//                body = "{\"id\":\"id\",\"value\":\"value\",\"receivedDateTime\":",
-//                target = "application.noOutputLsdHeadersHandlerFunction-out-0",
-//                path = "application.noOutputLsdHeadersHandlerFunction-out-0",
-//                interactionType = PUBLISH
-//            )
-//        )
-//    }
+
+    @Test
+    fun `should handle no LSD headers in Kafka messages`() {
+        val input = Input(id = "id", value = "value")
+
+        kafkaTemplate.send(
+            ProducerRecord(
+                incomingTopic, null, null, null, input, listOf(
+                    RecordHeader("b3", "dbfb676cf98bee5d-dbfb676cf98bee5d-0".toByteArray())
+                )
+            )
+        )
+
+        Awaitility.await().untilAsserted {
+            val messages = testListener.getOutgoingTopic()
+            assertThat(messages, not(empty()))
+            assertThat(messages, hasSize(1))
+            assertThat(messages.map { it.payload.toString() }, hasItem(containsString("value")))
+            assertThat(getAllServeEvents(), hasSize(4))
+        }
+
+        val output = testListener.getOutgoingTopic().first().payload
+
+        verify(
+            buildExpectedInterceptedInteraction(
+                traceId = "dbfb676cf98bee5d",
+                serviceName = "Service2",
+                body = print(input),
+                target = "",
+                path = "",
+                interactionType = PUBLISH
+            )
+        )
+
+        verify(
+            buildExpectedInterceptedInteraction(
+                traceId = "dbfb676cf98bee5d",
+                serviceName = "Service2",
+                body = print(input),
+                target = "UNKNOWN",
+                path = "Service2",
+                interactionType = CONSUME
+            )
+        )
+
+        verify(
+            buildExpectedInterceptedInteraction(
+                traceId = "dbfb676cf98bee5d",
+                serviceName = "Service2",
+                body = print(output),
+                target = "NewEvent",
+                path = "NewEvent",
+                interactionType = PUBLISH
+            )
+        )
+
+        verify(
+            buildExpectedInterceptedInteraction(
+                traceId = "dbfb676cf98bee5d",
+                serviceName = "Service2", // This is wrong because there is only one `info.app.name` value in the context
+                body = print(output),
+                target = "NewEvent",
+                path = "Service2", // ditto
+                interactionType = CONSUME
+            )
+        )
+    }
 
     private fun buildExpectedInterceptedInteraction(
         traceId: String,

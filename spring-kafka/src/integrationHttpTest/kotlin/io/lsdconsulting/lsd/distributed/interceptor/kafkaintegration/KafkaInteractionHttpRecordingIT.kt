@@ -2,8 +2,11 @@ package io.lsdconsulting.lsd.distributed.interceptor.kafkaintegration
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.client.WireMock.getAllServeEvents
 import com.lsdconsulting.generatorui.controller.LsdControllerStub
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.CONSUME
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.PUBLISH
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.print
 import io.lsdconsulting.lsd.distributed.interceptor.config.mapper.ObjectMapperCreator
@@ -76,6 +79,85 @@ class KafkaInteractionHttpRecordingIT(
                 incomingTopic, null, null, null, input, listOf(
                     RecordHeader("Source-Name", "Service1".toByteArray()),
                     RecordHeader("Target-Name", "SomeEvent".toByteArray()),
+                    RecordHeader("b3", "dbfb676cf98bee5d-dbfb676cf98bee5d-0".toByteArray())
+                )
+            )
+        )
+
+        val consumerRecords = mutableListOf<ConsumerRecord<String, Output>>()
+        Awaitility.await().untilAsserted {
+            consumerRecords.addAll(consumer.poll(Duration.of(1000, MILLIS)).toList())
+            try {
+                consumer.commitSync()
+            } catch (e: CommitFailedException) {
+                log().error("Commit failed", e)
+                throw e
+            }
+            assertThat(consumerRecords, not(empty()))
+            assertThat(consumerRecords, hasSize(1))
+            assertThat(
+                consumerRecords.map { it.value().toString() },
+                hasItem(containsString("value"))
+            )
+            assertThat(getAllServeEvents(), hasSize(4))
+        }
+
+        val output = consumerRecords.first().value()
+
+        verify(
+            buildExpectedInterceptedInteraction(
+                traceId = "dbfb676cf98bee5d",
+                serviceName = "Service1",
+                body = print(input),
+                target = "SomeEvent",
+                path = "SomeEvent",
+                interactionType = PUBLISH
+            )
+        )
+
+        verify(
+            buildExpectedInterceptedInteraction(
+                traceId = "dbfb676cf98bee5d",
+                serviceName = "Service2",
+                body = print(input),
+                target = "SomeEvent",
+                path = "Service2",
+                interactionType = CONSUME
+            )
+        )
+
+        verify(
+            buildExpectedInterceptedInteraction(
+                traceId = "dbfb676cf98bee5d",
+                serviceName = "Service2",
+                body = print(output),
+                target = "NewEvent",
+                path = "NewEvent",
+                interactionType = PUBLISH
+            )
+        )
+
+        verify(
+            buildExpectedInterceptedInteraction(
+                traceId = "dbfb676cf98bee5d",
+                serviceName = "", // TODO Why is serviceName missing?
+                body = print(output),
+                target = "NewEvent",
+                path = "", // ditto
+                interactionType = CONSUME
+            )
+        )
+    }
+
+    @Test
+    fun `should handle no LSD headers in Kafka messages`() {
+        val input = Input(id = "id", value = "value")
+        val consumer = setupKafkaConsumer()
+        consumer.subscribe(listOf("outgoingTopic"))
+
+        KafkaProducer<String, Input>(getProducerProperties()).send(
+            ProducerRecord(
+                incomingTopic, null, null, null, input, listOf(
                     RecordHeader("b3", "dbfb676cf98bee5c-dbfb676cf98bee5c-0".toByteArray())
                 )
             )
@@ -96,19 +178,20 @@ class KafkaInteractionHttpRecordingIT(
                 consumerRecords.map { it.value().toString() },
                 hasItem(containsString("value"))
             )
-            assertThat(WireMock.getAllServeEvents(), hasSize(4))
+            assertThat(getAllServeEvents(), hasSize(4))
         }
 
         val output = consumerRecords.first().value()
 
+
         verify(
             buildExpectedInterceptedInteraction(
                 traceId = "dbfb676cf98bee5c",
-                serviceName = "Service1",
+                serviceName = "",
                 body = print(input),
-                target = "SomeEvent",
-                path = "SomeEvent",
-                interactionType = InteractionType.PUBLISH
+                target = "",
+                path = "",
+                interactionType = PUBLISH
             )
         )
 
@@ -117,9 +200,9 @@ class KafkaInteractionHttpRecordingIT(
                 traceId = "dbfb676cf98bee5c",
                 serviceName = "Service2",
                 body = print(input),
-                target = "SomeEvent",
+                target = "UNKNOWN",
                 path = "Service2",
-                interactionType = InteractionType.CONSUME
+                interactionType = CONSUME
             )
         )
 
@@ -130,7 +213,7 @@ class KafkaInteractionHttpRecordingIT(
                 body = print(output),
                 target = "NewEvent",
                 path = "NewEvent",
-                interactionType = InteractionType.PUBLISH
+                interactionType = PUBLISH
             )
         )
 
@@ -141,120 +224,10 @@ class KafkaInteractionHttpRecordingIT(
                 body = print(output),
                 target = "NewEvent",
                 path = "",//""Service2", // ditto
-                interactionType = InteractionType.CONSUME
+                interactionType = CONSUME
             )
         )
     }
-
-    private fun getProducerProperties(): Properties {
-        val producerProperties = Properties()
-        producerProperties["interceptor.classes"] =
-            "io.lsdconsulting.lsd.distributed.interceptor.interceptor.LsdKafkaInterceptor"
-        producerProperties["key.serializer"] = "org.apache.kafka.common.serialization.StringSerializer"
-        producerProperties["value.serializer"] = "org.springframework.kafka.support.serializer.JsonSerializer"
-        producerProperties["bootstrap.servers"] = "localhost:9095"
-        return producerProperties
-    }
-
-    private fun setupKafkaConsumer(): KafkaConsumer<String, Output> {
-        val consumerProperties = Properties()
-        consumerProperties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9095")
-        consumerProperties.setProperty(
-            ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-            StringDeserializer::class.java.getName()
-        )
-        consumerProperties.setProperty(
-            ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-            JsonDeserializer::class.java.getName()
-        )
-        consumerProperties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "someGroup")
-        consumerProperties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
-        consumerProperties.setProperty("spring.json.trusted.packages", "*")
-        consumerProperties["interceptor.classes"] =
-            "io.lsdconsulting.lsd.distributed.interceptor.interceptor.LsdKafkaInterceptor"
-        val consumer = KafkaConsumer<String, Output>(consumerProperties)
-        return consumer
-    }
-//
-//    @Test
-//    fun `should handle no LSD headers in Rabbit input channel`() {
-//        val input = Input(id = "id", value = "value")
-//
-//        rabbitTemplate.convertAndSend(
-//            inputExchange, NO_ROUTING_KEY, MessageBuilder
-//                .withBody(ObjectMapperCreator().objectMapper.writeValueAsString(input).toByteArray())
-//                .setHeader(CONTENT_TYPE, APPLICATION_JSON)
-//                .setHeader("b3", "dbfb676cf98bee5d-dbfb676cf98bee5d-0")
-//                .build()
-//        )
-//
-//        Awaitility.await().untilAsserted {
-//            val messages = testListener.getOutgoingTopic()
-//            assertThat(messages, not(empty()))
-//            assertThat(messages, hasSize(1))
-//            assertThat(messages.map { it.payload }, hasItem(containsString("value")))
-//        }
-//
-//        verify(
-//            buildExpectedInterceptedInteraction(
-//                traceId = "dbfb676cf98bee5d",
-//                body = "{\"id\":\"id\",\"value\":\"value\"}",
-//                target = "input.queue",
-//                path = "Test App",
-//                interactionType = CONSUME
-//            )
-//        )
-//
-//        verify(
-//            buildExpectedInterceptedInteraction(
-//                traceId = "dbfb676cf98bee5d",
-//                body = "{\"id\":\"id\",\"value\":\"value\",\"receivedDateTime\":",
-//                target = "output.topic",
-//                path = "output.topic",
-//                interactionType = PUBLISH
-//            )
-//        )
-//    }
-//
-//    @Test
-//    fun `should handle no LSD headers in Kafka output channel`() {
-//        val input = Input(id = "id", value = "value")
-//
-//        rabbitTemplate.convertAndSend(
-//            noLsdHeadersInputExchange, NO_ROUTING_KEY, MessageBuilder
-//                .withBody(ObjectMapperCreator().objectMapper.writeValueAsString(input).toByteArray())
-//                .setHeader(CONTENT_TYPE, APPLICATION_JSON)
-//                .setHeader("b3", "dbfb676cf98bee5e-dbfb676cf98bee5e-0")
-//                .build()
-//        )
-//
-//        Awaitility.await().untilAsserted {
-//            val messages = testListener.getNoLsdHeadersOutputTopic()
-//            assertThat(messages, not(empty()))
-//            assertThat(messages, hasSize(1))
-//            assertThat(messages.map { it.payload }, hasItem(containsString("value")))
-//        }
-//
-//        verify(
-//            buildExpectedInterceptedInteraction(
-//                traceId = "dbfb676cf98bee5e",
-//                body = "{\"id\":\"id\",\"value\":\"value\"}",
-//                target = "no-lsd-headers.input.queue",
-//                path = "Test App",
-//                interactionType = CONSUME
-//            )
-//        )
-//
-//        verify(
-//            buildExpectedInterceptedInteraction(
-//                traceId = "dbfb676cf98bee5e",
-//                body = "{\"id\":\"id\",\"value\":\"value\",\"receivedDateTime\":",
-//                target = "application.noOutputLsdHeadersHandlerFunction-out-0",
-//                path = "application.noOutputLsdHeadersHandlerFunction-out-0",
-//                interactionType = PUBLISH
-//            )
-//        )
-//    }
 
     private fun buildExpectedInterceptedInteraction(
         traceId: String,
@@ -364,5 +337,35 @@ class KafkaInteractionHttpRecordingIT(
         internal fun afterAll() {
             wireMockServer.stop()
         }
+    }
+
+    private fun getProducerProperties(): Properties {
+        val producerProperties = Properties()
+        producerProperties["interceptor.classes"] =
+            "io.lsdconsulting.lsd.distributed.interceptor.interceptor.LsdKafkaInterceptor"
+        producerProperties["key.serializer"] = "org.apache.kafka.common.serialization.StringSerializer"
+        producerProperties["value.serializer"] = "org.springframework.kafka.support.serializer.JsonSerializer"
+        producerProperties["bootstrap.servers"] = "localhost:9095"
+        return producerProperties
+    }
+
+    private fun setupKafkaConsumer(): KafkaConsumer<String, Output> {
+        val consumerProperties = Properties()
+        consumerProperties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9095")
+        consumerProperties.setProperty(
+            ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+            StringDeserializer::class.java.getName()
+        )
+        consumerProperties.setProperty(
+            ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+            JsonDeserializer::class.java.getName()
+        )
+        consumerProperties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "someGroup")
+        consumerProperties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
+        consumerProperties.setProperty("spring.json.trusted.packages", "*")
+        consumerProperties["interceptor.classes"] =
+            "io.lsdconsulting.lsd.distributed.interceptor.interceptor.LsdKafkaInterceptor"
+        val consumer = KafkaConsumer<String, Output>(consumerProperties)
+        return consumer
     }
 }
