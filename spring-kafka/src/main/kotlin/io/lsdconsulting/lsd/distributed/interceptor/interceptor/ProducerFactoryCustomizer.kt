@@ -14,7 +14,7 @@ class ProducerFactoryCustomizer : DefaultKafkaProducerFactoryCustomizer {
             producerFactory.configurationProperties[INTERCEPTOR_CLASSES_CONFIG]?.let {
                 updatedInterceptors.addAll(it as Collection<String>)
             }
-            updatedInterceptors.add(LsdKafkaProducerInterceptor::class.java.name)
+            updatedInterceptors.add(LsdSpringKafkaInterceptor::class.java.name)
             producerFactory.updateConfigs(mapOf(INTERCEPTOR_CLASSES_CONFIG to updatedInterceptors))
         }
     }

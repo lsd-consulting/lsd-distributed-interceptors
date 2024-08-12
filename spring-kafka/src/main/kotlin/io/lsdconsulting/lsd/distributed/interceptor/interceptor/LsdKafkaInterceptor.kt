@@ -10,7 +10,6 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServic
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.KafkaCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.KafkaHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
-import io.lsdconsulting.lsd.distributed.interceptor.config.ApplicationContextProvider
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
 import io.lsdconsulting.lsd.distributed.mongo.repository.DEFAULT_COLLECTION_SIZE_LIMIT_MBS
 import io.lsdconsulting.lsd.distributed.mongo.repository.DEFAULT_TIMEOUT_MILLIS
@@ -27,9 +26,9 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.TopicPartition
 
-class LsdKafkaProducerInterceptor: ProducerInterceptor<String, Any>, ConsumerInterceptor<String, Any> {
+class LsdKafkaInterceptor: ProducerInterceptor<String, Any>, ConsumerInterceptor<String, Any> {
 
-    private val kafkaCaptor: KafkaCaptor = ApplicationContextProvider.context.getBean(KafkaCaptor::class.java)
+    private var kafkaCaptor: KafkaCaptor = instance()
 
     override fun configure(configs: MutableMap<String, *>?) {}
 
@@ -37,12 +36,12 @@ class LsdKafkaProducerInterceptor: ProducerInterceptor<String, Any>, ConsumerInt
 
     override fun close() {}
 
-    override fun onCommit(p0: MutableMap<TopicPartition, OffsetAndMetadata>?) {
-        TODO("Not yet implemented")
-    }
+    override fun onCommit(p0: MutableMap<TopicPartition, OffsetAndMetadata>?) {}
 
-    override fun onConsume(p0: ConsumerRecords<String, Any>?): ConsumerRecords<String, Any> {
-        TODO("Not yet implemented")
+    override fun onConsume(records: ConsumerRecords<String, Any>): ConsumerRecords<String, Any> {
+        log().info("Intercepted consumed records: {}", records)
+        kafkaCaptor.captureConsumeInteraction(records)
+        return records
     }
 
     override fun onSend(record: ProducerRecord<String, Any>): ProducerRecord<String, Any> {

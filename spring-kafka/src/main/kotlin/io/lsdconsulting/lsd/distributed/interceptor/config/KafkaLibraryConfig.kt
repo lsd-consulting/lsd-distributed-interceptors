@@ -5,7 +5,8 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServic
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.KafkaCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.KafkaHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
-import io.lsdconsulting.lsd.distributed.interceptor.interceptor.LsdKafkaProducerInterceptor
+import io.lsdconsulting.lsd.distributed.interceptor.interceptor.ConsumerFactoryCustomizer
+import io.lsdconsulting.lsd.distributed.interceptor.interceptor.LsdSpringKafkaInterceptor
 import io.lsdconsulting.lsd.distributed.interceptor.interceptor.ProducerFactoryCustomizer
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -49,5 +50,8 @@ open class KafkaLibraryConfig {
     open fun producerFactoryCustomizer() = ProducerFactoryCustomizer()
 
     @Bean
-    open fun lsdKafkaProducerInterceptor() = LsdKafkaProducerInterceptor()
+    open fun consumerFactoryCustomizer() = ConsumerFactoryCustomizer()
+
+    @Bean
+    open fun lsdKafkaInterceptor() = LsdSpringKafkaInterceptor()
 }
