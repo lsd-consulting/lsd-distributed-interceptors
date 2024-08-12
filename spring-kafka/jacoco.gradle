@@ -6,7 +6,7 @@ jacocoTestReport {
     }
     executionData(
             file("${project.layout.buildDirectory}/jacoco/test.exec"),
-//            file("${project.layout.buildDirectory}/jacoco/integrationHttpTest.exec"),
+            file("${project.layout.buildDirectory}/jacoco/integrationHttpTest.exec"),
             file("${project.layout.buildDirectory}/jacoco/springIntegrationHttpTest.exec")
     )
 }

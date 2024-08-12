@@ -16,7 +16,7 @@ apply from: 'dependencies.gradle'
 apply from: 'test.gradle'
 apply from: 'jacoco.gradle'
 apply from: 'pitest.gradle'
-//apply from: 'integrationHttpTest.gradle'
+apply from: 'integrationHttpTest.gradle'
 apply from: 'springIntegrationHttpTest.gradle'
 
 kotlin {
