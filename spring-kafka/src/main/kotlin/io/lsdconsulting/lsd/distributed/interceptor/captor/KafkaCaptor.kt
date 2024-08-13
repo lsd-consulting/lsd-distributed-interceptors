@@ -38,8 +38,8 @@ class KafkaCaptor(
                 requestHeaders = headers,
                 responseHeaders = emptyMap(),
                 serviceName = propertyServiceNameDeriver.serviceName,
-                target = getSource(record),
-                path = propertyServiceNameDeriver.serviceName,
+                target = getTarget(record),
+                path = getTarget(record),
                 httpStatus = null,
                 httpMethod = null, interactionType = InteractionType.CONSUME,
                 profile = profile,
@@ -51,10 +51,10 @@ class KafkaCaptor(
         }
     }
 
-    private fun getSource(record: ConsumerRecord<String, Any>): String {
+    private fun getTarget(record: ConsumerRecord<String, Any>): String {
         var source = print(record.headers().headers(TARGET_NAME_KEY).firstOrNull()?.value())
         if (source.isEmpty()) {
-            source = "UNKNOWN"
+            source = record.topic()
         }
         log().debug("found source:{}", source)
         return source

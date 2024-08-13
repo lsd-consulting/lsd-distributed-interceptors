@@ -104,7 +104,7 @@ class SpringKafkaInteractionHttpRecordingIT(
                 serviceName = "Service2",
                 body = print(input),
                 target = "SomeEvent",
-                path = "Service2",
+                path = "SomeEvent",
                 interactionType = CONSUME
             )
         )
@@ -126,7 +126,7 @@ class SpringKafkaInteractionHttpRecordingIT(
                 serviceName = "Service2", // This is wrong because there is only one `info.app.name` value in the context
                 body = print(output),
                 target = "NewEvent",
-                path = "Service2", // ditto
+                path = "NewEvent",
                 interactionType = CONSUME
             )
         )
@@ -170,8 +170,8 @@ class SpringKafkaInteractionHttpRecordingIT(
                 traceId = "dbfb676cf98bee5d",
                 serviceName = "Service2",
                 body = print(input),
-                target = "UNKNOWN",
-                path = "Service2",
+                target = "incomingTopic",
+                path = "incomingTopic",
                 interactionType = CONSUME
             )
         )
@@ -193,7 +193,7 @@ class SpringKafkaInteractionHttpRecordingIT(
                 serviceName = "Service2", // This is wrong because there is only one `info.app.name` value in the context
                 body = print(output),
                 target = "NewEvent",
-                path = "Service2", // ditto
+                path = "NewEvent",
                 interactionType = CONSUME
             )
         )

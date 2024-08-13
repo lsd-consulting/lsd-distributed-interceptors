@@ -121,7 +121,7 @@ class KafkaInteractionHttpRecordingIT(
                 serviceName = "Service2",
                 body = print(input),
                 target = "SomeEvent",
-                path = "Service2",
+                path = "SomeEvent",
                 interactionType = CONSUME
             )
         )
@@ -143,7 +143,7 @@ class KafkaInteractionHttpRecordingIT(
                 serviceName = "", // TODO Why is serviceName missing?
                 body = print(output),
                 target = "NewEvent",
-                path = "", // ditto
+                path = "NewEvent",
                 interactionType = CONSUME
             )
         )
@@ -200,8 +200,8 @@ class KafkaInteractionHttpRecordingIT(
                 traceId = "dbfb676cf98bee5c",
                 serviceName = "Service2",
                 body = print(input),
-                target = "UNKNOWN",
-                path = "Service2",
+                target = "incomingTopic",
+                path = "incomingTopic",
                 interactionType = CONSUME
             )
         )
@@ -223,7 +223,7 @@ class KafkaInteractionHttpRecordingIT(
                 serviceName = "",//""Service2", // This is wrong because there is only one `info.app.name` value in the context
                 body = print(output),
                 target = "NewEvent",
-                path = "",//""Service2", // ditto
+                path = "NewEvent",
                 interactionType = CONSUME
             )
         )
