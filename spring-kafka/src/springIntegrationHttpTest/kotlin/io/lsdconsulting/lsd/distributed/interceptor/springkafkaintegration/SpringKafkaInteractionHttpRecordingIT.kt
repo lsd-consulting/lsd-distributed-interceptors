@@ -61,6 +61,7 @@ class SpringKafkaInteractionHttpRecordingIT(
     fun setup() {
         reset()
         lsdControllerStub.store(easyRandom.nextObject(InterceptedInteraction::class.java))
+        testListener.clearOutgoingTopic()
     }
 
     @Test

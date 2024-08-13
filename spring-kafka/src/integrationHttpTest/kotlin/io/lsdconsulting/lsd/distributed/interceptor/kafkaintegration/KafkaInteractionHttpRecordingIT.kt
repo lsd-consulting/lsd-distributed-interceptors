@@ -352,16 +352,11 @@ class KafkaInteractionHttpRecordingIT(
     private fun setupKafkaConsumer(): KafkaConsumer<String, Output> {
         val consumerProperties = Properties()
         consumerProperties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9095")
-        consumerProperties.setProperty(
-            ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-            StringDeserializer::class.java.getName()
-        )
-        consumerProperties.setProperty(
-            ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-            JsonDeserializer::class.java.getName()
-        )
+        consumerProperties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java.getName())
+        consumerProperties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer::class.java.getName())
         consumerProperties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "someGroup")
         consumerProperties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
+        consumerProperties.setProperty(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "1000")
         consumerProperties.setProperty("spring.json.trusted.packages", "*")
         consumerProperties["interceptor.classes"] =
             "io.lsdconsulting.lsd.distributed.interceptor.interceptor.LsdKafkaInterceptor"
