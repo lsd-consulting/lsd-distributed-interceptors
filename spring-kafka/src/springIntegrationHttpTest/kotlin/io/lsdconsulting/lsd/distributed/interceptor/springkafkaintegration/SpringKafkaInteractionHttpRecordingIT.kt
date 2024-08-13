@@ -123,7 +123,7 @@ class SpringKafkaInteractionHttpRecordingIT(
         verify(
             buildExpectedInterceptedInteraction(
                 traceId = "dbfb676cf98bee5c",
-                serviceName = "Service2", // This is wrong because there is only one `info.app.name` value in the context
+                serviceName = "Service2", // Should be `Service1` but there is only one `info.app.name` within the test
                 body = print(output),
                 target = "NewEvent",
                 path = "NewEvent",
@@ -157,7 +157,7 @@ class SpringKafkaInteractionHttpRecordingIT(
         verify(
             buildExpectedInterceptedInteraction(
                 traceId = "dbfb676cf98bee5d",
-                serviceName = "Service2",
+                serviceName = "Service2", // Should be `Service1` but there is only one `info.app.name` within the test
                 body = print(input),
                 target = "incomingTopic",
                 path = "incomingTopic",
@@ -190,7 +190,7 @@ class SpringKafkaInteractionHttpRecordingIT(
         verify(
             buildExpectedInterceptedInteraction(
                 traceId = "dbfb676cf98bee5d",
-                serviceName = "Service2", // This is wrong because there is only one `info.app.name` value in the context
+                serviceName = "Service2", // Should be `Service1` but there is only one `info.app.name` within the test
                 body = print(output),
                 target = "NewEvent",
                 path = "NewEvent",

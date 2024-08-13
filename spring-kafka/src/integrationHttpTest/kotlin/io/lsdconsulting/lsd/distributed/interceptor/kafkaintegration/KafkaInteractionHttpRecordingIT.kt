@@ -140,7 +140,7 @@ class KafkaInteractionHttpRecordingIT(
         verify(
             buildExpectedInterceptedInteraction(
                 traceId = "dbfb676cf98bee5d",
-                serviceName = "", // TODO Why is serviceName missing?
+                serviceName = "Service2", // Should be `Service1` but there is only one `info.app.name` within the test
                 body = print(output),
                 target = "NewEvent",
                 path = "NewEvent",
@@ -187,7 +187,7 @@ class KafkaInteractionHttpRecordingIT(
         verify(
             buildExpectedInterceptedInteraction(
                 traceId = "dbfb676cf98bee5c",
-                serviceName = "",
+                serviceName = "Service2", // Should be `Service1` but there is only one `info.app.name` within the test
                 body = print(input),
                 target = "incomingTopic",
                 path = "incomingTopic",
@@ -220,7 +220,7 @@ class KafkaInteractionHttpRecordingIT(
         verify(
             buildExpectedInterceptedInteraction(
                 traceId = "dbfb676cf98bee5c",
-                serviceName = "",//""Service2", // This is wrong because there is only one `info.app.name` value in the context
+                serviceName = "Service2", // Should be `Service1` but there is only one `info.app.name` within the test
                 body = print(output),
                 target = "NewEvent",
                 path = "NewEvent",
@@ -328,6 +328,7 @@ class KafkaInteractionHttpRecordingIT(
         @JvmStatic
         internal fun beforeAll() {
             System.setProperty("lsd.dist.connectionString", "http://localhost:8070")
+            System.setProperty("info.app.name", "Service2")
             WireMock.configureFor(WIREMOCK_SERVER_PORT)
             wireMockServer.start()
         }
@@ -358,6 +359,7 @@ class KafkaInteractionHttpRecordingIT(
         consumerProperties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
         consumerProperties.setProperty(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "1000")
         consumerProperties.setProperty("spring.json.trusted.packages", "*")
+        consumerProperties.setProperty("info.app.name", "Service1")
         consumerProperties["interceptor.classes"] =
             "io.lsdconsulting.lsd.distributed.interceptor.interceptor.LsdKafkaInterceptor"
         val consumer = KafkaConsumer<String, Output>(consumerProperties)
