@@ -189,8 +189,8 @@ class KafkaInteractionHttpRecordingIT(
                 traceId = "dbfb676cf98bee5c",
                 serviceName = "",
                 body = print(input),
-                target = "",
-                path = "",
+                target = "incomingTopic",
+                path = "incomingTopic",
                 interactionType = PUBLISH
             )
         )

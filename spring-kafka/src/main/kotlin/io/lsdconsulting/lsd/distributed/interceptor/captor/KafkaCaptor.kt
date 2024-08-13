@@ -72,7 +72,8 @@ class KafkaCaptor(
             requestHeaders = headers,
             responseHeaders = emptyMap(),
             serviceName = source.ifBlank { propertyServiceNameDeriver.serviceName },
-            target = target, path = target,
+            target = target.ifBlank { record.topic() },
+            path = target.ifBlank { record.topic() },
             httpStatus = null, httpMethod = null,
             interactionType = PUBLISH, profile = profile,
             elapsedTime = 0L, createdAt = ZonedDateTime.now(ZoneId.of("UTC"))

@@ -159,8 +159,8 @@ class SpringKafkaInteractionHttpRecordingIT(
                 traceId = "dbfb676cf98bee5d",
                 serviceName = "Service2",
                 body = print(input),
-                target = "",
-                path = "",
+                target = "incomingTopic",
+                path = "incomingTopic",
                 interactionType = PUBLISH
             )
         )
