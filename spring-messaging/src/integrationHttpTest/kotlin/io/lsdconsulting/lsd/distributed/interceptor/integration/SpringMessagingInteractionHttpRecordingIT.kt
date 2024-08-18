@@ -18,7 +18,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.I
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.ServiceConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.handler.Input
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.handler.TestListener
-import org.awaitility.Awaitility
+import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.jeasy.random.EasyRandom
@@ -93,7 +93,7 @@ class SpringMessagingInteractionHttpRecordingIT(
                 .build()
         )
 
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             val messages = testListener.getOutputTopic()
             assertThat(messages, not(empty()))
             assertThat(messages, hasSize(1))
@@ -133,7 +133,7 @@ class SpringMessagingInteractionHttpRecordingIT(
                 .build()
         )
 
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             val messages = testListener.getOutputTopic()
             assertThat(messages, not(empty()))
             assertThat(messages, hasSize(1))
@@ -173,7 +173,7 @@ class SpringMessagingInteractionHttpRecordingIT(
                 .build()
         )
 
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             val messages = testListener.getNoLsdHeadersOutputTopic()
             assertThat(messages, not(empty()))
             assertThat(messages, hasSize(1))

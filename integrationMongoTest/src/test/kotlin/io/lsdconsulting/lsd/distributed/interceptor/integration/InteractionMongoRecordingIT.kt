@@ -7,7 +7,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.integration.matcher.Intercep
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.controller.event.SomethingDoneEvent
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.repository.TestRepository
 import org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric
-import org.awaitility.Awaitility
+import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.DisplayName
@@ -39,7 +39,7 @@ class InteractionMongoRecordingIT: IntegrationTestBase() {
         assertThat(response.statusCode, `is`(HttpStatus.OK))
         assertThat(response.body, `is`("response_from_controller"))
         val interceptedInteractions: MutableList<InterceptedInteraction?> = ArrayList()
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             val foundInterceptedInteractions = testRepository.findAll(mainTraceId)
             assertThat(foundInterceptedInteractions, hasSize(8))
             interceptedInteractions.addAll(foundInterceptedInteractions)
@@ -161,7 +161,7 @@ class InteractionMongoRecordingIT: IntegrationTestBase() {
         assertThat(response.statusCode, `is`(HttpStatus.OK))
         assertThat(response.body, containsString("response_from_controller"))
         val interceptedInteractions: MutableList<InterceptedInteraction?> = ArrayList()
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             val foundInterceptedInteractions = testRepository.findAll(mainTraceId)
             assertThat(foundInterceptedInteractions, hasSize(8))
             interceptedInteractions.addAll(foundInterceptedInteractions)
@@ -281,13 +281,13 @@ class InteractionMongoRecordingIT: IntegrationTestBase() {
         assertThat(response.statusCode, `is`(HttpStatus.OK))
         assertThat(response.body, `is`("response_from_controller"))
         val type = object : ParameterizedTypeReference<SomethingDoneEvent?>() {}
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             val message = rabbitTemplate.receiveAndConvert("queue-rabbit-template", 2000, type)
             assertThat(message, `is`(notNullValue()))
             assertThat(message?.message, `is`("from_controller"))
         }
         val interceptedInteractions: MutableList<InterceptedInteraction?> = ArrayList()
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             val foundInterceptedInteractions = testRepository.findAll(mainTraceId)
             assertThat(foundInterceptedInteractions, hasSize(4))
             interceptedInteractions.addAll(foundInterceptedInteractions)
@@ -353,7 +353,7 @@ class InteractionMongoRecordingIT: IntegrationTestBase() {
         val response = sentRequest("/api-listener", mainTraceId, null, null)
         assertThat(response.statusCode, `is`(HttpStatus.OK))
         val interceptedInteractions: MutableList<InterceptedInteraction?> = ArrayList()
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             val foundInterceptedInteractions = testRepository.findAll(mainTraceId)
             assertThat(foundInterceptedInteractions, hasSize(8))
             interceptedInteractions.addAll(foundInterceptedInteractions)

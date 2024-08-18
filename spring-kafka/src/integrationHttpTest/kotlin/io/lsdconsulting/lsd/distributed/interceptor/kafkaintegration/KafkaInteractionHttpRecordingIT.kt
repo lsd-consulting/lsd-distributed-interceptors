@@ -22,7 +22,7 @@ import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.header.internals.RecordHeader
 import org.apache.kafka.common.serialization.StringDeserializer
-import org.awaitility.Awaitility
+import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.jeasy.random.EasyRandom
@@ -85,7 +85,7 @@ class KafkaInteractionHttpRecordingIT(
         )
 
         val consumerRecords = mutableListOf<ConsumerRecord<String, Output>>()
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             consumerRecords.addAll(consumer.poll(Duration.of(1000, MILLIS)).toList())
             try {
                 consumer.commitSync()
@@ -164,7 +164,7 @@ class KafkaInteractionHttpRecordingIT(
         )
 
         val consumerRecords = mutableListOf<ConsumerRecord<String, Output>>()
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             consumerRecords.addAll(consumer.poll(Duration.of(1000, MILLIS)).toList())
             try {
                 consumer.commitSync()

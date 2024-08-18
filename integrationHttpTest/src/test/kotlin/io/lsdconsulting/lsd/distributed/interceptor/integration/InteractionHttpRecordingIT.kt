@@ -14,7 +14,7 @@ import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.integration.data.TraceIdGenerator
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.controller.event.SomethingDoneEvent
 import org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric
-import org.awaitility.Awaitility
+import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.`is`
@@ -65,7 +65,7 @@ class InteractionHttpRecordingIT : IntegrationTestBase() {
         val response = sentRequest("/api-listener", mainTraceId, null, null)
         assertThat(response.statusCode, `is`(HttpStatus.OK))
         assertThat(response.body, `is`("response_from_controller"))
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
 
             // Assert calls to http storage endpoint
             verify(
@@ -169,7 +169,7 @@ class InteractionHttpRecordingIT : IntegrationTestBase() {
         val response = sentRequest("/api-listener", mainTraceId, sourceName, targetName)
         assertThat(response.statusCode, `is`(HttpStatus.OK))
         assertThat(response.body, Matchers.containsString("response_from_controller"))
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
 
             // Assert calls to http storage endpoint
             verify(
@@ -270,12 +270,12 @@ class InteractionHttpRecordingIT : IntegrationTestBase() {
         assertThat(response.statusCode, `is`(HttpStatus.OK))
         assertThat(response.body, `is`("response_from_controller"))
         val type: ParameterizedTypeReference<SomethingDoneEvent> = object : ParameterizedTypeReference<SomethingDoneEvent>() {}
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             val message = rabbitTemplate.receiveAndConvert("queue-rabbit-template", 2000, type)
             assertThat(message, `is`(notNullValue()))
             assertThat(message?.message, `is`("from_controller"))
         }
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
 
             // Assert calls to http storage endpoint
             verify(
@@ -331,7 +331,7 @@ class InteractionHttpRecordingIT : IntegrationTestBase() {
         givenExternalApi()
         val response = sentRequest("/api-listener", mainTraceId, null, null)
         assertThat(response.statusCode, `is`(HttpStatus.OK))
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             val requestPatternBuilder = postRequestedFor(urlPathEqualTo("/lsds"))
             requestPatternBuilder.withRequestBody(
                 matchingJsonPath(

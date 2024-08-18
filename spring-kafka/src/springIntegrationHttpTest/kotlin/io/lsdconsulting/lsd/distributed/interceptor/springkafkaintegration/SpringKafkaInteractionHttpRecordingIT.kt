@@ -14,7 +14,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.springkafkaintegration.testa
 import io.lsdconsulting.lsd.distributed.interceptor.springkafkaintegration.testapp.TestListener
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.header.internals.RecordHeader
-import org.awaitility.Awaitility
+import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.jeasy.random.EasyRandom
@@ -77,7 +77,7 @@ class SpringKafkaInteractionHttpRecordingIT(
             )
         )
 
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             val messages = testListener.getOutgoingTopic()
             assertThat(messages, not(empty()))
             assertThat(messages, hasSize(1))
@@ -144,7 +144,7 @@ class SpringKafkaInteractionHttpRecordingIT(
             )
         )
 
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             val messages = testListener.getOutgoingTopic()
             assertThat(messages, not(empty()))
             assertThat(messages, hasSize(1))
