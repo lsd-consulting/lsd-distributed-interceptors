@@ -43,7 +43,7 @@ tasks.register('springIntegrationHttpTest', Test) {
     classpath = sourceSets.springIntegrationHttpTest.runtimeClasspath
     outputs.upToDateWhen { false }
     testLogging.showStandardStreams = false
-    mustRunAfter(test)
+    mustRunAfter(integrationHttpTest)
     finalizedBy jacocoTestReport
 }
 

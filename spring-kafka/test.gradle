@@ -14,6 +14,7 @@ test {
     useJUnitPlatform()
     testLogging.events("skipped", "failed")
     systemProperty("lsd.core.report.outputDir", "$buildDir/reports/lsd")
+    finalizedBy jacocoTestReport
     afterSuite { desc, result ->
         if (!desc.parent) {
             logger.lifecycle("Unit test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)")

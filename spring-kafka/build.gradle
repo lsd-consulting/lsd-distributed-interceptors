@@ -14,12 +14,11 @@ apply plugin: 'org.springframework.boot'
 
 apply from: 'dependencies.gradle'
 apply from: 'test.gradle'
-apply from: 'jacoco.gradle'
-apply from: 'pitest.gradle'
 apply from: 'integrationHttpTest.gradle'
 apply from: 'springIntegrationHttpTest.gradle'
+apply from: 'jacoco.gradle'
+apply from: 'pitest.gradle'
 
 kotlin {
     jvmToolchain(17)
 }
-
