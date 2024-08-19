@@ -7,7 +7,7 @@ import io.lsdconsulting.lsd.distributed.generator.diagram.InteractionGenerator
 import io.lsdconsulting.lsd.distributed.generator.diagram.LsdLogger
 import io.lsdconsulting.lsd.distributed.interceptor.integration.data.TraceIdGenerator
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.repository.TestRepository
-import org.awaitility.Awaitility
+import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.BeforeEach
@@ -48,7 +48,7 @@ class EndToEndIT : IntegrationTestBase() {
         val response = sentRequest("/api-listener", mainTraceId, "Client", "TestApp")
         assertThat(response.statusCode, `is`(HttpStatus.OK))
         assertThat(response.body, containsString("response_from_controller"))
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             assertThat(
                 testRepository!!.findAll(mainTraceId), hasSize(8)
             )
@@ -94,21 +94,21 @@ class EndToEndIT : IntegrationTestBase() {
         givenExternalApi()
         val setup1Response = sentRequest("/setup1", setupTraceId1, "E2E", "Setup1")
         assertThat(setup1Response.statusCode, `is`(HttpStatus.OK))
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             assertThat(
                 testRepository!!.findAll(setupTraceId1), hasSize(2)
             )
         }
         val response = sentRequest("/api-listener", mainTraceId, "Client", "TestApp")
         assertThat(response.statusCode, `is`(HttpStatus.OK))
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             assertThat(
                 testRepository!!.findAll(mainTraceId), hasSize(8)
             )
         }
         val setup2Response = sentRequest("/setup2", setupTraceId2, "E2E", "Setup2")
         assertThat(setup2Response.statusCode, `is`(HttpStatus.OK))
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             assertThat(
                 testRepository!!.findAll(setupTraceId2), hasSize(2)
             )

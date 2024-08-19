@@ -12,14 +12,11 @@ pitest {
             'io.lsdconsulting.lsd.distributed.interceptor.captor.**'
     ])
     targetClasses.set([
-            'io.lsdconsulting.lsd.distributed.interceptor.*'
-    ])
-    excludedClasses.set([
-            'io.lsdconsulting.lsd.distributed.interceptor.config.*'
+            'io.lsdconsulting.lsd.distributed.interceptor.captor.*'
     ])
     threads = 4
     outputFormats.set(['HTML'])
-    coverageThreshold = 25
-    mutationThreshold = 18
-    testStrengthThreshold = 56
+    coverageThreshold = 80
+    mutationThreshold = 65
+    testStrengthThreshold = 78
 }

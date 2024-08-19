@@ -33,10 +33,6 @@ dependencies {
     }
 
     springIntegrationHttpTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
-
-//    springIntegrationHttpTestImplementation 'ch.qos.logback:logback-core:1.5.6'
-//    springIntegrationHttpTestImplementation 'ch.qos.logback:logback-classic:1.5.6'
-//    springIntegrationHttpTestImplementation 'org.slf4j:slf4j-api:2.0.16'
 }
 
 tasks.register('springIntegrationHttpTest', Test) {
@@ -47,7 +43,7 @@ tasks.register('springIntegrationHttpTest', Test) {
     classpath = sourceSets.springIntegrationHttpTest.runtimeClasspath
     outputs.upToDateWhen { false }
     testLogging.showStandardStreams = false
-    mustRunAfter(test)
+    mustRunAfter(integrationHttpTest)
     finalizedBy jacocoTestReport
 }
 

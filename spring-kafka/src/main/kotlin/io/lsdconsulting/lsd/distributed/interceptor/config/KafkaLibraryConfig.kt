@@ -1,7 +1,8 @@
 package io.lsdconsulting.lsd.distributed.interceptor.config
 
-import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaConsumerCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaHeaderRetriever
+import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaProducerCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
@@ -30,14 +31,31 @@ open class KafkaLibraryConfig {
     }
 
     @Bean
-    open fun messagingCaptor(
+    open fun kafkaProducerCaptor(
         repositoryService: RepositoryService,
         propertyServiceNameDeriver: PropertyServiceNameDeriver,
         traceIdRetriever: TraceIdRetriever,
         kafkaHeaderRetriever: KafkaHeaderRetriever,
         @Value("\${spring.profiles.active:#{''}}") profile: String
-    ): KafkaCaptor {
-        return KafkaCaptor(
+    ): KafkaProducerCaptor {
+        return KafkaProducerCaptor(
+            repositoryService,
+            propertyServiceNameDeriver,
+            traceIdRetriever,
+            kafkaHeaderRetriever,
+            profile
+        )
+    }
+
+    @Bean
+    open fun kafkaConsumerCaptor(
+        repositoryService: RepositoryService,
+        propertyServiceNameDeriver: PropertyServiceNameDeriver,
+        traceIdRetriever: TraceIdRetriever,
+        kafkaHeaderRetriever: KafkaHeaderRetriever,
+        @Value("\${spring.profiles.active:#{''}}") profile: String
+    ): KafkaConsumerCaptor {
+        return KafkaConsumerCaptor(
             repositoryService,
             propertyServiceNameDeriver,
             traceIdRetriever,

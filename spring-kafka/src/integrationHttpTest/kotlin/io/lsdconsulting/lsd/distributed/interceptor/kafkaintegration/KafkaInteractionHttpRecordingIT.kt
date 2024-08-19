@@ -22,7 +22,7 @@ import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.header.internals.RecordHeader
 import org.apache.kafka.common.serialization.StringDeserializer
-import org.awaitility.Awaitility
+import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.jeasy.random.EasyRandom
@@ -85,7 +85,7 @@ class KafkaInteractionHttpRecordingIT(
         )
 
         val consumerRecords = mutableListOf<ConsumerRecord<String, Output>>()
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             consumerRecords.addAll(consumer.poll(Duration.of(1000, MILLIS)).toList())
             try {
                 consumer.commitSync()
@@ -121,7 +121,7 @@ class KafkaInteractionHttpRecordingIT(
                 serviceName = "Service2",
                 body = print(input),
                 target = "SomeEvent",
-                path = "SomeEvent",
+                path = "Service2",
                 interactionType = CONSUME
             )
         )
@@ -143,7 +143,7 @@ class KafkaInteractionHttpRecordingIT(
                 serviceName = "Service2", // Should be `Service1` but there is only one `info.app.name` within the test
                 body = print(output),
                 target = "NewEvent",
-                path = "NewEvent",
+                path = "Service2",
                 interactionType = CONSUME
             )
         )
@@ -164,7 +164,7 @@ class KafkaInteractionHttpRecordingIT(
         )
 
         val consumerRecords = mutableListOf<ConsumerRecord<String, Output>>()
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             consumerRecords.addAll(consumer.poll(Duration.of(1000, MILLIS)).toList())
             try {
                 consumer.commitSync()
@@ -201,7 +201,7 @@ class KafkaInteractionHttpRecordingIT(
                 serviceName = "Service2",
                 body = print(input),
                 target = "incomingTopic",
-                path = "incomingTopic",
+                path = "Service2",
                 interactionType = CONSUME
             )
         )
@@ -223,7 +223,7 @@ class KafkaInteractionHttpRecordingIT(
                 serviceName = "Service2", // Should be `Service1` but there is only one `info.app.name` within the test
                 body = print(output),
                 target = "NewEvent",
-                path = "NewEvent",
+                path = "Service2", // Should be `Service1` but there is only one `info.app.name` within the test
                 interactionType = CONSUME
             )
         )

@@ -11,16 +11,18 @@ import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.R
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.external.ExternalClient
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.external.ExternalClientWithTargetHeader
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.repository.TestRepository
-import org.awaitility.Awaitility
+import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
-import java.util.*
 
 private const val WIREMOCK_SERVER_PORT = 8070
 
@@ -49,7 +51,7 @@ class InteractionDbRecordingIT {
         assertThat(response, `is`("Response:from_test_client"))
 
         val interceptedInteractions: MutableList<InterceptedInteraction?> = ArrayList()
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             val foundInterceptedInteractions = testRepository.findAll("3e316fc2da26a3c7")
             assertThat(foundInterceptedInteractions, hasSize(2))
             interceptedInteractions.addAll(foundInterceptedInteractions)
@@ -94,7 +96,7 @@ class InteractionDbRecordingIT {
         assertThat(response, `is`("Response:from_test_client_with_target_header"))
 
         val interceptedInteractions: MutableList<InterceptedInteraction?> = ArrayList()
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             val foundInterceptedInteractions = testRepository.findAll("3e316fc2da26a3c7")
             assertThat(foundInterceptedInteractions, hasSize(2))
             interceptedInteractions.addAll(foundInterceptedInteractions)

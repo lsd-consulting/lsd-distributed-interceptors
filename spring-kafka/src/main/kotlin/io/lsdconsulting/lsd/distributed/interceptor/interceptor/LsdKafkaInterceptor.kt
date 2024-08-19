@@ -5,8 +5,9 @@ import com.lsd.core.properties.LsdProperties
 import io.lsdconsulting.lsd.distributed.connector.repository.InterceptedDocumentRepository
 import io.lsdconsulting.lsd.distributed.http.config.CONNECTION_TIMEOUT_MILLIS_DEFAULT
 import io.lsdconsulting.lsd.distributed.http.repository.InterceptedDocumentHttpRepository
-import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaConsumerCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaHeaderRetriever
+import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaProducerCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
@@ -28,7 +29,7 @@ import org.apache.kafka.common.TopicPartition
 
 class LsdKafkaInterceptor: ProducerInterceptor<String, Any>, ConsumerInterceptor<String, Any> {
 
-    private var kafkaCaptor: KafkaCaptor = instance()
+    private var kafkaProducerCaptors: Pair<KafkaProducerCaptor, KafkaConsumerCaptor> = instance()
 
     override fun configure(configs: MutableMap<String, *>?) {}
 
@@ -40,18 +41,18 @@ class LsdKafkaInterceptor: ProducerInterceptor<String, Any>, ConsumerInterceptor
 
     override fun onConsume(records: ConsumerRecords<String, Any>): ConsumerRecords<String, Any> {
         log().info("Intercepted consumed records: {}", records)
-        kafkaCaptor.captureConsumeInteraction(records)
+        kafkaProducerCaptors.second.captureConsumeInteraction(records)
         return records
     }
 
     override fun onSend(record: ProducerRecord<String, Any>): ProducerRecord<String, Any> {
         log().debug("Intercepted record: {}", record)
-        kafkaCaptor.capturePublishInteraction(record)
+        kafkaProducerCaptors.first.capturePublishInteraction(record)
         return record
     }
 
     companion object {
-        private fun instance(): KafkaCaptor {
+        private fun instance(): Pair<KafkaProducerCaptor, KafkaConsumerCaptor> {
             val connectionString = LsdProperties["lsd.dist.connectionString", ""]
             if (connectionString.isBlank()) throw IllegalArgumentException("Missing lsd.dist.connectionString")
             val appName = LsdProperties["info.app.name", ""]
@@ -64,7 +65,21 @@ class LsdKafkaInterceptor: ProducerInterceptor<String, Any>, ConsumerInterceptor
             repositoryService.start()
             val traceIdRetriever = TraceIdRetriever(Tracing.newBuilder().build().tracer())
             val kafkaHeaderRetriever = KafkaHeaderRetriever(Obfuscator(sensitiveHeaders))
-            return KafkaCaptor(repositoryService, PropertyServiceNameDeriver(appName), traceIdRetriever, kafkaHeaderRetriever, profile)
+            val kafkaProducerCaptor = KafkaProducerCaptor(
+                repositoryService,
+                PropertyServiceNameDeriver(appName),
+                traceIdRetriever,
+                kafkaHeaderRetriever,
+                profile
+            )
+            val kafkaConsumerCaptor = KafkaConsumerCaptor(
+                repositoryService,
+                PropertyServiceNameDeriver(appName),
+                traceIdRetriever,
+                kafkaHeaderRetriever,
+                profile
+            )
+            return Pair(kafkaProducerCaptor, kafkaConsumerCaptor)
         }
 
         private fun buildInterceptedDocumentRepository(connectionString: String): InterceptedDocumentRepository {
