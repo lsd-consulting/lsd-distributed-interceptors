@@ -14,6 +14,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.kafkaintegration.testapp.Inp
 import io.lsdconsulting.lsd.distributed.interceptor.kafkaintegration.testapp.Output
 import io.lsdconsulting.lsd.distributed.interceptor.kafkaintegration.testapp.TestApplication
 import lsd.logging.log
+import org.apache.commons.lang3.RandomUtils
 import org.apache.kafka.clients.consumer.CommitFailedException
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -37,6 +38,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDO
 import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.context.ActiveProfiles
+import java.lang.Long.toHexString
 import java.time.Duration
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -46,6 +48,7 @@ import java.util.*
 
 private const val WIREMOCK_SERVER_PORT = 8070
 private const val NO_ROUTING_KEY = ""
+private const val MIN_VALID_TRACE_ID_VALUE = 1152921504606846976L
 
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = [TestApplication::class])
 @ActiveProfiles("test")
@@ -61,11 +64,13 @@ class KafkaInteractionHttpRecordingIT(
     private val mapper = ObjectMapperCreator().objectMapper
     private val lsdControllerStub = LsdControllerStub(mapper)
     private val easyRandom: EasyRandom = EasyRandom(EasyRandomParameters().seed(System.currentTimeMillis()))
+    private lateinit var traceId: String
 
     @BeforeEach
     fun setup() {
         WireMock.reset()
         lsdControllerStub.store(easyRandom.nextObject(InterceptedInteraction::class.java))
+        traceId = toHexString(RandomUtils.nextLong(MIN_VALID_TRACE_ID_VALUE, Long.MAX_VALUE))
     }
 
     @Test
@@ -79,7 +84,7 @@ class KafkaInteractionHttpRecordingIT(
                 incomingTopic, null, null, null, input, listOf(
                     RecordHeader("Source-Name", "Service1".toByteArray()),
                     RecordHeader("Target-Name", "SomeEvent".toByteArray()),
-                    RecordHeader("b3", "dbfb676cf98bee5d-dbfb676cf98bee5d-0".toByteArray())
+                    RecordHeader("b3", "$traceId-$traceId-0".toByteArray())
                 )
             )
         )
@@ -106,7 +111,7 @@ class KafkaInteractionHttpRecordingIT(
 
         verify(
             buildExpectedInterceptedInteraction(
-                traceId = "dbfb676cf98bee5d",
+                traceId = traceId,
                 serviceName = "Service1",
                 body = print(input),
                 target = "SomeEvent",
@@ -117,7 +122,7 @@ class KafkaInteractionHttpRecordingIT(
 
         verify(
             buildExpectedInterceptedInteraction(
-                traceId = "dbfb676cf98bee5d",
+                traceId = traceId,
                 serviceName = "Service2",
                 body = print(input),
                 target = "SomeEvent",
@@ -128,7 +133,7 @@ class KafkaInteractionHttpRecordingIT(
 
         verify(
             buildExpectedInterceptedInteraction(
-                traceId = "dbfb676cf98bee5d",
+                traceId = traceId,
                 serviceName = "Service2",
                 body = print(output),
                 target = "NewEvent",
@@ -139,7 +144,7 @@ class KafkaInteractionHttpRecordingIT(
 
         verify(
             buildExpectedInterceptedInteraction(
-                traceId = "dbfb676cf98bee5d",
+                traceId = traceId,
                 serviceName = "Service2", // Should be `Service1` but there is only one `info.app.name` within the test
                 body = print(output),
                 target = "NewEvent",
@@ -158,7 +163,7 @@ class KafkaInteractionHttpRecordingIT(
         KafkaProducer<String, Input>(getProducerProperties()).send(
             ProducerRecord(
                 incomingTopic, null, null, null, input, listOf(
-                    RecordHeader("b3", "dbfb676cf98bee5c-dbfb676cf98bee5c-0".toByteArray())
+                    RecordHeader("b3", "$traceId-$traceId-0".toByteArray())
                 )
             )
         )
@@ -186,7 +191,7 @@ class KafkaInteractionHttpRecordingIT(
 
         verify(
             buildExpectedInterceptedInteraction(
-                traceId = "dbfb676cf98bee5c",
+                traceId = traceId,
                 serviceName = "Service2", // Should be `Service1` but there is only one `info.app.name` within the test
                 body = print(input),
                 target = "incomingTopic",
@@ -197,7 +202,7 @@ class KafkaInteractionHttpRecordingIT(
 
         verify(
             buildExpectedInterceptedInteraction(
-                traceId = "dbfb676cf98bee5c",
+                traceId = traceId,
                 serviceName = "Service2",
                 body = print(input),
                 target = "incomingTopic",
@@ -208,7 +213,7 @@ class KafkaInteractionHttpRecordingIT(
 
         verify(
             buildExpectedInterceptedInteraction(
-                traceId = "dbfb676cf98bee5c",
+                traceId = traceId,
                 serviceName = "Service2",
                 body = print(output),
                 target = "NewEvent",
@@ -219,7 +224,7 @@ class KafkaInteractionHttpRecordingIT(
 
         verify(
             buildExpectedInterceptedInteraction(
-                traceId = "dbfb676cf98bee5c",
+                traceId = traceId,
                 serviceName = "Service2", // Should be `Service1` but there is only one `info.app.name` within the test
                 body = print(output),
                 target = "NewEvent",

@@ -18,6 +18,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.I
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.ServiceConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.handler.Input
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.handler.TestListener
+import org.apache.commons.lang3.RandomUtils
 import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
@@ -38,11 +39,13 @@ import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.messaging.MessageHeaders.CONTENT_TYPE
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.util.MimeTypeUtils.APPLICATION_JSON
+import java.lang.Long.toHexString
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
 private const val WIREMOCK_SERVER_PORT = 8070
 private const val NO_ROUTING_KEY = ""
+private const val MIN_VALID_TRACE_ID_VALUE = 1152921504606846976L
 
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = [TestApplication::class])
 @ActiveProfiles("test")
@@ -68,6 +71,7 @@ class SpringMessagingInteractionHttpRecordingIT(
     private val lsdControllerStub = LsdControllerStub(mapper)
 
     private val easyRandom: EasyRandom = EasyRandom(EasyRandomParameters().seed(System.currentTimeMillis()))
+    private lateinit var traceId: String
 
     @BeforeEach
     fun setup() {
@@ -77,6 +81,7 @@ class SpringMessagingInteractionHttpRecordingIT(
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         lsdControllerStub.store(easyRandom.nextObject(InterceptedInteraction::class.java))
+        traceId = toHexString(RandomUtils.nextLong(MIN_VALID_TRACE_ID_VALUE, Long.MAX_VALUE))
     }
 
     @Test
@@ -89,7 +94,7 @@ class SpringMessagingInteractionHttpRecordingIT(
                 .setHeader(CONTENT_TYPE, APPLICATION_JSON)
                 .setHeader("Source-Name", "SourceService")
                 .setHeader("Target-Name", "InputEvent")
-                .setHeader("b3", "dbfb676cf98bee5c-dbfb676cf98bee5c-0")
+                .setHeader("b3", "$traceId-$traceId-0")
                 .build()
         )
 
@@ -102,7 +107,7 @@ class SpringMessagingInteractionHttpRecordingIT(
 
         verify(
             buildExpectedInterceptedInteraction(
-                traceId = "dbfb676cf98bee5c",
+                traceId = traceId,
                 body = "{\"id\":\"id\",\"value\":\"value\"}",
                 target = "InputEvent",
                 path = "Test App",
@@ -112,7 +117,7 @@ class SpringMessagingInteractionHttpRecordingIT(
 
         verify(
             buildExpectedInterceptedInteraction(
-                traceId = "dbfb676cf98bee5c",
+                traceId = traceId,
                 body = "{\"id\":\"id\",\"value\":\"value\",\"receivedDateTime\":",
                 target = "output.topic",
                 path = "output.topic",
@@ -129,7 +134,7 @@ class SpringMessagingInteractionHttpRecordingIT(
             inputExchange, NO_ROUTING_KEY, MessageBuilder
                 .withBody(ObjectMapperCreator().objectMapper.writeValueAsString(input).toByteArray())
                 .setHeader(CONTENT_TYPE, APPLICATION_JSON)
-                .setHeader("b3", "dbfb676cf98bee5d-dbfb676cf98bee5d-0")
+                .setHeader("b3", "$traceId-$traceId-0")
                 .build()
         )
 
@@ -142,7 +147,7 @@ class SpringMessagingInteractionHttpRecordingIT(
 
         verify(
             buildExpectedInterceptedInteraction(
-                traceId = "dbfb676cf98bee5d",
+                traceId = traceId,
                 body = "{\"id\":\"id\",\"value\":\"value\"}",
                 target = "input.queue",
                 path = "Test App",
@@ -152,7 +157,7 @@ class SpringMessagingInteractionHttpRecordingIT(
 
         verify(
             buildExpectedInterceptedInteraction(
-                traceId = "dbfb676cf98bee5d",
+                traceId = traceId,
                 body = "{\"id\":\"id\",\"value\":\"value\",\"receivedDateTime\":",
                 target = "output.topic",
                 path = "output.topic",
@@ -169,7 +174,7 @@ class SpringMessagingInteractionHttpRecordingIT(
             noLsdHeadersInputExchange, NO_ROUTING_KEY, MessageBuilder
                 .withBody(ObjectMapperCreator().objectMapper.writeValueAsString(input).toByteArray())
                 .setHeader(CONTENT_TYPE, APPLICATION_JSON)
-                .setHeader("b3", "dbfb676cf98bee5e-dbfb676cf98bee5e-0")
+                .setHeader("b3", "$traceId-$traceId-0")
                 .build()
         )
 
@@ -182,7 +187,7 @@ class SpringMessagingInteractionHttpRecordingIT(
 
         verify(
             buildExpectedInterceptedInteraction(
-                traceId = "dbfb676cf98bee5e",
+                traceId = traceId,
                 body = "{\"id\":\"id\",\"value\":\"value\"}",
                 target = "no-lsd-headers.input.queue",
                 path = "Test App",
@@ -192,7 +197,7 @@ class SpringMessagingInteractionHttpRecordingIT(
 
         verify(
             buildExpectedInterceptedInteraction(
-                traceId = "dbfb676cf98bee5e",
+                traceId = traceId,
                 body = "{\"id\":\"id\",\"value\":\"value\",\"receivedDateTime\":",
                 target = "application.noOutputLsdHeadersHandlerFunction-out-0",
                 path = "application.noOutputLsdHeadersHandlerFunction-out-0",
