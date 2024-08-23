@@ -1,4 +1,4 @@
-package io.lsdconsulting.lsd.distributed.interceptor.captor.messaging
+package io.lsdconsulting.lsd.distributed.interceptor.captor
 
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import org.apache.kafka.common.header.Headers

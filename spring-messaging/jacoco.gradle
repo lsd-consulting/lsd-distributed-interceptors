@@ -1,10 +1,10 @@
 jacocoTestReport {
     reports {
-        xml.enabled(true)
-        html.enabled(true)
-        html.destination(project.provider(() -> new File("${project.buildDir}/reports/coverage")))
+        xml.required = true
+        html.required = true
+        html.getOutputLocation().set( new File("${project.layout.buildDirectory}/reports/coverage"))
     }
     executionData(
-            file("${project.buildDir}/jacoco/test.exec")
+            file("${project.layout.buildDirectory}/jacoco/test.exec")
     )
 }

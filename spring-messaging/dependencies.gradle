@@ -7,7 +7,7 @@ dependencies {
     compileOnly 'org.springframework.integration:spring-integration-core'
 
     // LSD
-    implementation 'io.github.lsd-consulting:lsd-formatting-library:4.0.46'
+    implementation 'io.github.lsd-consulting:lsd-formatting-library:4.0.47'
     implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
     compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
 

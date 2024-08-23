@@ -4,19 +4,19 @@ build.dependsOn "pitest"
 
 // perform mutation test and enforce coverage
 pitest {
-    junit5PluginVersion = '1.1.0'
+    junit5PluginVersion = '1.2.1'
+    pitestVersion = '1.15.0'
     useClasspathFile = true
     timeoutConstInMillis = 20000
-    targetClasses.set([
-            'io.lsdconsulting.lsd.distributed.interceptor.*'
+    targetTests.set([
+            'io.lsdconsulting.lsd.distributed.interceptor.captor.**'
     ])
-    excludedClasses.set([
-            'io.lsdconsulting.lsd.distributed.interceptor.interceptor.*',
-            'io.lsdconsulting.lsd.distributed.interceptor.config.*'
+    targetClasses.set([
+            'io.lsdconsulting.lsd.distributed.interceptor.captor.*'
     ])
     threads = 4
     outputFormats.set(['HTML'])
-    coverageThreshold = 77
-    mutationThreshold = 44
-    testStrengthThreshold = 58
+    coverageThreshold = 80
+    mutationThreshold = 65
+    testStrengthThreshold = 78
 }

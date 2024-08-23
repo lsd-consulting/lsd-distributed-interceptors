@@ -1,10 +1,45 @@
 jacocoTestReport {
+    dependsOn test, integrationHttpTest, springIntegrationHttpTest
     reports {
-        xml.enabled(true)
-        html.enabled(true)
-        html.destination(project.provider(() -> new File("${project.buildDir}/reports/coverage")))
+        xml.required = true
+        html.required = true
+        html.getOutputLocation().set( new File("${project.layout.buildDirectory.get()}/reports/coverage"))
     }
     executionData(
-            file("${project.buildDir}/jacoco/test.exec")
+            file("${project.layout.buildDirectory.get()}/jacoco/test.exec"),
+            file("${project.layout.buildDirectory.get()}/jacoco/integrationHttpTest.exec"),
+            file("${project.layout.buildDirectory.get()}/jacoco/springIntegrationHttpTest.exec")
     )
 }
+
+jacocoTestCoverageVerification {
+    dependsOn test, integrationHttpTest, springIntegrationHttpTest, jacocoTestReport
+    violationRules {
+        rule {
+            limit {
+                counter = 'INSTRUCTION'
+                minimum = 0.48
+            }
+        }
+        rule {
+            limit {
+                counter = 'CLASS'
+                minimum = 0.27
+            }
+        }
+        rule {
+            limit {
+                counter = 'BRANCH'
+                minimum = 0.55
+            }
+        }
+        rule {
+            limit {
+                counter = 'METHOD'
+                minimum = 0.18
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification

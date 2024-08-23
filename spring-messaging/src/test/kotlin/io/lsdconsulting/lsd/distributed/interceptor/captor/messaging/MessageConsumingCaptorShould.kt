@@ -22,7 +22,8 @@ internal class MessageConsumingCaptorShould {
 
     private val underTest = MessageConsumingCaptor(repositoryService, propertyServiceNameDeriver, traceIdRetriever, messagingHeaderRetriever, "profile")
 
-    private val topic = randomAlphabetic(20)
+    private val targetHeader = randomAlphabetic(20)
+    private val typeId = randomAlphabetic(20)
     private val serviceName = randomAlphabetic(20)
     private val traceId = randomAlphabetic(20)
     private val body = randomAlphabetic(20)
@@ -31,13 +32,13 @@ internal class MessageConsumingCaptorShould {
     fun `capture consume interaction with source from type id when target name not no in header`() {
         every { propertyServiceNameDeriver.serviceName } returns serviceName
         every { traceIdRetriever.getTraceId(any()) } returns traceId
-        every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"), "__TypeId__" to listOf(topic))
-        val headers = mapOf("name" to listOf("value"), "__TypeId__" to topic)
+        every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"), "__TypeId__" to listOf(typeId))
+        val headers = mapOf("name" to listOf("value"), "__TypeId__" to typeId)
         val message: Message<*> = MutableMessage(body.toByteArray(), headers)
 
         val result = underTest.captureConsumeInteraction(message)
 
-        assertThat(result.target, `is`(topic))
+        assertThat(result.target, `is`(typeId))
         assertThat(result.path, `is`(serviceName))
         assertThat(result.body, `is`(body))
         assertThat(result.serviceName, `is`(serviceName))
@@ -46,7 +47,7 @@ internal class MessageConsumingCaptorShould {
         assertThat(result.httpMethod, emptyOrNullString())
         assertThat(result.httpStatus, emptyOrNullString())
         assertThat(result.profile, `is`("profile"))
-        assertThat(result.requestHeaders, `is`(mapOf("name" to listOf("value"), "__TypeId__" to listOf(topic))))
+        assertThat(result.requestHeaders, `is`(mapOf("name" to listOf("value"), "__TypeId__" to listOf(typeId))))
         assertThat(result.responseHeaders, aMapWithSize(0))
         verify { repositoryService.enqueue(result) }
     }
@@ -79,13 +80,13 @@ internal class MessageConsumingCaptorShould {
     fun `capture consume interaction with source from target name`() {
         every { propertyServiceNameDeriver.serviceName } returns serviceName
         every { traceIdRetriever.getTraceId(any()) } returns traceId
-        every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"), "Target-Name" to listOf(topic), "__TypeId__" to listOf("blah"))
-        val headers = mapOf("name" to listOf("value"), "__TypeId__" to "blah", "Target-Name" to topic)
+        every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"), "Target-Name" to listOf(targetHeader), "__TypeId__" to listOf(typeId))
+        val headers = mapOf("name" to listOf("value"), "__TypeId__" to typeId, "Target-Name" to targetHeader)
         val message: Message<*> = MutableMessage(body.toByteArray(), headers)
 
         val result = underTest.captureConsumeInteraction(message)
 
-        assertThat(result.target, `is`(topic))
+        assertThat(result.target, `is`(targetHeader))
         assertThat(result.path, `is`(serviceName))
         assertThat(result.body, `is`(body))
         assertThat(result.serviceName, `is`(serviceName))
@@ -94,7 +95,7 @@ internal class MessageConsumingCaptorShould {
         assertThat(result.httpMethod, emptyOrNullString())
         assertThat(result.httpStatus, emptyOrNullString())
         assertThat(result.profile, `is`("profile"))
-        assertThat(result.requestHeaders, `is`(mapOf("name" to listOf("value"), "__TypeId__" to listOf("blah"), "Target-Name" to listOf(topic))))
+        assertThat(result.requestHeaders, `is`(mapOf("name" to listOf("value"), "__TypeId__" to listOf(typeId), "Target-Name" to listOf(targetHeader))))
         assertThat(result.responseHeaders, aMapWithSize(0))
         verify { repositoryService.enqueue(result) }
     }

@@ -5,13 +5,8 @@ dependencies {
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
     testImplementation 'io.mockk:mockk:1.13.5'
     testImplementation 'org.apache.commons:commons-lang3:3.12.0'
-
-    testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
-    testImplementation 'org.springframework.boot:spring-boot-autoconfigure'
-    testImplementation 'org.springframework.kafka:spring-kafka'
     testImplementation 'org.apache.kafka:kafka-clients:3.5.0'
     testImplementation 'io.zipkin.brave:brave:5.16.0'
-
     testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
 }
 
@@ -19,6 +14,7 @@ test {
     useJUnitPlatform()
     testLogging.events("skipped", "failed")
     systemProperty("lsd.core.report.outputDir", "$buildDir/reports/lsd")
+    finalizedBy jacocoTestReport
     afterSuite { desc, result ->
         if (!desc.parent) {
             logger.lifecycle("Unit test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)")

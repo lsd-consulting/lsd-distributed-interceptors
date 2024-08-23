@@ -9,23 +9,26 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.lsdconsulting.generatorui.controller.LsdControllerStub
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
-import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.*
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.REQUEST
+import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.RESPONSE
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.TestApplication
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.external.ExternalClient
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.external.ExternalClientWithTargetHeader
-import org.awaitility.Awaitility
+import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.jeasy.random.EasyRandom
 import org.jeasy.random.EasyRandomParameters
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.util.*
 
 
 private const val WIREMOCK_SERVER_PORT = 8070
@@ -60,7 +63,7 @@ class InteractionHttpRecordingIT {
         assertThat(response, `is`("Response:from_test_client"))
 
         // Assert calls to http storage endpoint
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             verify(2, postRequestedFor(urlPathEqualTo("/lsds")))
             verify(
                 buildExpectedInterceptedInteraction(
@@ -93,7 +96,7 @@ class InteractionHttpRecordingIT {
         assertThat(response, `is`("Response:from_test_client_with_target_header"))
 
         // Assert calls to http storage endpoint
-        Awaitility.await().untilAsserted {
+        await().untilAsserted {
             verify(2, postRequestedFor(urlPathEqualTo("/lsds")))
             verify(
                 buildExpectedInterceptedInteraction(

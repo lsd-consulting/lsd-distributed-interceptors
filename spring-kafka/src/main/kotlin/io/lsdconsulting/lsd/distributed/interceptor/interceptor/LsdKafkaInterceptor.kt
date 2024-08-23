@@ -5,12 +5,12 @@ import com.lsd.core.properties.LsdProperties
 import io.lsdconsulting.lsd.distributed.connector.repository.InterceptedDocumentRepository
 import io.lsdconsulting.lsd.distributed.http.config.CONNECTION_TIMEOUT_MILLIS_DEFAULT
 import io.lsdconsulting.lsd.distributed.http.repository.InterceptedDocumentHttpRepository
+import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaConsumerCaptor
+import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaHeaderRetriever
+import io.lsdconsulting.lsd.distributed.interceptor.captor.KafkaProducerCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.Obfuscator
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
-import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.KafkaCaptor
-import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.KafkaHeaderRetriever
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
-import io.lsdconsulting.lsd.distributed.interceptor.config.ApplicationContextProvider
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
 import io.lsdconsulting.lsd.distributed.mongo.repository.DEFAULT_COLLECTION_SIZE_LIMIT_MBS
 import io.lsdconsulting.lsd.distributed.mongo.repository.DEFAULT_TIMEOUT_MILLIS
@@ -27,9 +27,9 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.TopicPartition
 
-class LsdKafkaProducerInterceptor: ProducerInterceptor<String, Any>, ConsumerInterceptor<String, Any> {
+class LsdKafkaInterceptor: ProducerInterceptor<String, Any>, ConsumerInterceptor<String, Any> {
 
-    private val kafkaCaptor: KafkaCaptor = ApplicationContextProvider.context.getBean(KafkaCaptor::class.java)
+    private var kafkaProducerCaptors: Pair<KafkaProducerCaptor, KafkaConsumerCaptor> = instance()
 
     override fun configure(configs: MutableMap<String, *>?) {}
 
@@ -37,22 +37,22 @@ class LsdKafkaProducerInterceptor: ProducerInterceptor<String, Any>, ConsumerInt
 
     override fun close() {}
 
-    override fun onCommit(p0: MutableMap<TopicPartition, OffsetAndMetadata>?) {
-        TODO("Not yet implemented")
-    }
+    override fun onCommit(p0: MutableMap<TopicPartition, OffsetAndMetadata>?) {}
 
-    override fun onConsume(p0: ConsumerRecords<String, Any>?): ConsumerRecords<String, Any> {
-        TODO("Not yet implemented")
+    override fun onConsume(records: ConsumerRecords<String, Any>): ConsumerRecords<String, Any> {
+        log().info("Intercepted consumed records: {}", records)
+        kafkaProducerCaptors.second.captureConsumeInteraction(records)
+        return records
     }
 
     override fun onSend(record: ProducerRecord<String, Any>): ProducerRecord<String, Any> {
         log().debug("Intercepted record: {}", record)
-        kafkaCaptor.capturePublishInteraction(record)
+        kafkaProducerCaptors.first.capturePublishInteraction(record)
         return record
     }
 
     companion object {
-        private fun instance(): KafkaCaptor {
+        private fun instance(): Pair<KafkaProducerCaptor, KafkaConsumerCaptor> {
             val connectionString = LsdProperties["lsd.dist.connectionString", ""]
             if (connectionString.isBlank()) throw IllegalArgumentException("Missing lsd.dist.connectionString")
             val appName = LsdProperties["info.app.name", ""]
@@ -65,7 +65,21 @@ class LsdKafkaProducerInterceptor: ProducerInterceptor<String, Any>, ConsumerInt
             repositoryService.start()
             val traceIdRetriever = TraceIdRetriever(Tracing.newBuilder().build().tracer())
             val kafkaHeaderRetriever = KafkaHeaderRetriever(Obfuscator(sensitiveHeaders))
-            return KafkaCaptor(repositoryService, PropertyServiceNameDeriver(appName), traceIdRetriever, kafkaHeaderRetriever, profile)
+            val kafkaProducerCaptor = KafkaProducerCaptor(
+                repositoryService,
+                PropertyServiceNameDeriver(appName),
+                traceIdRetriever,
+                kafkaHeaderRetriever,
+                profile
+            )
+            val kafkaConsumerCaptor = KafkaConsumerCaptor(
+                repositoryService,
+                PropertyServiceNameDeriver(appName),
+                traceIdRetriever,
+                kafkaHeaderRetriever,
+                profile
+            )
+            return Pair(kafkaProducerCaptor, kafkaConsumerCaptor)
         }
 
         private fun buildInterceptedDocumentRepository(connectionString: String): InterceptedDocumentRepository {
