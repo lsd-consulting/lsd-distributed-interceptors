@@ -14,7 +14,7 @@ dependencies {
 test {
     useJUnitPlatform()
     testLogging.events("skipped", "failed")
-    systemProperty("lsd.core.report.outputDir", "$buildDir/reports/lsd")
+    systemProperty("lsd.core.report.outputDir", "${layout.buildDirectory.get().toString()}/reports/lsd")
     finalizedBy jacocoTestReport
     afterSuite { desc, result ->
         if (!desc.parent) {

@@ -35,7 +35,7 @@ dependencies {
 test {
     useJUnitPlatform()
     testLogging.events("skipped", "failed")
-    systemProperty("lsd.core.report.outputDir", "$buildDir/reports/lsd")
+    systemProperty("lsd.core.report.outputDir", "${layout.buildDirectory.get().toString()}/reports/lsd")
     afterSuite { desc, result ->
         if (!desc.parent) {
             logger.lifecycle("Integration Postgres test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)")
