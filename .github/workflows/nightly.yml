@@ -9,3 +9,4 @@ jobs:
     with:
       operating-system: ubuntu-22.04
       java-version: '17'
+      artifact-path: '**/build/reports'
