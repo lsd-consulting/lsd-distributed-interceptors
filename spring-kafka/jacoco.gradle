@@ -3,7 +3,7 @@ jacocoTestReport {
     reports {
         xml.required = true
         html.required = true
-        html.getOutputLocation().set( new File("${project.layout.buildDirectory.get()}/reports/coverage"))
+        html.getOutputLocation().set(project.layout.buildDirectory.dir('reports/coverage'))
     }
     executionData(
             file("${project.layout.buildDirectory.get()}/jacoco/test.exec"),

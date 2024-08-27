@@ -1,12 +1,11 @@
 jacocoTestReport {
+    dependsOn test
     reports {
         xml.required = true
         html.required = true
-        html.getOutputLocation().set( new File("${project.layout.buildDirectory}/reports/coverage"))
+        html.getOutputLocation().set(project.layout.buildDirectory.dir('reports/coverage'))
     }
     executionData(
-            file("${project.layout.buildDirectory}/jacoco/test.exec"),
-            file("${project.layout.buildDirectory}/jacoco/integrationMongoTest.exec"),
-            file("${project.layout.buildDirectory}/jacoco/integrationHttpTest.exec")
+            file("${project.layout.buildDirectory}/jacoco/test.exec")
     )
 }
