@@ -10,20 +10,22 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     testImplementation 'org.springframework.boot:spring-boot-starter-amqp'
     testImplementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-    testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    testImplementation 'io.micrometer:micrometer-tracing'
+    testImplementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    testImplementation 'io.micrometer:micrometer-tracing-test'
 
     // Other
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.5.4'
     testImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'
-    testImplementation 'org.awaitility:awaitility:4.1.0'
-    testImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
-    testImplementation 'org.junit.platform:junit-platform-launcher:1.9.2'
-    testImplementation 'org.jeasy:easy-random-core:5.0.0'
+    testImplementation 'org.awaitility:awaitility'
+    testImplementation 'org.wiremock:wiremock-standalone:3.12.1'
+    testImplementation 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'io.github.k-random:k-random-core:1.29.3'
 
     // LSD
     testImplementation 'io.github.lsd-consulting:lsd-distributed-mongodb-connector:5.0.0'
     testImplementation 'io.github.lsd-consulting:lsd-junit5:6.0.1'
-    testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:7.1.1'
+    testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:8.2.34'
     testImplementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
 }
 

@@ -1,11 +1,11 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.trace
 
-import brave.Span
-import brave.Tracer
-import brave.propagation.TraceContext
+import io.micrometer.tracing.Span
+import io.micrometer.tracing.TraceContext
+import io.micrometer.tracing.Tracer
 import io.mockk.every
 import io.mockk.mockk
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
@@ -19,7 +19,7 @@ internal class TraceIdRetrieverShould {
 
     private val underTest = TraceIdRetriever(tracer)
 
-    private val traceId = randomAlphabetic(10)
+    private val traceId = secure().nextAlphabetic(10)
 
     @Test
     fun `retrieve trace id from b 3 header`() {
@@ -56,7 +56,7 @@ internal class TraceIdRetrieverShould {
     fun `fall back to tracer for wrong xrequest info header value`(headerValue: String) {
         every { tracer.currentSpan() } returns span
         every { span.context() } returns context
-        every { context.traceIdString() } returns "123456"
+        every { context.traceId() } returns "123456"
         val headers = mapOf<String, Collection<String>>("X-Request-Info" to listOf(headerValue))
 
         val result = underTest.getTraceId(headers)
@@ -68,7 +68,7 @@ internal class TraceIdRetrieverShould {
     fun `retrieve trace id from tracer current span`() {
         every { tracer.currentSpan() } returns span
         every { span.context() } returns context
-        every { context.traceIdString() } returns traceId
+        every { context.traceId() } returns traceId
 
         val result = underTest.getTraceId(HashMap())
 
@@ -80,7 +80,7 @@ internal class TraceIdRetrieverShould {
         every { tracer.nextSpan() } returns span
         every { tracer.currentSpan() } returns span
         every { span.context() } returns context
-        every { context.traceIdString() } returns traceId
+        every { context.traceId() } returns traceId
 
         val result = underTest.getTraceId(HashMap())
 

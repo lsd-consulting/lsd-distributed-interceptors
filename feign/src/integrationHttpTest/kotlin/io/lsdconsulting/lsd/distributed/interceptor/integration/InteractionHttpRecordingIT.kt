@@ -8,6 +8,8 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.lsdconsulting.generatorui.controller.LsdControllerStub
+import io.github.krandom.KRandom
+import io.github.krandom.KRandomParameters
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.REQUEST
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.RESPONSE
@@ -18,14 +20,13 @@ import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.external
 import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
-import org.jeasy.random.EasyRandom
-import org.jeasy.random.EasyRandomParameters
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT
 import org.springframework.test.context.ActiveProfiles
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -33,13 +34,13 @@ import java.time.ZonedDateTime
 
 private const val WIREMOCK_SERVER_PORT = 8070
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = [TestApplication::class])
+@SpringBootTest(webEnvironment = DEFINED_PORT, classes = [TestApplication::class])
 @ActiveProfiles("test")
 class InteractionHttpRecordingIT {
     private val mapper = ObjectMapper()
     private val lsdControllerStub = LsdControllerStub(mapper)
 
-    private val easyRandom: EasyRandom = EasyRandom(EasyRandomParameters().seed(System.currentTimeMillis()))
+    private val kRandom: KRandom = KRandom(KRandomParameters().seed(System.currentTimeMillis()))
 
     @Autowired
     private lateinit var externalClient: ExternalClient
@@ -54,7 +55,7 @@ class InteractionHttpRecordingIT {
         mapper.registerModule(JavaTimeModule())
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        lsdControllerStub.store(easyRandom.nextObject(InterceptedInteraction::class.java))
+        lsdControllerStub.store(kRandom.nextObject(InterceptedInteraction::class.java))
     }
 
     @Test
@@ -172,7 +173,7 @@ class InteractionHttpRecordingIT {
     }
 
     companion object {
-        private val wireMockServer = WireMockServer(WIREMOCK_SERVER_PORT)
+        private val wireMockServer: WireMockServer = WireMockServer(WIREMOCK_SERVER_PORT)
 
         @BeforeAll
         @JvmStatic

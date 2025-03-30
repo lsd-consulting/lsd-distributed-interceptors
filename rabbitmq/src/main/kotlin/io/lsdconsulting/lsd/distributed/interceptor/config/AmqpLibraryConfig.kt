@@ -16,15 +16,15 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @ConditionalOnProperty(name = ["lsd.dist.connectionString"])
-open class AmqpLibraryConfig {
+class AmqpLibraryConfig {
 
     @Bean
     @ConditionalOnClass(Message::class)
-    open fun amqpHeaderRetriever(obfuscator: Obfuscator) = AmqpHeaderRetriever(obfuscator)
+    fun amqpHeaderRetriever(obfuscator: Obfuscator) = AmqpHeaderRetriever(obfuscator)
 
     @Bean
     @ConditionalOnBean(name = ["amqpHeaderRetriever"])
-    open fun publishCaptor(
+    fun publishCaptor(
         repositoryService: RepositoryService,
         propertyServiceNameDeriver: PropertyServiceNameDeriver,
         traceIdRetriever: TraceIdRetriever,

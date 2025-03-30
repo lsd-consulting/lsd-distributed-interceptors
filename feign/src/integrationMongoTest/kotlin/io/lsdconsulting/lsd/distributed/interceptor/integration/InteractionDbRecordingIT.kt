@@ -7,7 +7,6 @@ import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.RESPONSE
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.integration.matcher.InterceptedInteractionMatcher.Companion.with
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.TestApplication
-import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RepositoryConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.external.ExternalClient
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.external.ExternalClientWithTargetHeader
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.repository.TestRepository
@@ -21,12 +20,10 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT
-import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 
 private const val WIREMOCK_SERVER_PORT = 8070
 
-@Import(RepositoryConfig::class)
 @SpringBootTest(webEnvironment = DEFINED_PORT, classes = [TestApplication::class])
 @ActiveProfiles("test")
 class InteractionDbRecordingIT {
@@ -136,7 +133,7 @@ class InteractionDbRecordingIT {
     }
 
     companion object {
-        private val wireMockServer = WireMockServer(WIREMOCK_SERVER_PORT)
+        private val wireMockServer: WireMockServer = WireMockServer(WIREMOCK_SERVER_PORT)
 
         @BeforeAll
         @JvmStatic

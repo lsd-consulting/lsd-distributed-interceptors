@@ -2,12 +2,14 @@ dependencies {
     implementation project(":core")
 
     compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
-    compileOnly 'io.github.openfeign:feign-core:12.4'
-    compileOnly 'io.github.openfeign:feign-slf4j:12.4'
-    compileOnly 'io.zipkin.brave:brave:5.16.0'
+    compileOnly 'io.github.openfeign:feign-core'
+    compileOnly 'io.github.openfeign:feign-slf4j'
+    compileOnly 'io.zipkin.brave:brave'
+    compileOnly 'io.micrometer:micrometer-tracing'
+    compileOnly 'io.micrometer:micrometer-tracing-bridge-brave'
 
     // LSD
-    implementation('io.github.lsd-consulting:lsd-core:6.1.2') {
+    implementation('io.github.lsd-consulting:lsd-core:7.0.69') {
         because "We need to load properties for the non-spring option"
     }
     implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
@@ -16,7 +18,7 @@ dependencies {
     }
     compileOnly 'io.github.lsd-consulting:lsd-distributed-mongodb-connector:5.0.0'
     compileOnly 'io.github.lsd-consulting:lsd-distributed-postgres-connector:1.0.3'
-    compileOnly 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.2'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-http-connector:4.0.42'
 
     // JSON & XML pretty formatting
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'

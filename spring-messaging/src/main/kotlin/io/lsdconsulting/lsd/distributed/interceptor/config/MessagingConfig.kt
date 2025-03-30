@@ -17,7 +17,7 @@ import org.springframework.messaging.support.ChannelInterceptor
 @Configuration
 @ConditionalOnClass(value = [ChannelInterceptor::class, Message::class])
 @ConditionalOnProperty(name = ["lsd.dist.connectionString"])
-open class MessagingConfig(
+class MessagingConfig(
     private val messageConsumingCaptor: MessageConsumingCaptor,
     private val messagePublishingCaptor: MessagePublishingCaptor,
     private val errorMessagePublishingCaptor: ErrorMessagePublishingCaptor,
@@ -25,13 +25,13 @@ open class MessagingConfig(
 
     @Bean
     @GlobalChannelInterceptor(patterns = ["*-in-*"], order = 100)
-    open fun eventConsumerInterceptor() = InputChannelInterceptor(messageConsumingCaptor)
+    fun eventConsumerInterceptor() = InputChannelInterceptor(messageConsumingCaptor)
 
     @Bean
     @GlobalChannelInterceptor(patterns = ["*-out-*"], order = 101)
-    open fun eventPublisherInterceptor() = OutputChannelInterceptor(messagePublishingCaptor)
+    fun eventPublisherInterceptor() = OutputChannelInterceptor(messagePublishingCaptor)
 
     @Bean
     @GlobalChannelInterceptor(patterns = ["*errorChannel"], order = 102)
-    open fun errorPublisherInterceptor() = ErrorChannelInterceptor(errorMessagePublishingCaptor)
+    fun errorPublisherInterceptor() = ErrorChannelInterceptor(errorMessagePublishingCaptor)
 }

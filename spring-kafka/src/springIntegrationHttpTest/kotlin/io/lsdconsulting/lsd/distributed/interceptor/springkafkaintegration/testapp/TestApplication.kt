@@ -2,9 +2,11 @@ package io.lsdconsulting.lsd.distributed.interceptor.springkafkaintegration.test
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.context.annotation.Import
 
 @SpringBootApplication
-open class TestApplication
+@Import(TracingConfig::class)
+class TestApplication
 
 fun main(args: Array<String>) {
     SpringApplication.run(TestApplication::class.java, *args)

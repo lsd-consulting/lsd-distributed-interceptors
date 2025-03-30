@@ -10,6 +10,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.TestAppl
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RabbitConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RabbitTemplateConfig
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RestConfig
+import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.TracingConfig
 import lsd.logging.log
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -31,10 +32,10 @@ private const val POSTGRES_PORT = 5432
 private const val POSTGRES_IMAGE = "postgres:15.3-alpine3.18"
 private const val TABLE_NAME = "lsd_database"
 
-@Import(RestConfig::class, RabbitConfig::class, RabbitTemplateConfig::class)
+@Import(RestConfig::class, RabbitConfig::class, RabbitTemplateConfig::class, TracingConfig::class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = [TestApplication::class])
 @ActiveProfiles("test")
-open class IntegrationTestBase {
+class IntegrationTestBase {
     @LocalServerPort
     private val serverPort = 0
 

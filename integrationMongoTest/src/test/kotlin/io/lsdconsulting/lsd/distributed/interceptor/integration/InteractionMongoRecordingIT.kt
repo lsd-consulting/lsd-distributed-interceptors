@@ -6,7 +6,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.integration.data.TraceIdGene
 import io.lsdconsulting.lsd.distributed.interceptor.integration.matcher.InterceptedInteractionMatcher
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.controller.event.SomethingDoneEvent
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.repository.TestRepository
-import org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
@@ -27,8 +27,8 @@ class InteractionMongoRecordingIT: IntegrationTestBase() {
     private lateinit var rabbitTemplate: RabbitTemplate
 
     private val mainTraceId = TraceIdGenerator.generate()
-    private val sourceName = randomAlphanumeric(10).uppercase(Locale.getDefault())
-    private val targetName = randomAlphanumeric(10).uppercase(Locale.getDefault())
+    private val sourceName = secure().nextAlphanumeric(10).uppercase(Locale.getDefault())
+    private val targetName = secure().nextAlphanumeric(10).uppercase(Locale.getDefault())
 
     @Test
     @DisplayName("Should record interactions from RestTemplate, FeignClient and RabbitListener")

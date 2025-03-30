@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 
 @SpringBootApplication
 @EnableFeignClients(clients = [ExternalClient::class, ExternalClientWithTargetHeader::class])
-open class TestApplication
+class TestApplication
 
 fun main(args: Array<String>) {
     SpringApplication.run(TestApplication::class.java, *args)

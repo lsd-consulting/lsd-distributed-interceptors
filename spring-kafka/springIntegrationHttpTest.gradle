@@ -16,23 +16,25 @@ dependencies {
 
     // Spring
     springIntegrationHttpTestImplementation 'org.springframework.boot:spring-boot-starter-test'
-    springIntegrationHttpTestImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    springIntegrationHttpTestImplementation 'io.micrometer:micrometer-tracing'
+    springIntegrationHttpTestImplementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    springIntegrationHttpTestImplementation 'io.micrometer:micrometer-tracing-test'
     springIntegrationHttpTestImplementation 'org.springframework.boot:spring-boot-starter-web'
     springIntegrationHttpTestImplementation 'org.springframework.kafka:spring-kafka'
     springIntegrationHttpTestImplementation 'org.springframework.kafka:spring-kafka-test'
 
     // Other
-    springIntegrationHttpTestImplementation 'org.awaitility:awaitility:4.1.0'
-    springIntegrationHttpTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
-    springIntegrationHttpTestImplementation 'org.jeasy:easy-random-core:5.0.0'
+    springIntegrationHttpTestImplementation 'org.awaitility:awaitility'
+    springIntegrationHttpTestImplementation 'org.wiremock:wiremock-standalone:3.12.1'
+    springIntegrationHttpTestImplementation 'io.github.k-random:k-random-core:1.29.3'
 
     // LSD
-    springIntegrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.1'
-    springIntegrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.0.2:wiremock-stubs'){
+    springIntegrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:4.0.42'
+    springIntegrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:7.2.0:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
 
-    springIntegrationHttpTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
+    springIntegrationHttpTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }
 
 tasks.register('springIntegrationHttpTest', Test) {

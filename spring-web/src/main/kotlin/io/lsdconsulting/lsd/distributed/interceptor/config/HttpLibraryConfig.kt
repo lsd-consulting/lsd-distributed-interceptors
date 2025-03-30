@@ -14,12 +14,12 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @ConditionalOnProperty(name = ["lsd.dist.connectionString"])
-open class HttpLibraryConfig {
+class HttpLibraryConfig {
     @Bean
-    open fun httpHeaderRetriever(obfuscator: Obfuscator) = HttpHeaderRetriever(obfuscator)
+    fun httpHeaderRetriever(obfuscator: Obfuscator) = HttpHeaderRetriever(obfuscator)
 
     @Bean
-    open fun requestCaptor(
+    fun requestCaptor(
         repositoryService: RepositoryService,
         sourceTargetDeriver: SourceTargetDeriver,
         traceIdRetriever: TraceIdRetriever,
@@ -28,7 +28,7 @@ open class HttpLibraryConfig {
     ) = RequestCaptor(repositoryService, sourceTargetDeriver, traceIdRetriever, httpHeaderRetriever, profile)
 
     @Bean
-    open fun responseCaptor(
+    fun responseCaptor(
         repositoryService: RepositoryService,
         sourceTargetDeriver: SourceTargetDeriver,
         httpHeaderRetriever: HttpHeaderRetriever,

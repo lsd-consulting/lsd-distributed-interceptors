@@ -5,22 +5,21 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.lsdconsulting.generatorui.controller.LsdControllerStub
+import io.github.krandom.KRandom
+import io.github.krandom.KRandomParameters
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.*
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.interceptor.integration.data.TraceIdGenerator
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.controller.event.SomethingDoneEvent
-import org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
-import org.jeasy.random.EasyRandom
-import org.jeasy.random.EasyRandomParameters
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -33,33 +32,30 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
 
-
 class InteractionHttpRecordingIT : IntegrationTestBase() {
     @Autowired
     private lateinit var rabbitTemplate: RabbitTemplate
     private val mainTraceId = TraceIdGenerator.generate()
-    private val sourceName = randomAlphanumeric(10).uppercase(Locale.getDefault())
-    private val targetName = randomAlphanumeric(10).uppercase(Locale.getDefault())
+    private val sourceName = secure().nextAlphanumeric(10).uppercase(Locale.getDefault())
+    private val targetName = secure().nextAlphanumeric(10).uppercase(Locale.getDefault())
     private val mapper = ObjectMapper()
     private val lsdControllerStub = LsdControllerStub(mapper)
 
-    private val easyRandom: EasyRandom = EasyRandom(EasyRandomParameters().seed(System.currentTimeMillis()))
+    private val kRandom: KRandom = KRandom(KRandomParameters().seed(System.currentTimeMillis()))
 
     @BeforeEach
     fun setup() {
-        WireMock.reset()
+        reset()
         mapper.registerModule(KotlinModule.Builder().build())
         mapper.registerModule(JavaTimeModule())
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        lsdControllerStub.store(easyRandom.nextObject(InterceptedInteraction::class.java))
+        lsdControllerStub.store(kRandom.nextObject(InterceptedInteraction::class.java))
     }
 
     @Test
     @DisplayName("Should record interactions from RestTemplate, FeignClient and RabbitListener")
-    @Throws(
-        URISyntaxException::class
-    )
+    @Throws(URISyntaxException::class)
     fun `should record rest template feign client and listener interactions`() {
         givenExternalApi()
         val response = sentRequest("/api-listener", mainTraceId, null, null)
@@ -336,7 +332,7 @@ class InteractionHttpRecordingIT : IntegrationTestBase() {
             requestPatternBuilder.withRequestBody(
                 matchingJsonPath(
                     "$.requestHeaders['Authorization']",
-                    WireMock.notContaining("Password")
+                    notContaining("Password")
                 )
             )
             verify(requestPatternBuilder)

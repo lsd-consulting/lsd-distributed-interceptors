@@ -1,6 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.trace
 
-import brave.Tracer
+import io.micrometer.tracing.Tracer
 import lsd.logging.log
 
 private const val B3_HEADER = "b3"
@@ -13,16 +13,16 @@ class TraceIdRetriever(
         log().debug("headers received={}", headers)
         val traceId = getTraceIdFromB3Header(headers[B3_HEADER]) ?: getTraceIdFromXRequestInfo(headers[X_REQUEST_INFO_HEADER]) ?: traceIdFromTracer()
         log().debug("traceId retrieved={}", traceId)
-        return traceId
+        return traceId!!
     }
 
     /*
      * The advantage of this approach is that it will create a new traceId and hopefully pass it on with the next request.
      */
-    private fun traceIdFromTracer() =
+    private fun traceIdFromTracer(): String? =
         if (tracer.currentSpan() == null) tracer.nextSpan().context()
-            .traceIdString()
-        else tracer.currentSpan().context().traceIdString()
+            .traceId()
+        else tracer.currentSpan()?.context()?.traceId()
 
     private fun getTraceIdFromXRequestInfo(xRequestInfoHeader: Collection<String>?) =
         xRequestInfoHeader?.first()?.split(";")?.map { it.trim() }

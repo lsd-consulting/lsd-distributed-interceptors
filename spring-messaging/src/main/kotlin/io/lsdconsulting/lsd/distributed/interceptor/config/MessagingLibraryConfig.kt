@@ -18,15 +18,15 @@ import org.springframework.messaging.Message
 @Configuration
 @ConditionalOnProperty(name = ["lsd.dist.connectionString"])
 @ConditionalOnClass(Message::class)
-open class MessagingLibraryConfig {
+class MessagingLibraryConfig {
 
     @Bean
-    open fun messagingHeaderRetriever(obfuscator: Obfuscator): MessagingHeaderRetriever {
+    fun messagingHeaderRetriever(obfuscator: Obfuscator): MessagingHeaderRetriever {
         return MessagingHeaderRetriever(obfuscator)
     }
 
     @Bean
-    open fun messageConsumingCaptor(
+    fun messageConsumingCaptor(
         repositoryService: RepositoryService,
         propertyServiceNameDeriver: PropertyServiceNameDeriver,
         traceIdRetriever: TraceIdRetriever,
@@ -41,7 +41,7 @@ open class MessagingLibraryConfig {
     )
 
     @Bean
-    open fun messagePublishingCaptor(
+    fun messagePublishingCaptor(
         repositoryService: RepositoryService,
         propertyServiceNameDeriver: PropertyServiceNameDeriver,
         traceIdRetriever: TraceIdRetriever,
@@ -56,7 +56,7 @@ open class MessagingLibraryConfig {
     )
 
     @Bean
-    open fun errorMessagePublishingCaptor(
+    fun errorMessagePublishingCaptor(
         repositoryService: RepositoryService,
         propertyServiceNameDeriver: PropertyServiceNameDeriver,
         traceIdRetriever: TraceIdRetriever,

@@ -2,18 +2,18 @@ dependencies {
 
     // Spring
     compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
-    compileOnly 'io.zipkin.brave:brave:5.16.0'
+    compileOnly 'io.micrometer:micrometer-tracing'
     compileOnly 'jakarta.annotation:jakarta.annotation-api'
 
     // LSD
-    compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.1.1'
     implementation 'io.github.lsd-consulting:lsd-formatting-library:4.0.47'
     implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
 
     // JSON & XML pretty formatting
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.3'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
     // Other
-    implementation 'org.slf4j:slf4j-api:2.0.7'
+    implementation 'org.slf4j:slf4j-api'
 }

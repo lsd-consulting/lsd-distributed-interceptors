@@ -4,6 +4,8 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.getAllServeEvents
 import com.lsdconsulting.generatorui.controller.LsdControllerStub
+import io.github.krandom.KRandom
+import io.github.krandom.KRandomParameters
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.CONSUME
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.PUBLISH
@@ -26,8 +28,6 @@ import org.apache.kafka.common.serialization.StringDeserializer
 import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
-import org.jeasy.random.EasyRandom
-import org.jeasy.random.EasyRandomParameters
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -63,14 +63,14 @@ class KafkaInteractionHttpRecordingIT(
 
     private val mapper = ObjectMapperCreator().objectMapper
     private val lsdControllerStub = LsdControllerStub(mapper)
-    private val easyRandom: EasyRandom = EasyRandom(EasyRandomParameters().seed(System.currentTimeMillis()))
+    private val kRandom: KRandom = KRandom(KRandomParameters().seed(System.currentTimeMillis()))
     private lateinit var traceId: String
 
     @BeforeEach
     fun setup() {
         WireMock.reset()
-        lsdControllerStub.store(easyRandom.nextObject(InterceptedInteraction::class.java))
-        traceId = toHexString(RandomUtils.nextLong(MIN_VALID_TRACE_ID_VALUE, Long.MAX_VALUE))
+        lsdControllerStub.store(kRandom.nextObject(InterceptedInteraction::class.java))
+        traceId = toHexString(RandomUtils.secure().randomLong(MIN_VALID_TRACE_ID_VALUE, Long.MAX_VALUE))
     }
 
     @Test
@@ -358,8 +358,14 @@ class KafkaInteractionHttpRecordingIT(
     private fun setupKafkaConsumer(): KafkaConsumer<String, Output> {
         val consumerProperties = Properties()
         consumerProperties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9095")
-        consumerProperties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java.getName())
-        consumerProperties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer::class.java.getName())
+        consumerProperties.setProperty(
+            ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+            StringDeserializer::class.java.getName()
+        )
+        consumerProperties.setProperty(
+            ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+            JsonDeserializer::class.java.getName()
+        )
         consumerProperties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "someGroup")
         consumerProperties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
         consumerProperties.setProperty(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "1000")

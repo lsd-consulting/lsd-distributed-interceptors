@@ -17,6 +17,8 @@ import io.lsdconsulting.lsd.distributed.mongo.repository.DEFAULT_TIMEOUT_MILLIS
 import io.lsdconsulting.lsd.distributed.mongo.repository.InterceptedDocumentMongoRepository
 import io.lsdconsulting.lsd.distributed.mongo.repository.InterceptedInteractionCollectionBuilder
 import io.lsdconsulting.lsd.distributed.postgres.repository.InterceptedDocumentPostgresRepository
+import io.micrometer.tracing.CurrentTraceContext
+import io.micrometer.tracing.brave.bridge.BraveTracer
 import lsd.format.json.createObjectMapper
 import lsd.logging.log
 import org.apache.kafka.clients.consumer.ConsumerInterceptor
@@ -27,7 +29,7 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.TopicPartition
 
-class LsdKafkaInterceptor: ProducerInterceptor<String, Any>, ConsumerInterceptor<String, Any> {
+class LsdKafkaInterceptor : ProducerInterceptor<String, Any>, ConsumerInterceptor<String, Any> {
 
     private var kafkaProducerCaptors: Pair<KafkaProducerCaptor, KafkaConsumerCaptor> = instance()
 
@@ -58,12 +60,13 @@ class LsdKafkaInterceptor: ProducerInterceptor<String, Any>, ConsumerInterceptor
             val appName = LsdProperties["info.app.name", ""]
             val sensitiveHeaders = LsdProperties["lsd.dist.obfuscator.sensitiveHeaders", ""]
             val profile = LsdProperties["spring.profiles.active", ""]
-            val threadPoolSize:Int = LsdProperties.getInt("lsd.dist.threadPool.size", 16)
+            val threadPoolSize: Int = LsdProperties.getInt("lsd.dist.threadPool.size", 16)
 
             val repository = buildInterceptedDocumentRepository(connectionString)
             val repositoryService = RepositoryService(threadPoolSize, repository)
             repositoryService.start()
-            val traceIdRetriever = TraceIdRetriever(Tracing.newBuilder().build().tracer())
+            val traceIdRetriever =
+                TraceIdRetriever(BraveTracer(Tracing.newBuilder().build().tracer(), CurrentTraceContext.NOOP))
             val kafkaHeaderRetriever = KafkaHeaderRetriever(Obfuscator(sensitiveHeaders))
             val kafkaProducerCaptor = KafkaProducerCaptor(
                 repositoryService,
@@ -79,7 +82,7 @@ class LsdKafkaInterceptor: ProducerInterceptor<String, Any>, ConsumerInterceptor
                 kafkaHeaderRetriever,
                 profile
             )
-            return Pair(kafkaProducerCaptor, kafkaConsumerCaptor)
+            return kafkaProducerCaptor to kafkaConsumerCaptor
         }
 
         private fun buildInterceptedDocumentRepository(connectionString: String): InterceptedDocumentRepository {
@@ -95,7 +98,10 @@ class LsdKafkaInterceptor: ProducerInterceptor<String, Any>, ConsumerInterceptor
                         null,
                         null,
                         LsdProperties.getInt("lsd.dist.db.connectionTimeout.millis", DEFAULT_TIMEOUT_MILLIS),
-                        LsdProperties.getLong("lsd.dist.db.collectionSizeLimit.megabytes", DEFAULT_COLLECTION_SIZE_LIMIT_MBS)
+                        LsdProperties.getLong(
+                            "lsd.dist.db.collectionSizeLimit.megabytes",
+                            DEFAULT_COLLECTION_SIZE_LIMIT_MBS
+                        )
                     )
                 )
 

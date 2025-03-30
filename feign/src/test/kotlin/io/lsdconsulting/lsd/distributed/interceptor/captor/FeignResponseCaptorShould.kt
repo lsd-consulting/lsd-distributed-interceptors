@@ -9,7 +9,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryServic
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
@@ -23,12 +23,12 @@ internal class FeignResponseCaptorShould {
 
     private val underTest = FeignResponseCaptor(repositoryService, sourceTargetDeriver, traceIdRetriever, feignHttpHeaderRetriever, "profile")
 
-    private val resource = randomAlphanumeric(20)
-    private val traceId = randomAlphanumeric(20)
-    private val target = randomAlphanumeric(20)
-    private val serviceName = randomAlphanumeric(20)
+    private val resource = secure().nextAlphanumeric(20)
+    private val traceId = secure().nextAlphanumeric(20)
+    private val target = secure().nextAlphanumeric(20)
+    private val serviceName = secure().nextAlphanumeric(20)
     private val url = "http://localhost/$resource"
-    private val body = randomAlphanumeric(20)
+    private val body = secure().nextAlphanumeric(20)
     private val requestHeaders = mapOf<String, Collection<String>>("b3" to listOf(traceId), "Target-Name" to listOf(target))
     private val responseHeaders = mapOf<String, Collection<String>>()
     private val response = Response.builder().request(Request.create(Request.HttpMethod.GET, url, requestHeaders, body.toByteArray(), Charset.defaultCharset(), RequestTemplate())).build()

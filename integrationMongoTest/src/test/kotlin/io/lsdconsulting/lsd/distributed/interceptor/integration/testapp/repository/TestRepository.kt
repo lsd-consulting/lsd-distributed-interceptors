@@ -31,6 +31,7 @@ class TestRepository {
         CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build())
     )
 
+    @Suppress("UNCHECKED_CAST")
     fun findAll(traceId: String): List<InterceptedInteraction> {
         log().info("Retrieving interceptedInteractions for traceId:{}", traceId)
         val database = mongoClient!!.getDatabase(DATABASE_NAME)

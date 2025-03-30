@@ -20,18 +20,18 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @ConditionalOnProperty(name = ["lsd.dist.connectionString"])
 @ConditionalOnClass(ProducerRecord::class)
-open class KafkaLibraryConfig {
+class KafkaLibraryConfig {
 
     @Bean
-    open fun applicationContextProvider() = ApplicationContextProvider()
+    fun applicationContextProvider() = ApplicationContextProvider()
 
     @Bean
-    open fun kafkaHeaderRetriever(obfuscator: Obfuscator): KafkaHeaderRetriever {
+    fun kafkaHeaderRetriever(obfuscator: Obfuscator): KafkaHeaderRetriever {
         return KafkaHeaderRetriever(obfuscator)
     }
 
     @Bean
-    open fun kafkaProducerCaptor(
+    fun kafkaProducerCaptor(
         repositoryService: RepositoryService,
         propertyServiceNameDeriver: PropertyServiceNameDeriver,
         traceIdRetriever: TraceIdRetriever,
@@ -48,7 +48,7 @@ open class KafkaLibraryConfig {
     }
 
     @Bean
-    open fun kafkaConsumerCaptor(
+    fun kafkaConsumerCaptor(
         repositoryService: RepositoryService,
         propertyServiceNameDeriver: PropertyServiceNameDeriver,
         traceIdRetriever: TraceIdRetriever,
@@ -65,11 +65,11 @@ open class KafkaLibraryConfig {
     }
 
     @Bean
-    open fun producerFactoryCustomizer() = ProducerFactoryCustomizer()
+    fun producerFactoryCustomizer() = ProducerFactoryCustomizer()
 
     @Bean
-    open fun consumerFactoryCustomizer() = ConsumerFactoryCustomizer()
+    fun consumerFactoryCustomizer() = ConsumerFactoryCustomizer()
 
     @Bean
-    open fun lsdKafkaInterceptor() = LsdSpringKafkaInterceptor()
+    fun lsdKafkaInterceptor() = LsdSpringKafkaInterceptor()
 }

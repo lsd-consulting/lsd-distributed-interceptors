@@ -16,29 +16,30 @@ dependencies {
 
     // Spring
     integrationHttpTestImplementation 'org.springframework.boot:spring-boot-starter-test'
-    integrationHttpTestImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    integrationHttpTestImplementation 'io.micrometer:micrometer-tracing-bridge-brave'
     integrationHttpTestImplementation 'org.springframework.cloud:spring-cloud-stream'
     integrationHttpTestImplementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka'
     integrationHttpTestImplementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
     integrationHttpTestImplementation 'org.springframework.kafka:spring-kafka-test'
 
     // Other
+    integrationHttpTestImplementation 'org.apache.commons:commons-lang3'
     integrationHttpTestImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'
-    integrationHttpTestImplementation 'org.awaitility:awaitility:4.1.0'
-    integrationHttpTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
-    integrationHttpTestImplementation 'org.jeasy:easy-random-core:5.0.0'
+    integrationHttpTestImplementation 'org.awaitility:awaitility'
+    integrationHttpTestImplementation 'org.wiremock:wiremock-standalone:3.12.1'
+    integrationHttpTestImplementation 'io.github.k-random:k-random-core:1.29.3'
 
     // LSD
-    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.1'
-//    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:6.0.2')
-    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.0.2:wiremock-stubs'){
+    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:4.0.42'
+//    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:7.2.0')
+    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:7.2.0:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
 
-    integrationHttpTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
+    integrationHttpTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
-    integrationHttpTestImplementation 'ch.qos.logback:logback-core:1.2.12'
-    integrationHttpTestImplementation 'ch.qos.logback:logback-classic:1.2.12'
+    integrationHttpTestImplementation 'ch.qos.logback:logback-core'
+    integrationHttpTestImplementation 'ch.qos.logback:logback-classic'
 }
 
 tasks.register('integrationHttpTest', Test) {

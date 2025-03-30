@@ -3,6 +3,7 @@ package io.lsdconsulting.lsd.distributed.interceptor.config
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
 import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.RabbitCaptor
 import io.lsdconsulting.lsd.distributed.interceptor.captor.rabbit.mapper.deriveExchangeName
+import jakarta.annotation.PostConstruct
 import lsd.logging.log
 import org.springframework.amqp.core.Message
 import org.springframework.amqp.core.MessageBuilder
@@ -11,7 +12,6 @@ import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFacto
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Configuration
-import javax.annotation.PostConstruct
 
 /*
     This config adds the interception of messages to RabbitMq listeners
@@ -19,7 +19,7 @@ import javax.annotation.PostConstruct
 @ConditionalOnProperty(name = ["lsd.dist.connectionString"])
 @ConditionalOnBean(SimpleRabbitListenerContainerFactory::class) // TODO What if there is no bean of this type?
 @Configuration
-open class RabbitListenerInterceptorConfig(
+class RabbitListenerInterceptorConfig(
     private val simpleRabbitListenerContainerFactory: SimpleRabbitListenerContainerFactory,
     private val rabbitCaptor: RabbitCaptor,
 ) {

@@ -6,15 +6,18 @@ dependencies {
     compileOnly 'org.springframework.amqp:spring-amqp'
     compileOnly 'org.springframework.amqp:spring-rabbit'
     compileOnly 'jakarta.annotation:jakarta.annotation-api'
+    compileOnly 'io.zipkin.brave:brave'
+    compileOnly 'io.micrometer:micrometer-tracing'
+    compileOnly 'io.micrometer:micrometer-tracing-bridge-brave'
 
     // LSD
     implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
-    compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.1.1'
 
     // JSON & XML pretty formatting
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.3'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
     // Other
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.apache.commons:commons-lang3'
 }
