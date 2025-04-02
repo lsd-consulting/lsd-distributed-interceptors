@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import java.net.URISyntaxException
 
-class EndToEndIT : IntegrationTestBase() {
+class EndToEndIT : IntegrationMongoTestBase() {
     @Autowired
     private val testRepository: TestRepository? = null
 

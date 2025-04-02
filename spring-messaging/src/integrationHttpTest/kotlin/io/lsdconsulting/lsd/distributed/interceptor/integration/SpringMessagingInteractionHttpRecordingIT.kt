@@ -8,6 +8,8 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.lsdconsulting.generatorui.controller.LsdControllerStub
+import io.github.krandom.KRandom
+import io.github.krandom.KRandomParameters
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.CONSUME
 import io.lsdconsulting.lsd.distributed.connector.model.InteractionType.PUBLISH
@@ -22,8 +24,6 @@ import org.apache.commons.lang3.RandomUtils
 import org.awaitility.Awaitility.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
-import org.jeasy.random.EasyRandom
-import org.jeasy.random.EasyRandomParameters
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -70,7 +70,7 @@ class SpringMessagingInteractionHttpRecordingIT(
     private val mapper = ObjectMapper()
     private val lsdControllerStub = LsdControllerStub(mapper)
 
-    private val easyRandom: EasyRandom = EasyRandom(EasyRandomParameters().seed(System.currentTimeMillis()))
+    private val kRandom: KRandom = KRandom(KRandomParameters().seed(System.currentTimeMillis()))
     private lateinit var traceId: String
 
     @BeforeEach
@@ -80,8 +80,8 @@ class SpringMessagingInteractionHttpRecordingIT(
         mapper.registerModule(JavaTimeModule())
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        lsdControllerStub.store(easyRandom.nextObject(InterceptedInteraction::class.java))
-        traceId = toHexString(RandomUtils.nextLong(MIN_VALID_TRACE_ID_VALUE, Long.MAX_VALUE))
+        lsdControllerStub.store(kRandom.nextObject(InterceptedInteraction::class.java))
+        traceId = toHexString(RandomUtils.secure().randomLong(MIN_VALID_TRACE_ID_VALUE, Long.MAX_VALUE))
     }
 
     @Test

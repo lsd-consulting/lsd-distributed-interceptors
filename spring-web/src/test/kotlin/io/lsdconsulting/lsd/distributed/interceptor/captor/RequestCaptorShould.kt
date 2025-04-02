@@ -6,11 +6,12 @@ import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryServic
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod.*
 import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.client.ClientHttpResponse
@@ -27,9 +28,9 @@ internal class RequestCaptorShould {
 
     private val underTest = RequestCaptor(repositoryService, sourceTargetDeriver, traceIdRetriever, httpHeaderRetriever, "profile")
 
-    private val traceId = randomAlphanumeric(20)
-    private val target = randomAlphanumeric(20)
-    private val serviceName = randomAlphanumeric(20)
+    private val traceId = secure().nextAlphanumeric(20)
+    private val target = secure().nextAlphanumeric(20)
+    private val serviceName = secure().nextAlphanumeric(20)
     private val requestHeaders = mapOf<String, Collection<String>>("b3" to listOf(traceId), "Target-Name" to listOf(target))
 
     @Test
@@ -37,7 +38,7 @@ internal class RequestCaptorShould {
     fun `handle empty response body from delete request`() {
         val httpHeaders = mockk<HttpHeaders>()
         every { httpRequest.headers} returns httpHeaders
-        every { httpRequest.methodValue} returns "GET"
+        every { httpRequest.method } returns GET
         every { httpRequest.uri} returns URI.create("http://localhost/test")
         every { clientHttpResponse.headers} returns httpHeaders
         every { clientHttpResponse.statusCode} returns HttpStatus.NO_CONTENT
@@ -56,7 +57,7 @@ internal class RequestCaptorShould {
     fun `enqueue intercepted interaction on spring response`() {
         val httpHeaders = mockk<HttpHeaders>()
         every { httpRequest.headers} returns httpHeaders
-        every { httpRequest.methodValue} returns "GET"
+        every { httpRequest.method} returns GET
         every { httpRequest.uri} returns URI.create("http://localhost/test")
         every { clientHttpResponse.headers} returns httpHeaders
         every { clientHttpResponse.statusCode} returns HttpStatus.NO_CONTENT

@@ -4,7 +4,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.messaging.MessagePubl
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
@@ -20,7 +20,7 @@ internal class OutputChannelInterceptorShould {
 
     @Test
     fun `return same message`() {
-        every { channel.fullChannelName } returns randomAlphanumeric(10)
+        every { channel.fullChannelName } returns secure().nextAlphanumeric(10)
 
         val result = underTest.preSend(message, channel)
 
@@ -29,7 +29,7 @@ internal class OutputChannelInterceptorShould {
 
     @Test
     fun `capture message`() {
-        val channelName = randomAlphanumeric(10)
+        val channelName = secure().nextAlphanumeric(10)
         every { channel.fullChannelName } returns channelName
 
         underTest.preSend(message, channel)

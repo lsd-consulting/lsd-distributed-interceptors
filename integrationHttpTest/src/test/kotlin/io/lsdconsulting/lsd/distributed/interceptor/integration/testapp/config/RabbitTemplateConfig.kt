@@ -11,12 +11,12 @@ import org.springframework.context.annotation.Bean
 
 @TestConfiguration
 @EnableRabbit
-open class RabbitTemplateConfig {
+class RabbitTemplateConfig {
     @Bean
-    open fun connectionFactory() = CachingConnectionFactory(MockConnectionFactory())
+    fun connectionFactory() = CachingConnectionFactory(MockConnectionFactory())
 
     @Bean
-    open fun rabbitTemplate(): RabbitTemplate {
+    fun rabbitTemplate(): RabbitTemplate {
         val rabbitTemplate = RabbitTemplate(connectionFactory())
         rabbitTemplate.messageConverter = Jackson2JsonMessageConverter(ObjectMapperCreator().objectMapper)
         return rabbitTemplate

@@ -17,7 +17,7 @@ import org.springframework.http.HttpStatus
 import java.net.URISyntaxException
 import javax.sql.DataSource
 
-class EndToEndIT : IntegrationTestBase() {
+class EndToEndIT : IntegrationPostgresTestBase() {
     @Autowired
     private lateinit var testRepository: TestRepository
 

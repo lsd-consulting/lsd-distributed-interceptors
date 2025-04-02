@@ -8,17 +8,17 @@ import org.springframework.context.annotation.Bean
 import java.util.function.Function
 
 @TestConfiguration
-open class ServiceConfig(
+class ServiceConfig(
     private val inputOutputHandler: InputOutputHandler
 ) {
     @Bean
-    open fun inputOutputHandlerFunction() =
+    fun inputOutputHandlerFunction() =
         Function<Input, Output> {
             inputOutputHandler.handle(it)
         }
 
     @Bean
-    open fun noOutputLsdHeadersHandlerFunction() =
+    fun noOutputLsdHeadersHandlerFunction() =
         Function<Input, Output> {
             inputOutputHandler.handle(it)
         }

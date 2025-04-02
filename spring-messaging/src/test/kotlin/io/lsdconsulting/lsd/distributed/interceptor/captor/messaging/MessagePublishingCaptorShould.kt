@@ -7,7 +7,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryServic
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
@@ -22,10 +22,10 @@ internal class MessagePublishingCaptorShould {
 
     private val underTest = MessagePublishingCaptor(repositoryService, propertyServiceNameDeriver, traceIdRetriever, messagingHeaderRetriever, "profile")
 
-    private val topic = randomAlphabetic(20)
-    private val serviceName = randomAlphabetic(20)
-    private val traceId = randomAlphabetic(20)
-    private val body = randomAlphabetic(20)
+    private val topic = secure().nextAlphabetic(20)
+    private val serviceName = secure().nextAlphabetic(20)
+    private val traceId = secure().nextAlphabetic(20)
+    private val body = secure().nextAlphabetic(20)
 
     @Test
     fun `capture publish interaction with source from header`() {
@@ -57,7 +57,7 @@ internal class MessagePublishingCaptorShould {
         every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"))
         val headers = mapOf("name" to listOf("value"), "Target-Name" to topic)
         val message: Message<*> = MutableMessage(body.toByteArray(), headers)
-        val channelName = randomAlphabetic(10)
+        val channelName = secure().nextAlphabetic(10)
 
         val result = underTest.capturePublishInteraction(message, channelName)
 
@@ -82,7 +82,7 @@ internal class MessagePublishingCaptorShould {
         every { messagingHeaderRetriever.retrieve(any()) } returns mapOf<String, Collection<String>>("name" to listOf("value"))
         val headers = mapOf("name" to listOf("value"))
         val message: Message<*> = MutableMessage(body.toByteArray(), headers)
-        val channelName = randomAlphabetic(10)
+        val channelName = secure().nextAlphabetic(10)
 
         val result = underTest.capturePublishInteraction(message, channelName)
 

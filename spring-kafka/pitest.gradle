@@ -4,7 +4,7 @@ build.dependsOn "pitest"
 
 // perform mutation test and enforce coverage
 pitest {
-    junit5PluginVersion = '1.2.1'
+    junit5PluginVersion = '1.2.2'
     pitestVersion = '1.15.0'
     useClasspathFile = true
     timeoutConstInMillis = 20000

@@ -5,8 +5,8 @@ import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 
 @TestConfiguration
-open class RepositoryConfig {
+class RepositoryConfig {
 
     @Bean
-    open fun testRepository() = TestRepository()
+    fun testRepository() = TestRepository()
 }

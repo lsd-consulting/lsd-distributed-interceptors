@@ -14,9 +14,9 @@ import org.springframework.web.client.RestTemplate
 @Configuration
 @ConditionalOnProperty(name = ["lsd.dist.connectionString"])
 @ConditionalOnClass(RestTemplate::class)
-open class RestTemplateInterceptorConfig {
+class RestTemplateInterceptorConfig {
     @Bean
-    open fun lsdRestTemplateInterceptor(
+    fun lsdRestTemplateInterceptor(
         requestCaptor: RequestCaptor,
         responseCaptor: ResponseCaptor
     ): ClientHttpRequestInterceptor {
@@ -24,7 +24,7 @@ open class RestTemplateInterceptorConfig {
     }
 
     @Bean
-    open fun lsdRestTemplateCustomizer(lsdRestTemplateInterceptor: ClientHttpRequestInterceptor?): LsdRestTemplateCustomizer {
+    fun lsdRestTemplateCustomizer(lsdRestTemplateInterceptor: ClientHttpRequestInterceptor?): LsdRestTemplateCustomizer {
         return LsdRestTemplateCustomizer(lsdRestTemplateInterceptor!!)
     }
 }

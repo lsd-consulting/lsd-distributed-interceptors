@@ -6,7 +6,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetrieve
 import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryService
 import io.mockk.every
 import io.mockk.mockk
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.emptyOrNullString
@@ -23,10 +23,10 @@ internal class RabbitCaptorShould {
 
     private val underTest = RabbitCaptor(repositoryService, propertyServiceNameDeriver, traceIdRetriever, amqpHeaderRetriever, "profile")
 
-    private val exchange = randomAlphabetic(20)
-    private val serviceName = randomAlphabetic(20)
-    private val traceId = randomAlphabetic(20)
-    private val body = randomAlphabetic(20)
+    private val exchange = secure().nextAlphabetic(20)
+    private val serviceName = secure().nextAlphabetic(20)
+    private val traceId = secure().nextAlphabetic(20)
+    private val body = secure().nextAlphabetic(20)
     private val messageProperties = MessageProperties()
     private val message = Message(body.toByteArray(), messageProperties)
     private val headers = mapOf<String, Collection<String>>("name" to listOf("value"))

@@ -22,11 +22,16 @@ import io.lsdconsulting.lsd.distributed.mongo.repository.DEFAULT_TIMEOUT_MILLIS
 import io.lsdconsulting.lsd.distributed.mongo.repository.InterceptedDocumentMongoRepository
 import io.lsdconsulting.lsd.distributed.mongo.repository.InterceptedInteractionCollectionBuilder
 import io.lsdconsulting.lsd.distributed.postgres.repository.InterceptedDocumentPostgresRepository
+import io.micrometer.tracing.CurrentTraceContext
+import io.micrometer.tracing.brave.bridge.BraveTracer
 import lsd.format.json.createObjectMapper
 import lsd.logging.log
 import java.io.IOException
 
-class LsdFeignLoggerInterceptor(private val feignRequestCaptor: FeignRequestCaptor, private val feignResponseCaptor: FeignResponseCaptor) :
+class LsdFeignLoggerInterceptor(
+    private val feignRequestCaptor: FeignRequestCaptor,
+    private val feignResponseCaptor: FeignResponseCaptor
+) :
     Slf4jLogger(LsdFeignLoggerInterceptor::class.java) {
 
     public override fun logRequest(configKey: String, level: Level, request: Request) {
@@ -68,13 +73,13 @@ class LsdFeignLoggerInterceptor(private val feignRequestCaptor: FeignRequestCapt
             val appName = LsdProperties["info.app.name", ""]
             val sensitiveHeaders = LsdProperties["lsd.dist.obfuscator.sensitiveHeaders", ""]
             val profile = LsdProperties["spring.profiles.active", ""]
-            val threadPoolSize:Int = LsdProperties.getInt("lsd.dist.threadPool.size", 16)
+            val threadPoolSize: Int = LsdProperties.getInt("lsd.dist.threadPool.size", 16)
 
             val repository = buildInterceptedDocumentRepository(connectionString)
             val repositoryService = RepositoryService(threadPoolSize, repository)
             repositoryService.start()
             val sourceTargetDeriver = SourceTargetDeriver(PropertyServiceNameDeriver(appName))
-            val traceIdRetriever = TraceIdRetriever(Tracing.newBuilder().build().tracer())
+            val traceIdRetriever = TraceIdRetriever(BraveTracer(Tracing.newBuilder().build().tracer(), CurrentTraceContext.NOOP))
             val feignHttpHeaderRetriever = FeignHttpHeaderRetriever(Obfuscator(sensitiveHeaders))
             val feignRequestCaptor = FeignRequestCaptor(
                 repositoryService,
@@ -106,7 +111,10 @@ class LsdFeignLoggerInterceptor(private val feignRequestCaptor: FeignRequestCapt
                         null,
                         null,
                         LsdProperties.getInt("lsd.dist.db.connectionTimeout.millis", DEFAULT_TIMEOUT_MILLIS),
-                        LsdProperties.getLong("lsd.dist.db.collectionSizeLimit.megabytes", DEFAULT_COLLECTION_SIZE_LIMIT_MBS)
+                        LsdProperties.getLong(
+                            "lsd.dist.db.collectionSizeLimit.megabytes",
+                            DEFAULT_COLLECTION_SIZE_LIMIT_MBS
+                        )
                     )
                 )
 

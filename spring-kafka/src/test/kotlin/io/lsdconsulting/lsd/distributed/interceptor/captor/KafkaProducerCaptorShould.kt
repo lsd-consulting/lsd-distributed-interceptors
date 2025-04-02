@@ -7,7 +7,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryServic
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.header.internals.RecordHeader
 import org.hamcrest.MatcherAssert.assertThat
@@ -22,10 +22,10 @@ internal class KafkaProducerCaptorShould {
 
     private val underTest = KafkaProducerCaptor(repositoryService, propertyServiceNameDeriver, traceIdRetriever, kafkaHeaderRetriever, "profile")
 
-    private val topic = randomAlphabetic(20)
-    private val serviceName = randomAlphabetic(20)
-    private val traceId = randomAlphabetic(20)
-    private val body = randomAlphabetic(20)
+    private val topic = secure().nextAlphabetic(20)
+    private val serviceName = secure().nextAlphabetic(20)
+    private val traceId = secure().nextAlphabetic(20)
+    private val body = secure().nextAlphabetic(20)
 
     @Test
     fun `capture publish interaction with source from header`() {

@@ -4,8 +4,7 @@ build.dependsOn "pitest"
 
 // perform mutation test and enforce coverage
 pitest {
-    junit5PluginVersion = '1.1.1'
-    pitestVersion = '1.14.0'
+    junit5PluginVersion = '1.2.2'
     useClasspathFile = true
     timeoutConstInMillis = 20000
     targetClasses.set(['io.lsdconsulting.lsd.distributed.interceptor.*'])

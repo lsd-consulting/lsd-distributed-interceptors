@@ -7,7 +7,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryServic
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
@@ -22,11 +22,11 @@ internal class MessageConsumingCaptorShould {
 
     private val underTest = MessageConsumingCaptor(repositoryService, propertyServiceNameDeriver, traceIdRetriever, messagingHeaderRetriever, "profile")
 
-    private val targetHeader = randomAlphabetic(20)
-    private val typeId = randomAlphabetic(20)
-    private val serviceName = randomAlphabetic(20)
-    private val traceId = randomAlphabetic(20)
-    private val body = randomAlphabetic(20)
+    private val targetHeader = secure().nextAlphabetic(20)
+    private val typeId = secure().nextAlphabetic(20)
+    private val serviceName = secure().nextAlphabetic(20)
+    private val traceId = secure().nextAlphabetic(20)
+    private val body = secure().nextAlphabetic(20)
 
     @Test
     fun `capture consume interaction with source from type id when target name not no in header`() {

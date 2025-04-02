@@ -2,14 +2,14 @@ package io.lsdconsulting.lsd.distributed.interceptor.persistence
 
 import io.lsdconsulting.lsd.distributed.connector.model.InterceptedInteraction
 import io.lsdconsulting.lsd.distributed.connector.repository.InterceptedDocumentRepository
+import jakarta.annotation.PostConstruct
+import jakarta.annotation.PreDestroy
 import lsd.logging.log
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit.MILLISECONDS
-import javax.annotation.PostConstruct
-import javax.annotation.PreDestroy
 
 class RepositoryService(
     private val threadPoolSize: Int,

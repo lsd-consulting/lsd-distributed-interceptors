@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 
 @TestConfiguration
-open class InputRabbitMqConfig(
+class InputRabbitMqConfig(
     @Value("\${spring.cloud.stream.bindings.inputOutputHandlerFunction-in-0.destination}")
     private val inputExchange: String,
     @Value("\${spring.cloud.stream.bindings.noOutputLsdHeadersHandlerFunction-in-0.destination}")
@@ -22,22 +22,22 @@ open class InputRabbitMqConfig(
     private val noLsdHeadersInputQueue: String,
 ) {
     @Bean
-    open fun connectionFactory(): CachingConnectionFactory = CachingConnectionFactory(MockConnectionFactory())
+    fun connectionFactory(): CachingConnectionFactory = CachingConnectionFactory(MockConnectionFactory())
 
     @Bean
-    open fun inputExchange() = FanoutExchange(inputExchange)
+    fun inputExchange() = FanoutExchange(inputExchange)
 
     @Bean
-    open fun noLsdHeadersInputExchange() = FanoutExchange(noLsdHeadersInputExchange)
+    fun noLsdHeadersInputExchange() = FanoutExchange(noLsdHeadersInputExchange)
 
     @Bean
-    open fun inputQueue(): Queue = Queue(inputQueue)
+    fun inputQueue(): Queue = Queue(inputQueue)
 
     @Bean
-    open fun noLsdHeadersInputQueue(): Queue = Queue(noLsdHeadersInputQueue)
+    fun noLsdHeadersInputQueue(): Queue = Queue(noLsdHeadersInputQueue)
 
     @Bean
-    open fun bindInputQueue(
+    fun bindInputQueue(
         inputQueue: Queue,
         inputExchange: FanoutExchange
     ): Binding {
@@ -45,7 +45,7 @@ open class InputRabbitMqConfig(
     }
 
     @Bean
-    open fun bindNoLsdHeadersInputQueue(
+    fun bindNoLsdHeadersInputQueue(
         noLsdHeadersInputQueue: Queue,
         noLsdHeadersInputExchange: FanoutExchange
     ): Binding {

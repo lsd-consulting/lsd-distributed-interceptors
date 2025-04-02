@@ -6,6 +6,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 
 class ConsumerFactoryCustomizer : DefaultKafkaConsumerFactoryCustomizer {
 
+    @Suppress("UNCHECKED_CAST")
     override fun customize(consumerFactory: DefaultKafkaConsumerFactory<*, *>) {
         val updatedInterceptors = mutableListOf<String>()
 

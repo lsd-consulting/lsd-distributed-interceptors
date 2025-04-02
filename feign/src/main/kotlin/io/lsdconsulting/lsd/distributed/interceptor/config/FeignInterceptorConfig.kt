@@ -19,18 +19,18 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @ConditionalOnProperty(name = ["lsd.dist.connectionString"])
 @ConditionalOnClass(Level::class)
-open class FeignInterceptorConfig {
+class FeignInterceptorConfig {
 
     @Bean
     @ConditionalOnMissingBean(Level::class)
-    open fun feignLoggerLevel() = Level.BASIC
+    fun feignLoggerLevel() = Level.BASIC
 
     @Bean
-    open fun lsdFeignLoggerInterceptor(feignRequestCaptor: FeignRequestCaptor, feignResponseCaptor: FeignResponseCaptor) =
+    fun lsdFeignLoggerInterceptor(feignRequestCaptor: FeignRequestCaptor, feignResponseCaptor: FeignResponseCaptor) =
         LsdFeignLoggerInterceptor(feignRequestCaptor, feignResponseCaptor)
 
     @Bean
-    open fun feignRequestCaptor(
+    fun feignRequestCaptor(
         repositoryService: RepositoryService,
         sourceTargetDeriver: SourceTargetDeriver,
         traceIdRetriever: TraceIdRetriever,
@@ -41,7 +41,7 @@ open class FeignInterceptorConfig {
     )
 
     @Bean
-    open fun feignResponseCaptor(
+    fun feignResponseCaptor(
         repositoryService: RepositoryService,
         sourceTargetDeriver: SourceTargetDeriver,
         traceIdRetriever: TraceIdRetriever,
@@ -52,5 +52,5 @@ open class FeignInterceptorConfig {
     )
 
     @Bean
-    open fun feignHttpHeaderRetriever(obfuscator: Obfuscator) = FeignHttpHeaderRetriever(obfuscator)
+    fun feignHttpHeaderRetriever(obfuscator: Obfuscator) = FeignHttpHeaderRetriever(obfuscator)
 }

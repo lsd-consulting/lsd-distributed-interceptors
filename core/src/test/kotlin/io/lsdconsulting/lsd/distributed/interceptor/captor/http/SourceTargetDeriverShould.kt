@@ -3,7 +3,7 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor.http
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
 import io.mockk.every
 import io.mockk.mockk
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.BeforeEach
@@ -14,10 +14,10 @@ internal class SourceTargetDeriverShould {
 
     private val underTest = SourceTargetDeriver(propertyServiceNameDeriver)
 
-    private val appName = randomAlphabetic(20)
-    private val sourceName = randomAlphabetic(20)
-    private val targetName = randomAlphabetic(20)
-    private val path = randomAlphabetic(20)
+    private val appName = secure().nextAlphabetic(20)
+    private val sourceName = secure().nextAlphabetic(20)
+    private val targetName = secure().nextAlphabetic(20)
+    private val path = secure().nextAlphabetic(20)
 
     @BeforeEach
     fun setup() {

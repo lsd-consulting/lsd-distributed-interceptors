@@ -1,13 +1,15 @@
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.pitest:pitest-junit5-plugin:1.2.0'
-    testImplementation 'org.hamcrest:hamcrest-core:2.2'
-    testImplementation 'org.jeasy:easy-random-core:5.0.0'
+    testImplementation 'org.hamcrest:hamcrest-core'
+    testImplementation 'io.github.k-random:k-random-core:1.29.3'
     testImplementation 'io.mockk:mockk:1.13.5'
-    testImplementation 'org.apache.commons:commons-lang3:3.12.0'
-    testImplementation 'org.apache.kafka:kafka-clients:3.5.0'
-    testImplementation 'io.zipkin.brave:brave:5.16.0'
-    testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
+    testImplementation 'org.apache.commons:commons-lang3'
+    testImplementation 'org.apache.kafka:kafka-clients'
+    testImplementation 'io.zipkin.brave:brave'
+    testImplementation 'io.micrometer:micrometer-tracing'
+    testImplementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.1.1'
 }
 
 test {

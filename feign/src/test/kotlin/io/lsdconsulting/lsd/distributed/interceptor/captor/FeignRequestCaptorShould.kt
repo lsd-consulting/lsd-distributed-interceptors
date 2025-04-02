@@ -1,6 +1,7 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor
 
 import feign.Request
+import feign.Request.HttpMethod.GET
 import feign.RequestTemplate
 import io.lsdconsulting.lsd.distributed.interceptor.captor.http.SourceTargetDeriver
 import io.lsdconsulting.lsd.distributed.interceptor.captor.trace.TraceIdRetriever
@@ -8,7 +9,7 @@ import io.lsdconsulting.lsd.distributed.interceptor.persistence.RepositoryServic
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
@@ -22,14 +23,14 @@ internal class FeignRequestCaptorShould {
 
     private val underTest = FeignRequestCaptor(repositoryService, sourceTargetDeriver, traceIdRetriever, feignHttpHeaderRetriever, "profile")
 
-    private val resource = randomAlphanumeric(20)
+    private val resource = secure().nextAlphanumeric(20)
     private val url = "http://localhost/$resource"
-    private val body = randomAlphanumeric(20)
-    private val traceId = randomAlphanumeric(20)
-    private val target = randomAlphanumeric(20)
-    private val serviceName = randomAlphanumeric(20)
+    private val body = secure().nextAlphanumeric(20)
+    private val traceId = secure().nextAlphanumeric(20)
+    private val target = secure().nextAlphanumeric(20)
+    private val serviceName = secure().nextAlphanumeric(20)
     private val requestHeaders = mapOf<String, Collection<String>>("b3" to listOf(traceId), "Target-Name" to listOf(target))
-    private val request = Request.create(Request.HttpMethod.GET, url, requestHeaders, body.toByteArray(), Charset.defaultCharset(), RequestTemplate())
+    private val request = Request.create(GET, url, requestHeaders, body.toByteArray(), Charset.defaultCharset(), RequestTemplate())
 
     @Test
     fun `take trace id from request headers`() {

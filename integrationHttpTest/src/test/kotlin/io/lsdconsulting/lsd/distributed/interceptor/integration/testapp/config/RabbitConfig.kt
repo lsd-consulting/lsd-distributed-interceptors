@@ -12,37 +12,37 @@ import org.springframework.context.annotation.Bean
 import java.lang.Boolean.FALSE
 
 @TestConfiguration
-open class RabbitConfig(
+class RabbitConfig(
     private val connectionFactory: CachingConnectionFactory
 ) {
 
     @Bean
-    open fun exchangeListener(): Exchange {
+    fun exchangeListener(): Exchange {
         return FanoutExchange("exchange-listener")
     }
 
     @Bean
-    open fun exchangeTemplate(): Exchange {
+    fun exchangeTemplate(): Exchange {
         return FanoutExchange("exchange-rabbit-template")
     }
 
     @Bean
-    open fun queueListener(): Queue {
+    fun queueListener(): Queue {
         return Queue("queue-listener")
     }
 
     @Bean
-    open fun queueRabbitTemplate(): Queue {
+    fun queueRabbitTemplate(): Queue {
         return Queue("queue-rabbit-template")
     }
 
     @Bean
-    open fun queueListenerToExchangeBinding(): Binding {
+    fun queueListenerToExchangeBinding(): Binding {
         return Binding("queue-listener", Binding.DestinationType.QUEUE, "exchange-listener", "queue-listener", null)
     }
 
     @Bean
-    open fun queueRabbitTemplateToExchangeBinding(): Binding {
+    fun queueRabbitTemplateToExchangeBinding(): Binding {
         return Binding(
             "queue-rabbit-template",
             Binding.DestinationType.QUEUE,
@@ -54,7 +54,7 @@ open class RabbitConfig(
 
     @Bean
     //     TODO This should not have to be done - investigate
-    open fun rabbitListenerContainerFactory(configurer: SimpleRabbitListenerContainerFactoryConfigurer): SimpleRabbitListenerContainerFactory {
+    fun rabbitListenerContainerFactory(configurer: SimpleRabbitListenerContainerFactoryConfigurer): SimpleRabbitListenerContainerFactory {
         val factory = SimpleRabbitListenerContainerFactory()
         configurer.configure(factory, connectionFactory)
         factory.setDefaultRequeueRejected(FALSE)
