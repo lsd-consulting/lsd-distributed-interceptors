@@ -1,16 +1,9 @@
 package io.lsdconsulting.lsd.distributed.interceptor.integration
 
-import com.github.dockerjava.api.model.ExposedPort
-import com.github.dockerjava.api.model.HostConfig
-import com.github.dockerjava.api.model.PortBinding
-import com.github.dockerjava.api.model.Ports
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.TestApplication
-import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RabbitConfig
-import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RabbitTemplateConfig
-import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.RestConfig
-import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.TracingConfig
+import io.lsdconsulting.lsd.distributed.interceptor.integration.testapp.config.*
 import lsd.logging.log
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -24,24 +17,24 @@ import org.springframework.http.MediaType
 import org.springframework.http.RequestEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
-import org.testcontainers.containers.PostgreSQLContainer
 import java.net.URI
 import java.net.URISyntaxException
 
-private const val POSTGRES_PORT = 5432
-private const val POSTGRES_IMAGE = "postgres:15.3-alpine3.18"
-private const val TABLE_NAME = "lsd_database"
-
-@Import(RestConfig::class, RabbitConfig::class, RabbitTemplateConfig::class, TracingConfig::class)
+@Import(
+    RepositoryConfig::class,
+    RestConfig::class,
+    RabbitConfig::class,
+    RabbitTemplateConfig::class,
+    TracingConfig::class
+)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = [TestApplication::class])
 @ActiveProfiles("test")
-class IntegrationTestBase {
+class IntegrationMongoTestBase {
     @LocalServerPort
     private val serverPort = 0
 
     @Autowired
     private val testRestTemplate: TestRestTemplate? = null
-
     fun givenExternalApi() {
         WireMock.stubFor(
             WireMock.post(WireMock.urlEqualTo("/external-api?message=from_feign"))
@@ -74,36 +67,18 @@ class IntegrationTestBase {
 
     companion object {
         private val wireMockServer = WireMockServer(8070)
-        private var postgreSQLContainer: PostgreSQLContainer<*> = PostgreSQLContainer(POSTGRES_IMAGE)
-            .withDatabaseName(TABLE_NAME)
-            .withUsername("sa")
-            .withPassword("sa")
-            .withExposedPorts(POSTGRES_PORT)
-            .withCreateContainerCmdModifier { cmd ->
-                cmd.withHostConfig(
-                    HostConfig().withPortBindings(
-                        PortBinding(
-                            Ports.Binding.bindPort(POSTGRES_PORT), ExposedPort(
-                                POSTGRES_PORT
-                            )
-                        )
-                    )
-                )
-            }
 
         @BeforeAll
         @JvmStatic
         internal fun beforeAll() {
             WireMock.configureFor(8070)
             wireMockServer.start()
-            postgreSQLContainer.start()
         }
 
         @AfterAll
         @JvmStatic
         internal fun afterAll() {
             wireMockServer.stop()
-            postgreSQLContainer.stop()
         }
     }
 }

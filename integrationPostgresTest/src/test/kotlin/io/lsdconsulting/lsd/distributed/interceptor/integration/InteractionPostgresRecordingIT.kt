@@ -21,7 +21,7 @@ import java.net.URISyntaxException
 import java.util.*
 import javax.sql.DataSource
 
-class InteractionPostgresRecordingIT: IntegrationTestBase() {
+class InteractionPostgresRecordingIT: IntegrationPostgresTestBase() {
     @Autowired
     private lateinit var testRepository: TestRepository
 

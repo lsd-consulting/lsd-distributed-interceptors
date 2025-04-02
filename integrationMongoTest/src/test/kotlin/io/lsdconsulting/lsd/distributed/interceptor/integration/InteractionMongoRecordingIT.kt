@@ -19,7 +19,7 @@ import org.springframework.http.HttpStatus
 import java.net.URISyntaxException
 import java.util.*
 
-class InteractionMongoRecordingIT: IntegrationTestBase() {
+class InteractionMongoRecordingIT: IntegrationMongoTestBase() {
     @Autowired
     private lateinit var testRepository: TestRepository
 

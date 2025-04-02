@@ -36,7 +36,7 @@ private const val WIREMOCK_SERVER_PORT = 8070
 
 @SpringBootTest(webEnvironment = DEFINED_PORT, classes = [TestApplication::class])
 @ActiveProfiles("test")
-class InteractionHttpRecordingIT {
+class InteractionFeignHttpRecordingIT {
     private val mapper = ObjectMapper()
     private val lsdControllerStub = LsdControllerStub(mapper)
 

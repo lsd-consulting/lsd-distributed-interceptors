@@ -6,7 +6,7 @@ import org.springframework.test.context.ActiveProfiles
 
 @ActiveProfiles("wrong-connection-string")
 @Disabled // TODO Haven't figured out how to assert when app fails to start
-class WrongLsdConnectionStringIT: IntegrationTestBase() {
+class WrongLsdConnectionStringIT: IntegrationPostgresTestBase() {
 
     @Test
     fun `should fail on wrong connection string`() {
