@@ -9,7 +9,7 @@ plugins {
     id 'com.palantir.git-version' version '4.0.0'
     id 'jacoco'
     id 'org.jetbrains.kotlin.jvm' version '2.0.21'
-    id 'org.jetbrains.dokka-javadoc' version "2.0.0"
+    id 'org.jetbrains.dokka-javadoc' version "2.1.0"
 }
 
 group = 'io.github.lsd-consulting'
