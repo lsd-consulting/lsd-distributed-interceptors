@@ -1,3 +1,5 @@
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
 version: 2
 updates:
   - package-ecosystem: "gradle"
@@ -5,17 +7,33 @@ updates:
     schedule:
       interval: "daily"
     commit-message:
-      prefix: "fix"
+      prefix: "fix"  # Triggers PATCH release
+    open-pull-requests-limit: 10
     groups:
       lsd-dependencies:
         patterns:
           - "io.github.lsd-consulting:*"
-      springframework-dependencies:
+        update-types:
+          - "minor"
+          - "patch"
+
+      spring-dependencies:
         patterns:
-          - "org.springframework.*"
-      other-dependencies:
+          - "org.springframework.*:*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      kotlin-dependencies:
         patterns:
-          - "*"
-        exclude-patterns:
-          - "io.github.lsd-consulting:*"
-          - "org.springframework.*"
+          - "org.jetbrains.kotlin*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"  # For workflow updates - no version impact
