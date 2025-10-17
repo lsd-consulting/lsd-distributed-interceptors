@@ -2,7 +2,7 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
     id 'java-library'
-    id 'org.springframework.boot' version '2.7.12' apply false
+    id 'org.springframework.boot' version '3.5.6' apply false
     id 'io.spring.dependency-management' version '1.1.7'
     id 'signing'
     id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
