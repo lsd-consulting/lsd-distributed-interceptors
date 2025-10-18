@@ -5,6 +5,7 @@ updates:
   # Production dependencies - triggers semantic releases
   - package-ecosystem: "gradle"
     directory: "/"
+    target-branch: "main"
     schedule:
       interval: "daily"
     commit-message:
@@ -69,6 +70,7 @@ updates:
   # Test dependencies - does not trigger semantic releases
   - package-ecosystem: "gradle"
     directory: "/"
+    target-branch: "main"
     schedule:
       interval: "daily"
     commit-message:
@@ -121,6 +123,7 @@ updates:
 
   - package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: "main"
     schedule:
       interval: "weekly"
     commit-message:
