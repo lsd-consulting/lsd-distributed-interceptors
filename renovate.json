@@ -32,7 +32,7 @@
       "matchPackagePatterns": [
         "org.jetbrains*",
         "org.springframework*",
-        "io.github.lsd-consulting:lsd-core"
+        "io.github.lsd-consulting*"
       ],
       "commitMessagePrefix": "fix(deps): "
     },
