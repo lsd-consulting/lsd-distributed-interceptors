@@ -1,0 +1,45 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":dependencyDashboard"
+  ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "vulnerabilityAlerts": {
+    "enabled": true
+  },
+  "labels": ["dependencies"],
+  "addLabels": ["{{updateType}}"],
+  "rebaseWhen": "behind-base-branch",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    },
+    {
+      "matchPackagePatterns": ["org.jetbrains.kotlin"],
+      "groupName": "kotlin dependencies"
+    },
+    {
+      "description": "Production dependencies - triggers semantic releases",
+      "matchPackagePatterns": [
+        "org.jetbrains*",
+        "org.springframework*",
+        "io.github.lsd-consulting:lsd-core"
+      ],
+      "commitMessagePrefix": "fix(deps): "
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "commitMessagePrefix": "ci(deps): "
+    }
+  ],
+  "commitMessagePrefix": "chore(deps): "
+}
