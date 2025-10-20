@@ -23,7 +23,7 @@ dependencies {
     // Other
     integrationHttpTestImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'
     integrationHttpTestImplementation 'org.awaitility:awaitility:4.1.0'
-    integrationHttpTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
+    integrationHttpTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.2'
     integrationHttpTestImplementation 'org.jeasy:easy-random-core:5.0.0'
 
     // LSD
