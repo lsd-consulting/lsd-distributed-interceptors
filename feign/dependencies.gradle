@@ -14,7 +14,7 @@ dependencies {
     implementation('io.github.lsd-consulting:lsd-formatting-library:4.0.47') {
         because "We need the LSD objectMapper"
     }
-    compileOnly 'io.github.lsd-consulting:lsd-distributed-mongodb-connector:5.0.0'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-mongodb-connector:5.0.12'
     compileOnly 'io.github.lsd-consulting:lsd-distributed-postgres-connector:1.0.3'
     compileOnly 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.2'
 
