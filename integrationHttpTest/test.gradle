@@ -20,7 +20,7 @@ dependencies {
     testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
 
     // LSD
-    testImplementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
+    testImplementation 'io.github.lsd-consulting:lsd-logging-library:1.0.19'
     testImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.1'
     testImplementation 'io.github.lsd-consulting:lsd-junit5:6.0.12'
     testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:7.1.1'

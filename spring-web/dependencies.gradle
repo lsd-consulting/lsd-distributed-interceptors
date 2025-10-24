@@ -6,7 +6,7 @@ dependencies {
     compileOnly 'org.springframework.boot:spring-boot-starter-web'
 
     // LSD
-    implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
+    implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.19'
     compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
 
     // JSON & XML pretty formatting
