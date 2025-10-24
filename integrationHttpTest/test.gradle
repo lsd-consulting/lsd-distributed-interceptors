@@ -22,7 +22,7 @@ dependencies {
     // LSD
     testImplementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
     testImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.1'
-    testImplementation 'io.github.lsd-consulting:lsd-junit5:6.0.1'
+    testImplementation 'io.github.lsd-consulting:lsd-junit5:6.0.12'
     testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:7.1.1'
     testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:6.0.1')
     testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.0.1:wiremock-stubs'){
