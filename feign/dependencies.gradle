@@ -7,7 +7,7 @@ dependencies {
     compileOnly 'io.zipkin.brave:brave:5.16.0'
 
     // LSD
-    implementation('io.github.lsd-consulting:lsd-core:6.1.2') {
+    implementation('io.github.lsd-consulting:lsd-core:6.1.12') {
         because "We need to load properties for the non-spring option"
     }
     implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
