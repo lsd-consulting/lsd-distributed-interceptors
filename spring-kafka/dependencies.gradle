@@ -11,7 +11,7 @@ dependencies {
     implementation('io.github.lsd-consulting:lsd-core:6.1.12') {
         because "We need to load properties for the non-spring option"
     }
-    implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.1'
+    implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.19'
     implementation('io.github.lsd-consulting:lsd-formatting-library:4.0.63') {
         because "We need the LSD objectMapper"
     }
