@@ -3,7 +3,7 @@ dependencies {
     testImplementation 'org.pitest:pitest-junit5-plugin:1.2.3'
     testImplementation 'org.hamcrest:hamcrest-core:2.2'
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
-    testImplementation 'io.mockk:mockk:1.13.5'
+    testImplementation 'io.mockk:mockk:1.14.6'
 
     testImplementation 'org.springframework.amqp:spring-amqp'
     testImplementation 'org.springframework.amqp:spring-rabbit'

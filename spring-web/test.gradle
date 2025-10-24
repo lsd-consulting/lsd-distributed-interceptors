@@ -3,7 +3,7 @@ dependencies {
     testImplementation 'org.pitest:pitest-junit5-plugin:1.2.3'
     testImplementation 'org.hamcrest:hamcrest-core:2.2'
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
-    testImplementation 'io.mockk:mockk:1.13.5'
+    testImplementation 'io.mockk:mockk:1.14.6'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'io.zipkin.brave:brave:5.16.0'
