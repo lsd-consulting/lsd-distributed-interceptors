@@ -20,7 +20,7 @@ dependencies {
     compileOnly 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.2'
 
     // JSON & XML pretty formatting
-    implementation('org.dom4j:dom4j:2.1.4') {
+    implementation('org.dom4j:dom4j:2.2.0') {
         exclude group: 'pull-parser', module: 'pull-parser'
         because "because pull-parser doesn't support the external-general-entities feature required by Logback"
     }
