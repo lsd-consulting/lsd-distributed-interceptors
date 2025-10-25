@@ -22,7 +22,7 @@ dependencies {
     integrationHttpTestImplementation 'org.springframework.kafka:spring-kafka-test'
 
     // Other
-    integrationHttpTestImplementation 'org.awaitility:awaitility:4.1.0'
+    integrationHttpTestImplementation 'org.awaitility:awaitility:4.3.0'
     integrationHttpTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.2'
     integrationHttpTestImplementation 'org.jeasy:easy-random-core:5.0.0'
 
