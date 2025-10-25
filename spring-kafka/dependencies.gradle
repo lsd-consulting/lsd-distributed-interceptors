@@ -27,5 +27,5 @@ dependencies {
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2'
 
     // Avro
-    implementation 'org.apache.avro:avro:1.11.3'
+    implementation 'org.apache.avro:avro:1.12.1'
 }
