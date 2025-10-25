@@ -5,7 +5,7 @@ dependencies {
     compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
     compileOnly 'org.springframework.kafka:spring-kafka'
     compileOnly 'org.apache.kafka:kafka-clients:3.5.0'
-    compileOnly 'io.zipkin.brave:brave:5.16.0'
+    compileOnly 'io.zipkin.brave:brave:5.18.1'
 
     // LSD
     implementation('io.github.lsd-consulting:lsd-core:6.1.12') {
