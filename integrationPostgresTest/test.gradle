@@ -16,7 +16,7 @@ dependencies {
     testImplementation 'com.zaxxer:HikariCP:5.1.0'
     testImplementation "org.testcontainers:postgresql:1.18.3"
     testImplementation "org.testcontainers:junit-jupiter:1.18.3"
-    testImplementation 'org.postgresql:postgresql:42.6.0'
+    testImplementation 'org.postgresql:postgresql:42.7.8'
 
     // Other
     testImplementation 'com.github.fridujo:rabbitmq-mock:1.2.0'
