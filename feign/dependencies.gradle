@@ -2,8 +2,8 @@ dependencies {
     implementation project(":core")
 
     compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
-    compileOnly 'io.github.openfeign:feign-core:12.4'
-    compileOnly 'io.github.openfeign:feign-slf4j:12.4'
+    compileOnly 'io.github.openfeign:feign-core:12.5'
+    compileOnly 'io.github.openfeign:feign-slf4j:12.5'
     compileOnly 'io.zipkin.brave:brave:5.18.1'
 
     // LSD
