@@ -5,7 +5,7 @@ dependencies {
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
     testImplementation 'io.mockk:mockk:1.14.6'
     testImplementation 'org.apache.commons:commons-lang3:3.19.0'
-    testImplementation 'org.apache.kafka:kafka-clients:3.5.0'
+    testImplementation 'org.apache.kafka:kafka-clients:3.9.1'
     testImplementation 'io.zipkin.brave:brave:5.18.1'
     testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
 }
