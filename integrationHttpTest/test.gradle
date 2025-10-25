@@ -12,7 +12,7 @@ dependencies {
     testImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
 
     // Other
-    testImplementation 'com.github.fridujo:rabbitmq-mock:1.1.1'
+    testImplementation 'com.github.fridujo:rabbitmq-mock:1.2.0'
     testImplementation 'org.awaitility:awaitility:4.1.0'
     testImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.2'
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
