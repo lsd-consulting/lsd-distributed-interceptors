@@ -28,7 +28,7 @@ dependencies {
 
     // LSD
     integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.1'
-    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.0.2:wiremock-stubs'){
+    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.1.5:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
 

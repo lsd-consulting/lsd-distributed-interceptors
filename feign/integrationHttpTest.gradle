@@ -31,7 +31,7 @@ dependencies {
     integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-junit5:6.0.12'
     integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:7.2.36'
     integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:6.1.5')
-    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.0.1:wiremock-stubs'){
+    integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.1.5:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
 
