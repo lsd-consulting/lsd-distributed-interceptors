@@ -6,7 +6,7 @@ dependencies {
     testImplementation 'io.mockk:mockk:1.14.6'
     testImplementation 'org.apache.commons:commons-lang3:3.19.0'
 
-    testImplementation 'io.zipkin.brave:brave:5.18.1'
+    testImplementation 'io.zipkin.brave:brave:6.3.0'
     testImplementation 'org.springframework:spring-messaging'
     testImplementation 'org.springframework.integration:spring-integration-core'
     testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
