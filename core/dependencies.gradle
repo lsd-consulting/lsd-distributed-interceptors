@@ -2,7 +2,7 @@ dependencies {
 
     // Spring
     compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
-    compileOnly 'io.zipkin.brave:brave:5.18.1'
+    compileOnly 'io.zipkin.brave:brave:6.3.0'
     compileOnly 'jakarta.annotation:jakarta.annotation-api'
 
     // LSD

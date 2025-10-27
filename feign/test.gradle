@@ -8,7 +8,7 @@ dependencies {
 
     testImplementation 'io.github.openfeign:feign-core:12.5'
     testImplementation 'io.github.openfeign:feign-slf4j:12.5'
-    testImplementation 'io.zipkin.brave:brave:5.18.1'
+    testImplementation 'io.zipkin.brave:brave:6.3.0'
     testImplementation 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
 }
 
