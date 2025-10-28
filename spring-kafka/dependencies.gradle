@@ -4,7 +4,7 @@ dependencies {
     // Spring
     compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
     compileOnly 'org.springframework.kafka:spring-kafka'
-    compileOnly 'org.apache.kafka:kafka-clients:3.9.1'
+    compileOnly 'org.apache.kafka:kafka-clients:4.1.0'
     compileOnly 'io.zipkin.brave:brave:6.3.0'
 
     // LSD
