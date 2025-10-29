@@ -1,6 +1,6 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.common
 
-import org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric
+import io.lsdconsulting.lsd.distributed.interceptor.randomAlphanumeric
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.hasEntry
 import org.junit.jupiter.api.Test

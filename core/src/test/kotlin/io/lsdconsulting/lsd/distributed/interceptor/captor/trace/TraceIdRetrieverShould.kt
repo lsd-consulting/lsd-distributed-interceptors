@@ -3,9 +3,9 @@ package io.lsdconsulting.lsd.distributed.interceptor.captor.trace
 import brave.Span
 import brave.Tracer
 import brave.propagation.TraceContext
+import io.lsdconsulting.lsd.distributed.interceptor.randomAlphabetic
 import io.mockk.every
 import io.mockk.mockk
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test

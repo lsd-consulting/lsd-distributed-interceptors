@@ -1,9 +1,9 @@
 package io.lsdconsulting.lsd.distributed.interceptor.captor.http
 
 import io.lsdconsulting.lsd.distributed.interceptor.captor.common.PropertyServiceNameDeriver
+import io.lsdconsulting.lsd.distributed.interceptor.randomAlphabetic
 import io.mockk.every
 import io.mockk.mockk
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.BeforeEach
