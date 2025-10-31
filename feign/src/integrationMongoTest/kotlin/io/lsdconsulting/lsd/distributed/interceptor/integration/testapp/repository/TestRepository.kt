@@ -87,22 +87,33 @@ class TestRepository {
 
     companion object {
         private const val MONGODB_HOST = "localhost"
-        private const val MONGODB_PORT = 27017
         private const val DATABASE_NAME = "lsd"
         private const val COLLECTION_NAME = "interceptedInteraction"
         private var mongoClient: MongoClient? = null
         private var mongodExecutable: MongodExecutable? = null
+        private var mongodbPort: Int = 0
+        
+        fun getMongoDbPort(): Int = mongodbPort
+        
         fun setupDatabase() {
             try {
+                // Use a random free port to avoid conflicts in CI
+                mongodbPort = Network.freeServerPort(Network.getLocalHost())
+                log().info("Starting embedded MongoDB on port: {}", mongodbPort)
+                
                 val mongodConfig: MongodConfig = MongodConfig.builder()
                     .version(Version.Main.V5_0)
-                    .net(Net(MONGODB_HOST, MONGODB_PORT, Network.localhostIsIPv6()))
+                    .net(Net(MONGODB_HOST, mongodbPort, Network.localhostIsIPv6()))
                     .build()
                 mongodExecutable = MongodStarter.getDefaultInstance().prepare(mongodConfig)
                 mongodExecutable!!.start()
+                
+                // Set system property so Spring can use the dynamic port
+                System.setProperty("mongodb.port", mongodbPort.toString())
+                
                 mongoClient = MongoClients.create(
                     MongoClientSettings.builder()
-                        .applyConnectionString(ConnectionString("mongodb://" + MONGODB_HOST + ":" + MONGODB_PORT))
+                        .applyConnectionString(ConnectionString("mongodb://" + MONGODB_HOST + ":" + mongodbPort))
                         .retryWrites(true)
                         .build()
                 )
