@@ -7,7 +7,7 @@ dependencies {
 
     // LSD
     implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.19'
-    compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.0.0'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.2.3'
 
     // JSON & XML pretty formatting
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
