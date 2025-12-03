@@ -16,8 +16,8 @@ dependencies {
     testImplementation 'org.awaitility:awaitility:4.3.0'
     testImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.2'
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
-    testImplementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
-    testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
+    testImplementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.20.1'
+    testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.1'
 
     // LSD
     testImplementation 'io.github.lsd-consulting:lsd-logging-library:1.0.19'
