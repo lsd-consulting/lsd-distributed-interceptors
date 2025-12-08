@@ -3,7 +3,7 @@ dependencies {
     testImplementation 'org.pitest:pitest-junit5-plugin:1.2.3'
     testImplementation 'org.hamcrest:hamcrest-core:3.0'
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
-    testImplementation 'io.mockk:mockk:1.14.6'
+    testImplementation 'io.mockk:mockk:1.14.7'
     testImplementation 'org.apache.commons:commons-lang3:3.19.0'
 
     testImplementation 'io.zipkin.brave:brave:6.3.0'
