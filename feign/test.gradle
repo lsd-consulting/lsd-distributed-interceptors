@@ -1,5 +1,5 @@
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.14.1'
     testImplementation 'org.pitest:pitest-junit5-plugin:1.2.3'
     testImplementation 'org.hamcrest:hamcrest-core:3.0'
     testImplementation 'org.jeasy:easy-random-core:5.0.0'

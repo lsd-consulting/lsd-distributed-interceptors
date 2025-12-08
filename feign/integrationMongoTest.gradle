@@ -23,7 +23,7 @@ dependencies {
 
     // Other
     integrationMongoTestImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.5.4'
-    integrationMongoTestImplementation 'org.junit.platform:junit-platform-launcher:1.9.2'
+    integrationMongoTestImplementation 'org.junit.platform:junit-platform-launcher:1.14.1'
     integrationMongoTestImplementation 'com.github.fridujo:rabbitmq-mock:1.2.0'
     integrationMongoTestImplementation 'org.awaitility:awaitility:4.3.0'
     integrationMongoTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.2'
