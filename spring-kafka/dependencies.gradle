@@ -24,7 +24,7 @@ dependencies {
         exclude group: 'pull-parser', module: 'pull-parser'
         because "because pull-parser doesn't support the external-general-entities feature required by Logback"
     }
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.20.1'
 
     // Avro
     implementation 'org.apache.avro:avro:1.12.1'
