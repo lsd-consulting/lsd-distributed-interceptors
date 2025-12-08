@@ -27,7 +27,7 @@ dependencies {
     integrationHttpTestImplementation 'org.jeasy:easy-random-core:5.0.0'
 
     // LSD
-    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.0'
+    integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.9'
     integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-junit-jupiter:1.0.1'
     integrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-generator:7.2.36'
     integrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:6.1.5')
