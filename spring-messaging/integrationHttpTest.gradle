@@ -37,8 +37,8 @@ dependencies {
 
     integrationHttpTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
 
-    integrationHttpTestImplementation 'ch.qos.logback:logback-core:1.2.12'
-    integrationHttpTestImplementation 'ch.qos.logback:logback-classic:1.2.12'
+    integrationHttpTestImplementation 'ch.qos.logback:logback-core:1.5.22'
+    integrationHttpTestImplementation 'ch.qos.logback:logback-classic:1.5.22'
 }
 
 tasks.register('integrationHttpTest', Test) {
