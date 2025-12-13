@@ -22,7 +22,7 @@ dependencies {
     integrationMongoTestImplementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
 
     // Other
-    integrationMongoTestImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.5.4'
+    integrationMongoTestImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.22.0'
     integrationMongoTestImplementation 'org.junit.platform:junit-platform-launcher:1.9.2'
     integrationMongoTestImplementation 'com.github.fridujo:rabbitmq-mock:1.2.0'
     integrationMongoTestImplementation 'org.awaitility:awaitility:4.3.0'
