@@ -19,5 +19,5 @@ dependencies {
     implementation 'org.apache.avro:avro:1.12.1'
 
     // Other
-    implementation 'org.slf4j:slf4j-api:2.0.17'
+    implementation 'org.slf4j:slf4j-api:2.0.18'
 }
