@@ -21,7 +21,7 @@ dependencies {
 
     // LSD
     testImplementation 'io.github.lsd-consulting:lsd-logging-library:1.0.19'
-    testImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.1'
+    testImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.9'
     testImplementation 'io.github.lsd-consulting:lsd-junit-jupiter:1.0.1'
     testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:7.2.36'
     testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:6.1.5')
