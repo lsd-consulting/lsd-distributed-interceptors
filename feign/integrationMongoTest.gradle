@@ -26,7 +26,7 @@ dependencies {
     integrationMongoTestImplementation 'org.junit.platform:junit-platform-launcher:1.9.2'
     integrationMongoTestImplementation 'com.github.fridujo:rabbitmq-mock:1.2.0'
     integrationMongoTestImplementation 'org.awaitility:awaitility:4.3.0'
-    integrationMongoTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.2'
+    integrationMongoTestImplementation 'com.github.tomakehurst:wiremock-jre8:3.0.1'
     integrationMongoTestImplementation 'org.jeasy:easy-random-core:5.0.0'
 
     // LSD
