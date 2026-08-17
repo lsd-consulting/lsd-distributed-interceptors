@@ -16,7 +16,7 @@ dependencies {
     }
     compileOnly 'io.github.lsd-consulting:lsd-distributed-mongodb-connector:5.0.12'
     compileOnly 'io.github.lsd-consulting:lsd-distributed-postgres-connector:1.0.20'
-    compileOnly 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.2'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.9'
 
     // JSON & XML pretty formatting
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
