@@ -9,15 +9,15 @@ dependencies {
     // LSD
     implementation 'io.github.lsd-consulting:lsd-formatting-library:4.0.63'
     implementation 'io.github.lsd-consulting:lsd-logging-library:1.0.19'
-    compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.2.3'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-connector:2.2.12'
 
     // JSON & XML pretty formatting
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.3'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.23.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.23.0'
 
     // Avro
     implementation 'org.apache.avro:avro:1.12.2'
 
     // Other
-    implementation 'org.slf4j:slf4j-api:2.0.18'
+    implementation 'org.slf4j:slf4j-api:2.0.20'
 }

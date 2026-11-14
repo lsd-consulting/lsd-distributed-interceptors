@@ -27,12 +27,12 @@ dependencies {
     springIntegrationHttpTestImplementation 'org.jeasy:easy-random-core:5.0.0'
 
     // LSD
-    springIntegrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.1'
+    springIntegrationHttpTestImplementation 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.9'
     springIntegrationHttpTestImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.1.5:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
 
-    springIntegrationHttpTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
+    springIntegrationHttpTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.23.0'
 }
 
 tasks.register('springIntegrationHttpTest', Test) {
