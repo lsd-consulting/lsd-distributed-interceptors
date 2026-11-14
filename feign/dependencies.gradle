@@ -2,8 +2,8 @@ dependencies {
     implementation project(":core")
 
     compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
-    compileOnly 'io.github.openfeign:feign-core:13.15'
-    compileOnly 'io.github.openfeign:feign-slf4j:13.15'
+    compileOnly 'io.github.openfeign:feign-core:13.18'
+    compileOnly 'io.github.openfeign:feign-slf4j:13.18'
     compileOnly 'io.zipkin.brave:brave:6.3.1'
 
     // LSD
@@ -16,9 +16,9 @@ dependencies {
     }
     compileOnly 'io.github.lsd-consulting:lsd-distributed-mongodb-connector:5.0.12'
     compileOnly 'io.github.lsd-consulting:lsd-distributed-postgres-connector:1.0.20'
-    compileOnly 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.2'
+    compileOnly 'io.github.lsd-consulting:lsd-distributed-http-connector:3.0.9'
 
     // JSON & XML pretty formatting
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.3'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.3'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.23.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.23.0'
 }
