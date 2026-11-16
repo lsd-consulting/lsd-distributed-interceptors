@@ -25,7 +25,7 @@ dependencies {
     testImplementation 'io.github.lsd-consulting:lsd-junit-jupiter:1.0.1'
     testImplementation 'io.github.lsd-consulting:lsd-distributed-generator:7.2.36'
     testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-api:6.1.5')
-    testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:6.1.5:wiremock-stubs'){
+    testImplementation('io.github.lsd-consulting:lsd-distributed-generator-ui-service:11.0.9:wiremock-stubs'){
         exclude group: "*", module: "*"
     }
 }
